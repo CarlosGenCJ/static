@@ -1,0 +1,724 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  --width-navbar: 150px;
+}
+
+body,
+html {
+  width: 100%;
+  height: 100vh;
+  font-family: "Inter";
+  background-color: #E6E6E6;
+}
+body .ripple,
+html .ripple {
+  position: relative;
+  overflow: hidden;
+  --bg-ripple: rgba(255, 255, 255, 0.4);
+}
+body .ripple.ripple-white,
+html .ripple.ripple-white {
+  --bg-ripple: rgba(150, 150, 150, 0.3);
+}
+body .ripple-container,
+html .ripple-container {
+  /*Con los siguientes valores de position, top, left, width y height aseguramos que el div tome todo el tamaño de su padre*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+}
+body .ripple-effect,
+html .ripple-effect {
+  position: absolute;
+  /*En javascript colocaremos el top y left de este span en el punto donde hizo click el usuario. Por eso es necesario trasladarlo en -50% en ambos ejes, para que el centro del efecto coincida con el click*/
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: var(--bg-ripple);
+}
+body .ripple-container.ripple-effect-animation .ripple-effect,
+html .ripple-container.ripple-effect-animation .ripple-effect {
+  /*Aplicamos la animación que mas adelante definiremos con @keyframes*/
+  -webkit-animation: ripple 0.4s ease-in;
+  animation: ripple 0.4s ease-in;
+}
+@keyframes ripple {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    padding-bottom: 200%;
+    width: 200%;
+  }
+}
+@-webkit-keyframes ripple {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    padding-bottom: 200%;
+    width: 200%;
+  }
+}
+
+/*
+*   *   *   *   *   *   *   *   *
+*                               *
+*           ENCABEZADO          *
+*                               *
+*   *   *   *   *   *   *   *   *
+*/
+header {
+  width: 100%;
+  min-height: 65px;
+  background-color: #fff;
+  border-bottom: 1px solid #1E1E1E;
+  --dimension_icon_header: 25px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+header .menu_head {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+header .menu_head .option {
+  margin: 0 10px;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+header .menu_head .option .icon {
+  width: var(--dimension_icon_header);
+  height: var(--dimension_icon_header);
+}
+header .menu_head .option .icon img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+nav {
+  height: 100%;
+  width: var(--width-navbar);
+  background-color: #1E1E1E;
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+nav .group_links {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  --dimension_icons: 25px;
+}
+nav .group_links .logo_container {
+  width: 100%;
+  height: 35px;
+  margin: 30px 0px 50px;
+}
+nav .group_links .logo_container img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+nav .group_links .icons {
+  max-width: 100%;
+}
+nav .group_links .icons .icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: all ease 0.3s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+nav .group_links .icons .icon .icon_img {
+  width: var(--dimension_icons);
+  height: var(--dimension_icons);
+  margin-bottom: 10px;
+}
+nav .group_links .icons .icon .icon_img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+nav .group_links .icons .icon .icon_label {
+  font-size: 15px;
+  font-weight: 500;
+}
+nav .group_links .icons .icon.active, nav .group_links .icons .icon:hover {
+  opacity: 1;
+}
+
+section {
+  display: inline-block;
+  width: calc(100% - var(--width-navbar));
+  margin-left: var(--width-navbar);
+}
+section .container {
+  margin-top: 30px;
+}
+section .container > .row {
+  margin-bottom: 15px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  transform: translateY(100%);
+  background-color: aquamarine;
+}
+
+.accounts_container {
+  max-width: 100%;
+  position: relative;
+  --space_button_controls: -5px;
+}
+.accounts_container .container_aux {
+  width: 100%;
+  overflow: hidden;
+}
+.accounts_container .container_aux .accounts {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  display: inline-flex;
+  overflow: hidden;
+  transform: translateX(var(--translate, 0px));
+}
+.accounts_container .container_aux .accounts .account {
+  width: 225px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 20px;
+  border-radius: 5px;
+  padding: 15px 10px;
+  color: #D9D9D9;
+  background-color: #fff;
+  border: 1px solid #484848;
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.accounts_container .container_aux .accounts .account .account_name {
+  font-weight: 700;
+  font-size: 15px;
+}
+.accounts_container .container_aux .accounts .account .account_info {
+  display: flex;
+}
+.accounts_container .container_aux .accounts .account .account_info .info .label {
+  font-size: 10px;
+  font-weight: 400;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.accounts_container .container_aux .accounts .account .account_info .info .text {
+  font-size: 15px;
+  font-weight: 700;
+}
+.accounts_container .container_aux .accounts .account .account_info .info:first-child {
+  margin-right: 25px;
+}
+.accounts_container .container_aux .accounts .account.active {
+  background-color: #E9511D;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0);
+  z-index: 2;
+}
+.accounts_container .container_aux .accounts .account.active .account_name,
+.accounts_container .container_aux .accounts .account.active .text {
+  -webkit-user-select: all;
+     -moz-user-select: all;
+          user-select: all;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container {
+  --button_size: 18px;
+  --max_dimension_menu_container: 300px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  width: var(--button_size);
+  height: var(--button_size);
+}
+.accounts_container .container_aux .accounts .account .menu_action_container label {
+  position: relative;
+  position: absolute;
+  transform: rotate(90deg);
+  font-weight: 700;
+  line-height: var(--button_size);
+  cursor: pointer;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container input {
+  display: none;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container input:checked + .menu_action {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  max-width: 500px;
+  color: #000;
+  opacity: 0;
+  transition: all ease 0.3s;
+  transform: scale(0.5);
+  transform-origin: top left;
+  pointer-events: none;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options {
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  grid-auto-flow: row;
+  grid-auto-columns: 1fr;
+  background-color: #fff;
+  border: 1px solid #484848;
+  border-radius: 5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  min-width: 200px;
+  font-size: 12px;
+  font-weight: 400;
+  overflow: hidden;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options .option {
+  padding: 10px;
+  transition: all ease 0.1s;
+}
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options .option:hover {
+  background-color: #FFE6DD;
+  cursor: pointer;
+}
+.accounts_container .next,
+.accounts_container .prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.accounts_container .next {
+  left: var(--space_button_controls);
+}
+.accounts_container .prev {
+  right: var(--space_button_controls);
+}
+
+.account_info_panel_container {
+  color: #1E1E1E;
+}
+.account_info_panel_container .account_info_panel {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid #484848;
+  border-radius: 5px;
+  background-color: #fff;
+  display: flex;
+  padding: 15px;
+  justify-content: center;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_data {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info {
+  margin-bottom: 10px;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .label {
+  font-size: 10px;
+  font-weight: 400;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .text {
+  font-size: 12px;
+  font-weight: 700;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info:last-child {
+  margin: 0;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-around;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle {
+  --dimension: 128px;
+  width: var(--dimension);
+  height: var(--dimension);
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph {
+  font-size: 10px;
+  z-index: 2;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .placeholder {
+  font-weight: 400;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .amount_graph {
+  font-weight: 700;
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after, .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after {
+  border-left: 5px solid #E9511D;
+  border-top: 5px solid #E9511D;
+  border-right: 5px solid rgba(0, 0, 0, 0);
+  border-bottom: 5px solid rgba(0, 0, 0, 0);
+}
+.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
+  border-right: 5px solid #FFE6DD;
+  border-bottom: 5px solid #FFE6DD;
+  border-left: 5px solid rgba(0, 0, 0, 0);
+  border-top: 5px solid rgba(0, 0, 0, 0);
+}
+
+.graph_container .graph {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid #484848;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 25px;
+  min-height: 500px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.graph_container .graph .graph_head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.graph_container .graph .graph_head .head_left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  gap: 27px;
+}
+.graph_container .graph .graph_head .head_left .option {
+  font-size: 15px;
+  font-weight: 400;
+  color: #484848;
+  cursor: pointer;
+}
+.graph_container .graph .graph_head .head_left .option.active {
+  font-weight: 700;
+  color: #000;
+}
+.graph_container .graph .graph_head .head_right .select {
+  position: relative;
+}
+.graph_container .graph .graph_head .head_right .select label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 400;
+  padding: 8px 50px;
+  border-radius: 50px;
+  border: 1px solid #484848;
+  cursor: pointer;
+}
+.graph_container .graph .graph_head .head_right .select label img {
+  margin-right: 10px;
+}
+.graph_container .graph .graph_head .head_right .select label img.arrow_open {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+}
+.graph_container .graph .graph_head .head_right .select input {
+  display: none;
+}
+.graph_container .graph .graph_head .head_right .select input:checked ~ .calendar_container {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container {
+  --width: 400px;
+  --spacing_days: 5px;
+  --dimension_days: 30px;
+  position: absolute;
+  pointer-events: none;
+  transition: all ease 0.2s;
+  transform: scale(0.5);
+  opacity: 0;
+  transform-origin: top left;
+  width: var(--width);
+  border-radius: 20px;
+  background-color: #f1f1fb;
+  box-shadow: 8px 8px 8px #d0d3d4, -0.6em 0 0.8em #f8f9f9;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  padding: 20px 20px;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_left {
+  font-size: 14px;
+  font-weight: 700;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right {
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right button {
+  border: none;
+  outline: none;
+  background-color: #E9511D;
+  box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+  width: 40px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right button:first-child img {
+  transform: rotate(90deg);
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right button:last-child img {
+  transform: rotate(-90deg);
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .divider {
+  width: 100%;
+  height: 2px;
+  background-color: #7a7a7a;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-auto-rows: 1fr;
+  grid-column-gap: var(--spacing_days);
+  grid-row-gap: var(--spacing_days);
+  padding: 15px;
+  text-align: center;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  grid-column-gap: var(--spacing_days);
+  grid-row-gap: var(--spacing_days);
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .day_name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--dimension_days);
+  height: var(--dimension_days);
+  font-size: 14px;
+  font-weight: 700;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day {
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--dimension_days);
+  height: var(--dimension_days);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.notMonth {
+  cursor: default;
+  color: #a7a7a7;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day:not(.notMonth):hover {
+  background-color: #fff;
+  box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.active, .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.active:hover {
+  background-color: #E9511D;
+  box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+  color: #fff;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.current {
+  background-color: #FFE6DD;
+  box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.current:hover {
+  background-color: #E9511D;
+  color: #fff;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.current.active, .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .row_calendar .col_day.current.active:hover {
+  background-color: #E9511D;
+  box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+  color: #fff;
+}
+
+.history_container .history {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid #484848;
+  border-radius: 5px;
+  background-color: #fff;
+  padding: 25px;
+  min-height: 500px;
+  color: #484848;
+}
+.history_container .history .head {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+  justify-content: flex-start;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.history_container .history .head .title {
+  font-size: 15px;
+  color: #000;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.history_container .history .head .title.active {
+  font-weight: 700;
+}
+.history_container .history .body {
+  height: calc(100% - 15px);
+  overflow: hidden;
+  padding-top: 30px;
+  max-height: 500px;
+}
+.history_container .history .body .row {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.history_container .history .body .row span {
+  font-size: 10px;
+  font-weight: 400;
+}
+.history_container .history .body .row span.title {
+  font-weight: 700;
+}
+.history_container .history .body .row:first-child {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}/*# sourceMappingURL=style.css.map */

@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$background_navbar: #1E1E1E;
+// * Color de textos
+$text_color_navbar: #fff;
+$text_color: #000;
+$text_color_primary: #1E1E1E;
+$tex_color_secondary: #484848;
+$text_color_placeholder: #D9D9D9;
+$text_color_contrast: #fff;
+
+$background_color: #fff;
+$background_color_secondary: #E6E6E6;
+
+$main_border: 1px solid #484848;
+$border_head: 1px solid #1E1E1E;
+$main_border_inactive: 1px solid rgba(0, 0, 0, 0);
+$box_shadow_submenus: 0px 4px 4px rgba(0, 0, 0, 0.25);
+$border_radius_main: 5px;
+$border_radius_round: 50px;
+$border_radius_complete: 50%;
+
+
+$main_color: #E9511D;
+$main_color_grad: #FFE6DD;
+
+$transparent: rgba(0, 0, 0, 0);
+
+// ! CALENDARIO
+$background_calendar: #fff;
+$box_shadow_calendar: 8px 8px 8px #d0d3d4, -0.6em 0 0.8em #f8f9f9;
+$box_shadow_buttons_calendar: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+$background_controls_calendar: #E9511D;
+$background_days_active: #E9511D;
+$background_day_current: #FFE6DD;
+$background_days_hover: #fff;
+$text_color_inactive_calendar: #a7a7a7;
+$text_color_hover_calendar: #000;
+$text_color_calendar: #000;
+$text_color_active_calendar: #fff;
+
+
+@mixin display-center-children {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@mixin row-center($between:false, $align: false) {
+    display: flex;
+    flex-direction: row;
+
+    @if $align {
+        align-items: center;
+        align-content: center;
+    }
+
+    @if $between {
+        justify-content: space-between;
+    }
+
+    @else {
+        justify-content: space-around;
+    }
+}
+
+@mixin col-center($between:false, $align: false) {
+    display: flex;
+    flex-direction: column;
+
+    @if $align {
+        align-items: center;
+        align-content: center;
+    }
+
+    @if $between {
+        justify-content: space-between;
+    }
+
+    @else {
+        justify-content: space-around;
+    }
+}
+
+@mixin width-height-max {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+@mixin box($dimension, $circle: false) {
+    width: $dimension;
+    height: $dimension;
+
+    @if($circle) {
+        border-radius: $border_radius_round;
+    }
+}
+
+@mixin full_father($full_center: false) {
+    position: absolute;
+
+    @if($full_center) {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    @else {
+        top: 0;
+        left: 0;
+    }
+    @include width-height-max();
+}
+
+@mixin container_style {
+    @include width-height-max;
+    border: $main_border;
+    border-radius: $border_radius_main;
+    background-color: $background_color;
+}
+
+@mixin image-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+@mixin ripple_effect {
+    .ripple {
+        position: relative;
+        overflow: hidden;
+        --bg-ripple: rgba(255, 255, 255, 0.4);
+      }
+      
+      .ripple.ripple-white {
+        --bg-ripple: rgba(150, 150, 150, 0.3);
+      }
+      
+      .ripple-container {
+        /*Con los siguientes valores de position, top, left, width y height aseguramos que el div tome todo el tamaño de su padre*/
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+      
+      .ripple-effect {
+        position: absolute;
+        /*En javascript colocaremos el top y left de este span en el punto donde hizo click el usuario. Por eso es necesario trasladarlo en -50% en ambos ejes, para que el centro del efecto coincida con el click*/
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: var(--bg-ripple);
+      }
+      
+      .ripple-container.ripple-effect-animation .ripple-effect {
+        /*Aplicamos la animación que mas adelante definiremos con @keyframes*/
+        -webkit-animation: ripple .4s ease-in;
+        animation: ripple .4s ease-in;
+      }
+      
+      @keyframes ripple {
+        0% {
+          opacity: 0;
+        }
+      
+        30% {
+          opacity: 1;
+        }
+      
+        100% {
+          opacity: 0;
+          padding-bottom: 200%;
+          width: 200%;
+        }
+      }
+      
+      @-webkit-keyframes ripple {
+        0% {
+          opacity: 0;
+        }
+      
+        30% {
+          opacity: 1;
+        }
+      
+        100% {
+          opacity: 0;
+          padding-bottom: 200%;
+          width: 200%;
+        }
+      }
+}
