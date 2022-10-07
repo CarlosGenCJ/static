@@ -78,7 +78,7 @@ class Swipper {
             this.swipper = this.container.getElementsByClassName("swipper_container")[0];
             this.children = this.swipper.getElementsByClassName(this.children_class);
             this.add_events_to_controls();
-            this.add_events_to_children();
+            // this.add_events_to_children();
             this.drag_and_drop();
         } catch (error) {
             console.error("Error: No se encontró ningún elemento hijo swipper", error);
@@ -254,8 +254,9 @@ class Swipper {
                 let new_movement = this.translate + movement;
         
                 if (new_movement < (this.limit * -1)) {
-                    new_movement = movement = this.limit * -1;
-                    this.translate = 0;
+                    new_movement = this.limit * -1;
+                    this.translate = this.limit * -1;
+                    movement = 0;
                 } else if (new_movement > 0) {
                     new_movement = movement = 0;
                     this.translate = 0;
@@ -292,8 +293,9 @@ class Swipper {
                 let new_movement = this.translate + movement;
         
                 if (new_movement < (this.limit * -1)) {
-                    new_movement = movement = this.limit * -1;
-                    this.translate = 0;
+                    new_movement = this.limit * -1;
+                    this.translate = this.limit * -1;
+                    movement = 0;
                 } else if (new_movement > 0) {
                     new_movement = movement = 0;
                     this.translate = 0;
@@ -738,12 +740,11 @@ class Calendar {
             if (Object.entries(this.date_selected_end).length !== 0) {
                 this.range_dates();
             }
-        })
+        });
     }
 
     event_days(element) {
         element.addEventListener('click', (event) => {
-            console.log("Se activa el click");
             if (element.dataset.daysOut == 'active') {
                 if (!event.shiftKey) {
                     if (this.date_selected.container) {
@@ -836,8 +837,8 @@ class Calendar {
             if (!clean) {
                 let timeAux = this.get_time_to_container_day(this.days_matrix[i].day[j].container, false);
                 const dayOut = this.days_matrix[i].day[j].container.dataset.daysOut;
-                const month = this.days_matrix[i].day[j].container.dataset.month;
-                if (timeAux >= date_init && timeAux <= date_end && month == range_month) {
+                const month = this.days_matrix[i].day[j].container.dataset.month; 
+                if (timeAux >= date_init && timeAux <= date_end) {
                     this.days_matrix[i].day[j].container.classList.add('active');
                 }
             }
