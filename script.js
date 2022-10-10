@@ -3,16 +3,23 @@ var next = null;
 var prev = null;
 
 var swipper_instance = null;
-var a = null;
+var calendar = null;
 document.oncontextmenu = function (event) {
     return false
 }
+
+window.addEventListener('keydown', (event) => {
+    if((event.ctrlKey && event.shiftKey && event.key.toLowerCase() == "i") || event.key.toLowerCase() == "f12"){
+        event.preventDefault();
+    }
+});
+
 window.addEventListener('load', () => {
-    container = document.getElementById("prueba_swipper_container");
-    next = document.getElementById("next");
-    prev = document.getElementById("prev");
+    // container = document.getElementById("prueba_swipper_container");
+    // next = document.getElementById("next");
+    // prev = document.getElementById("prev");
     swipper_instance = new Swipper("prueba", "account");
-    a = new Calendar("calendar");
+    calendar = new Calendar("calendar");
 });
 
 window.addEventListener('click', (event) => {
@@ -63,12 +70,16 @@ class Swipper {
 
     translate = 0;
 
+    canTranslate = true;
+
     constructor(id = "", children_class = "") {
         if (id != "") {
             this.container = document.getElementById(id + "_swipper_container");
             this.prev = document.getElementById(id + "_swipper_prev");
             this.next = document.getElementById(id + "_swipper_next");
             this.children_class = children_class;
+            this.children = this.container.getElementsByClassName(this.children_class);
+            // console.log(this.children);
             this.init();
         }
     }
@@ -93,41 +104,58 @@ class Swipper {
         const {
             limit
         } = this.getLimitTranslate();
+
         const real_limit = limit - margin;
         this.limit = real_limit;
+
         this.prev.onclick = () => {
-            const bound_container = this.getBound(this.container);
-            const bound_swipper = this.getBound(this.swipper);
-            const {
-                real_width,
-                margin
-            } = this.getMargin();
-            const translate = this.getTranslateX();
-            const {
-                limit,
-                width_container,
-                width_swipper
-            } = this.getLimitTranslate();
+            // const {
+            //     real_width,
+            //     margin
+            // } = this.getMargin();
+            // const translate = this.getTranslateX();
+            // const {
+            //     limit,
+            //     width_container,
+            //     width_swipper
+            // } = this.getLimitTranslate();
 
-            const real_limit = limit - margin;
-            this.limit = real_limit;
+            // const real_limit = limit - margin;
 
-            if (width_container < width_swipper) {
-                const aux_translate = translate - real_width;
-                console.log(limit, real_limit);
-                const new_translate = (aux_translate * -1) > real_limit ? (real_limit * -1) : aux_translate;
-                // this.swipper.style.setProperty("--translate", (new_translate) + "px");
-                this.swipper.style.transform = `translateX(${new_translate}px)`;
-                this.swipper.style.transition = "all ease 0.3s";
+            // this.limit = real_limit;
 
-                this.translate = new_translate;
-            }
+            // if (width_container < width_swipper) {
+            //     const aux_translate = translate - real_width;
+            //     console.log(limit, real_limit);
+            //     const new_translate = (aux_translate * -1) > real_limit ? (real_limit * -1) : aux_translate;
+            //     // this.swipper.style.setProperty("--translate", (new_translate) + "px");
+            //     this.swipper.style.transform = `translateX(${new_translate}px)`;
+            //     this.swipper.style.transition = "all ease 0.3s";
+
+            //     this.translate = new_translate;
+            // }
+
+            Array.from(this.children).forEach((child) => {
+                const bound = this.getBound(child);
+                const container = this.getBound(this.container);
+
+                const difference = bound.left - container.left;
+                // console.log(swipperBound);
+                // console.log(bound);
+
+                // console.log(child, bound.left, swipperBound.left);
+                // console.log(bound.left - swipperBound.left);
+
+                if(difference > 0){
+
+                }
+            });
 
         }
 
         this.next.onclick = () => {
-            const bound_container = this.getBound(this.container);
-            const bound_swipper = this.getBound(this.swipper);
+            // const bound_container = this.getBound(this.container);
+            // const bound_swipper = this.getBound(this.swipper);
             const {
                 real_width,
                 margin
@@ -167,17 +195,23 @@ class Swipper {
         const child = this.children[0];
         if (child) {
             const style = child.currentStyle || window.getComputedStyle(child);
-            const margin = parseInt(style.marginLeft) + parseInt(style.marginRight);
+            const marginLeft = parseInt(style.marginLeft);
+            const marginRight = parseInt(style.marginRight);
             const width = parseInt(style.width);
+            const margin = marginLeft + marginRight;
             const real_width = margin + width;
             return {
                 real_width,
-                margin
+                margin,
+                marginLeft,
+                marginRight
             };
         }
         return {
             real_width: 0,
-            margin: 0
+            margin: 0,
+            marginLeft : 0,
+            marginRigh: 0
         };
     }
 
@@ -200,6 +234,28 @@ class Swipper {
             width_container,
             width_swipper
         }
+
+    }
+
+    getLimit(){
+        const style_container = this.container.currentStyle || window.getComputedStyle(this.container);
+        const width_container = parseInt(style_container.width);
+
+        const style_swipper = this.swipper.currentStyle || window.getComputedStyle(this.swipper);
+        const width_swipper = parseInt(style_swipper.width);
+
+        const limit = width_swipper - width_container;
+
+        const margin_child = this.getMarginChild();
+
+        return {
+            limit,
+            width_container,
+            width_swipper
+        }
+    }
+
+    getMarginChild(){
 
     }
 
@@ -315,6 +371,13 @@ class Swipper {
     }
 
     
+}
+
+class newSwipper{
+    constructor(){
+        const enter_arguments = arguments;
+        // this.evaluate(enter_arguments)_;
+    }
 }
 
 class Calendar {
