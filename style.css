@@ -221,13 +221,14 @@ footer {
 .accounts_container {
   max-width: 100%;
   position: relative;
-  --space_button_controls: -5px;
+  --space_button_controls: 20px;
 }
 .accounts_container .container_aux {
   width: 100%;
   overflow: hidden;
+  position: relative;
 }
-.accounts_container .container_aux .accounts {
+.accounts_container .container_aux .swipper_container_children {
   width: auto;
   display: flex;
   flex-direction: row;
@@ -238,7 +239,35 @@ footer {
   overflow: hidden;
   transform: translateX(var(--translate, 0px));
 }
-.accounts_container .container_aux .accounts .account {
+.accounts_container .container_aux .next,
+.accounts_container .container_aux .prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.accounts_container .container_aux .next {
+  right: var(--space_button_controls);
+}
+.accounts_container .container_aux .prev {
+  left: var(--space_button_controls);
+}
+.accounts_container .container_aux .swipper_container_children {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  display: inline-flex;
+  overflow: hidden;
+  transform: translateX(var(--translate, 0px));
+}
+.accounts_container .container_aux .swipper_container_children .account {
   width: 225px;
   min-height: 160px;
   display: flex;
@@ -256,14 +285,17 @@ footer {
       -ms-user-select: none;
           user-select: none;
 }
-.accounts_container .container_aux .accounts .account .account_name {
+.accounts_container .container_aux .swipper_container_children .account:last-child {
+  margin: 0;
+}
+.accounts_container .container_aux .swipper_container_children .account .account_name {
   font-weight: 700;
   font-size: 15px;
 }
-.accounts_container .container_aux .accounts .account .account_info {
+.accounts_container .container_aux .swipper_container_children .account .account_info {
   display: flex;
 }
-.accounts_container .container_aux .accounts .account .account_info .info .label {
+.accounts_container .container_aux .swipper_container_children .account .account_info .info .label {
   font-size: 10px;
   font-weight: 400;
   -webkit-user-select: none;
@@ -271,26 +303,26 @@ footer {
       -ms-user-select: none;
           user-select: none;
 }
-.accounts_container .container_aux .accounts .account .account_info .info .text {
+.accounts_container .container_aux .swipper_container_children .account .account_info .info .text {
   font-size: 15px;
   font-weight: 700;
 }
-.accounts_container .container_aux .accounts .account .account_info .info:first-child {
+.accounts_container .container_aux .swipper_container_children .account .account_info .info:first-child {
   margin-right: 25px;
 }
-.accounts_container .container_aux .accounts .account.active {
+.accounts_container .container_aux .swipper_container_children .account.active {
   background-color: #E9511D;
   color: #fff;
   border: 1px solid rgba(0, 0, 0, 0);
   z-index: 2;
 }
-.accounts_container .container_aux .accounts .account.active .account_name,
-.accounts_container .container_aux .accounts .account.active .text {
+.accounts_container .container_aux .swipper_container_children .account.active .account_name,
+.accounts_container .container_aux .swipper_container_children .account.active .text {
   -webkit-user-select: all;
      -moz-user-select: all;
           user-select: all;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container {
   --button_size: 18px;
   --max_dimension_menu_container: 300px;
   -webkit-user-select: none;
@@ -303,7 +335,7 @@ footer {
   width: var(--button_size);
   height: var(--button_size);
 }
-.accounts_container .container_aux .accounts .account .menu_action_container label {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container label {
   position: relative;
   position: absolute;
   transform: rotate(90deg);
@@ -311,15 +343,15 @@ footer {
   line-height: var(--button_size);
   cursor: pointer;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container input {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container input {
   display: none;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container input:checked + .menu_action {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container input:checked + .menu_action {
   transform: scale(1);
   opacity: 1;
   pointer-events: all;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container .menu_action {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action {
   position: absolute;
   top: 100%;
   left: 50%;
@@ -331,7 +363,7 @@ footer {
   transform-origin: top left;
   pointer-events: none;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action .options {
   display: grid;
   grid-auto-rows: minmax(0, 1fr);
   grid-auto-flow: row;
@@ -345,30 +377,13 @@ footer {
   font-weight: 400;
   overflow: hidden;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options .option {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action .options .option {
   padding: 10px;
   transition: all ease 0.1s;
 }
-.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options .option:hover {
+.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action .options .option:hover {
   background-color: #FFE6DD;
   cursor: pointer;
-}
-.accounts_container .next,
-.accounts_container .prev {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-.accounts_container .next {
-  left: var(--space_button_controls);
-}
-.accounts_container .prev {
-  right: var(--space_button_controls);
 }
 
 .account_info_panel_container {

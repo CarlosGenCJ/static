@@ -144,18 +144,48 @@ footer {
     background-color: aquamarine;
 }
 
+@mixin swipper {
+    .swipper_container_children{
+        width: auto;
+        @include row-center(true, true);
+        display: inline-flex;
+        overflow: hidden;
+        transform: translateX(var(--translate, 0px));
+    }
+
+    .next,
+    .prev {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .next {
+        right: var(--space_button_controls);
+    }
+
+    .prev {
+        left: var(--space_button_controls);
+    }
+}
+
 .accounts_container {
     max-width: 100%;
     position: relative;
 
-    --space_button_controls: -5px;
+    --space_button_controls: 20px;
 
     .container_aux {
         width: 100%;
         overflow: hidden;
+        position: relative;
+        @include swipper;
 
-        .accounts {
-            width: auto;
+        // .accounts, 
+        .swipper_container_children { // swipper_container_children
+            width: auto;  
             @include row-center(true, true);
             display: inline-flex;
             overflow: hidden;
@@ -174,6 +204,9 @@ footer {
                 border: $main_border;
                 position: relative;
                 user-select: none;
+                &:last-child{
+                    margin: 0;
+                }
 
                 .account_name {
                     font-weight: 700;
@@ -285,24 +318,24 @@ footer {
                 }
             }
         }
+        // .next,
+        // .prev {
+        //     position: absolute;
+        //     top: 50%;
+        //     transform: translateY(-50%);
+        //     cursor: pointer;
+        //     user-select: none;
+        // }
+    
+        // .next {
+        //     left: var(--space_button_controls);
+        // }
+    
+        // .prev {
+        //     right: var(--space_button_controls);
+        // }
     }
 
-    .next,
-    .prev {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .next {
-        left: var(--space_button_controls);
-    }
-
-    .prev {
-        right: var(--space_button_controls);
-    }
 }
 
 .account_info_panel_container {

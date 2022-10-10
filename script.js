@@ -15,10 +15,8 @@ window.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('load', () => {
-    // container = document.getElementById("prueba_swipper_container");
-    // next = document.getElementById("next");
-    // prev = document.getElementById("prev");
-    swipper_instance = new Swipper("prueba", "account");
+    // swipper_instance = new Swipper("prueba", "account");
+    swipper_instance = new newSwipper("swipper", "account");
     calendar = new Calendar("calendar");
 });
 
@@ -374,9 +372,270 @@ class Swipper {
 }
 
 class newSwipper{
+
+    swipper = null;
+    swipper_container = null;
+    next = null;
+    prev = null;
+    dimensionControls = "20px";
+    children = [];
+    children_selected_class = "";
+    width_child = null;
+    limit = 0;
+    translate = 0;
+
+
     constructor(){
         const enter_arguments = arguments;
-        // this.evaluate(enter_arguments)_;
+        if(this.evaluate(enter_arguments)){
+            this.init();
+        }
+    }
+
+    evaluate(arg){
+        const length = arg.length;
+
+        let first, second;
+
+        if(length == 0){
+            throw new Error("Se esperaba 1/2 argumentos. Se obtuvieron 0 argumentos");
+        }
+        if(length > 1){
+            second = arg[1];
+        }
+        first = arg[0];
+
+        if(typeof first === "string"){
+            this.swipper_container = document.getElementById(first);
+            if(!this.swipper_container){
+                throw new Error("No se encotró ningún elemento con el id", first);
+            }
+        }else if(!this.isHTMLElement(first)){
+           throw new Error("Elemento no válido");
+        }
+
+        if(typeof second === "string"){
+            const children = this.swipper_container.getElementsByClassName(second);
+            // console.log(children);
+            if(children.length == 0){
+                throw new Error("No se encontraron elementos con la clase", second);
+            }
+
+            this.validate_children(children);
+        }else if(!second instanceof HTMLCollection){
+            throw new Error("Elemento no válido", arg[1]);
+         }
+
+        if(length >= 3){
+            this.options(arg[2]);
+        }
+
+        return true;
+    }
+
+
+    validate_children(children){
+        Array.from(children).forEach((child) => {
+            const parent = child.parentElement;
+            if(this.swipper_container == parent){
+                this.children.push(child);
+            }
+        });
+
+        if(this.children.length == 0){
+            throw new Error("La disposición de los elementos hijos no es la adecuada. Por favor, asegurese de que los elementos con la clase", second, "sean hijos directos del elemento con el id", first);
+        }
+    }
+
+    options(options){
+        if(!typeof options.toLowerCase() == "object"){
+            console.warn("El tipo de dato", typeof options, "no esta admitido como opciones.");
+        }
+        this.children_selected_class = options.classActive ?? '';
+    }
+
+    init(){
+        this.constructorContainer();
+        this.swipper = this.constructorSwipper();
+        this.next = this.constructorNextControl();
+        this.prev = this.constructorPrevControl();
+
+        this.print();
+
+        // this.swipper.style.transform = "translateX(-30px)";
+
+        // console.log(this.getCssProperty(this.swipper, "transform"));
+        this.events();
+    }
+
+    constructorContainer(){
+        this.swipper_container.innerHTML = '';
+        const width = this.getCssProperty(this.swipper_container,"width");
+        this.swipper_container.style.maxWidth = this.swipper_container.style.width = width == "0px" ? "100%" : width;
+        this.swipper_container.style.overflow = "hidden";
+        const position = this.getCssProperty(this.swipper_container, "position").toLowerCase();
+        this.swipper_container.style.position = position == 'static' ? 'relative' : position;
+    }
+
+    constructorSwipper(){
+        const swipper = document.createElement("div");
+        swipper.className = "swipper_container_children";
+        return swipper;
+    }
+
+    constructorNextControl(){
+        const next = document.createElement("div");
+        next.className = "next";
+
+        const icon = document.createElement("img");
+        icon.setAttribute("src", "./resouces/next.svg");
+        icon.style.width = icon.style.height = this.dimensionControls;
+        next.appendChild(icon);
+        return next;
+    }
+
+    constructorPrevControl(){
+        const prev = document.createElement("div");
+        prev.className = "prev";
+        const icon = document.createElement("img");
+        icon.setAttribute("src", "./resouces/prev.svg");
+        icon.style.width = icon.style.height = this.dimensionControls;
+        prev.appendChild(icon);
+        return prev;
+    }
+
+    print(){
+        this.swipper_container.appendChild(this.swipper);
+        this.swipper_container.appendChild(this.prev);
+        this.swipper_container.appendChild(this.next);
+        
+        
+        this.printChild();
+    }
+
+    printChild(){
+        this.children.forEach( child => {
+            console.log(child);
+            this.swipper.appendChild(child);
+        });
+    }
+
+    events(){
+        this.eventNextControl();
+    }
+
+    eventNextControl(){
+        this.next.addEventListener('click', (event) => {
+            this.limit = this.getLimit().limit;
+            console.log(this.translate, this.limit);
+            if(this.limit > 0){
+                const positionXContainer = this.getPosition(this.swipper_container).left;
+                const { diference, childReturn } = this.getcloser(positionXContainer);
+                const auxTranslate = this.translate + diference;
+                this.translate = auxTranslate > this.limit ? this.limit : auxTranslate;
+                this.translateSwipper();
+            }else{
+                this.activateNextElement();
+            }
+        });
+        // this.next.addEventListener('click', (event) => {
+        //     let limit = this.getLimit().limit;
+        //     if(limit > 0){
+        //         const positionXContainer = this.getPosition(this.swipper_container).left;
+        //         const { diference, childReturn } = this.getcloser(positionXContainer);
+        //         const auxTranslate = this.translate + diference;
+        //         this.translate = auxTranslate < 0 ? this.limit : auxTranslate;
+        //         console.log(childReturn, auxTranslate, diference, this.translate);
+        //         this.translateSwipper();
+        //     }
+        // });
+    }
+
+    getLimit(){
+        const style_container = this.swipper_container.currentStyle || window.getComputedStyle(this.swipper_container);
+        const width_container = parseInt(style_container.width);
+
+        const style_swipper = this.swipper.currentStyle || window.getComputedStyle(this.swipper);
+        const width_swipper = parseInt(style_swipper.width);
+
+        const limit = width_swipper - width_container;
+        return {
+            limit,
+            width_container,
+            width_swipper
+        }
+    }
+
+    getTranslateX() {
+        const style = this.swipper.currentStyle || window.getComputedStyle(this.swipper);
+        const matrix = new WebKitCSSMatrix(style.transform);
+        return matrix.m41;
+    }
+
+    getPosition(element){
+        const bound = element.getBoundingClientRect();
+        return {
+            left: bound.left,
+            with: bound.width
+        };
+    }
+
+    getcloser(positionParent){
+
+        let flag = false;
+        let childReturn = null;
+        let diference = 0;
+        this.children.forEach((child) => {
+            const positionX = this.getPosition(child).left;
+            let auxDiff = positionX - positionParent;
+            child.classList.remove(this.children_selected_class || "active");
+            if(auxDiff > 0 && !flag){
+                flag = true;
+                childReturn = child;
+                diference = auxDiff;
+                child.classList.add(this.children_selected_class || "active");
+            }
+        });
+
+        if(!flag){
+            childReturn = this.children[0];
+        }
+
+        return { diference, childReturn };
+    }
+
+    activateNextElement(){
+        const limit = this.children.length - 1;
+        let flag = 0;
+        const className = this.children_selected_class || "active";
+        this.children.forEach((child, index) => {
+            if(child.classList.contains(className) && index < limit && flag == 0){
+                flag = 1;
+                child.classList.remove(className);
+            }else if(flag == 1){
+                child.classList.add(className);
+                flag = 2;
+            }
+        });
+    }
+
+    translateSwipper(){
+        this.swipper.style.transform = `translateX(${this.translate * -1}px)`;
+    }
+
+    getCssProperty(element, property = null){
+        const style = getComputedStyle(element);
+        if(property){
+            return style[property];
+        }
+        return style;
+    }
+
+    isHTMLElement(o) {
+        return (
+            typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+            o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
+        );
     }
 }
 
