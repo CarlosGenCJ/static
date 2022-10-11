@@ -4,6 +4,7 @@ var prev = null;
 
 var swipper_instance = null;
 var calendar = null;
+var backdrop = null;
 document.oncontextmenu = function (event) {
     return false
 }
@@ -18,6 +19,12 @@ window.addEventListener('load', () => {
     // swipper_instance = new Swipper("prueba", "account");
     swipper_instance = new newSwipper("swipper", "account");
     calendar = new Calendar("calendar");
+    backdrop = new BeautifyBackDrop("account_switch", {
+        background: "#fff",
+        classActivate: "active",
+        borderRadius: "50px",
+        padding: 0
+    });
 });
 
 window.addEventListener('click', (event) => {
@@ -62,6 +69,7 @@ class Swipper {
     next = null;
     prev = null;
     swipper = null;
+    child_selected = null;
     spacing_different = 0;
     children_class = "";
     limit = 0;
@@ -461,10 +469,6 @@ class newSwipper{
         this.prev = this.constructorPrevControl();
 
         this.print();
-
-        // this.swipper.style.transform = "translateX(-30px)";
-
-        // console.log(this.getCssProperty(this.swipper, "transform"));
         this.events();
     }
 
@@ -518,37 +522,55 @@ class newSwipper{
             console.log(child);
             this.swipper.appendChild(child);
         });
+
+        this.child_selected = this.children[0];
     }
 
     events(){
         this.eventNextControl();
+        this.swipperControl();
+        this.childControl();
     }
 
     eventNextControl(){
         this.next.addEventListener('click', (event) => {
-            this.limit = this.getLimit().limit;
-            console.log(this.translate, this.limit);
-            if(this.limit > 0){
-                const positionXContainer = this.getPosition(this.swipper_container).left;
-                const { diference, childReturn } = this.getcloser(positionXContainer);
-                const auxTranslate = this.translate + diference;
-                this.translate = auxTranslate > this.limit ? this.limit : auxTranslate;
-                this.translateSwipper();
-            }else{
-                this.activateNextElement();
-            }
+            this.translateNexOrPrev(true);
         });
-        // this.next.addEventListener('click', (event) => {
-        //     let limit = this.getLimit().limit;
-        //     if(limit > 0){
-        //         const positionXContainer = this.getPosition(this.swipper_container).left;
-        //         const { diference, childReturn } = this.getcloser(positionXContainer);
-        //         const auxTranslate = this.translate + diference;
-        //         this.translate = auxTranslate < 0 ? this.limit : auxTranslate;
-        //         console.log(childReturn, auxTranslate, diference, this.translate);
-        //         this.translateSwipper();
-        //     }
-        // });
+
+        this.prev.addEventListener('click', (event) => {
+            this.translateNexOrPrev();
+        });
+    }
+
+    translateNexOrPrev(goRight = false){
+
+        this.limit = this.getLimit().limit;
+        goRight ? this.activateNextElement() : this.activatePrevElement();
+
+        let newTranslate = 0;
+
+        const positionChild = this.getPosition(this.child_selected);
+        const positionSwipper = this.getPosition(this.swipper_container);
+
+        // * RIGHT POSITION
+        const childRight = positionChild.left + positionChild.width;
+        const swipperRight = positionSwipper.left + positionSwipper.width;
+        const right = childRight - swipperRight;
+        if(right > 0){
+            newTranslate = this.translate + right;
+            this.translate = newTranslate > this.limit ? this.limit : newTranslate;
+            this.translateSlowSwipper();
+        }
+        
+        // * LEFT POSITION
+        const childLeft = positionChild.left;
+        const swipperLeft = positionSwipper.left;
+        const left = childLeft - swipperLeft;
+        if(left < 0){
+            newTranslate = this.translate + left;
+            this.translate = newTranslate < 0 ? 0 : newTranslate;
+            this.translateSlowSwipper();
+        }
     }
 
     getLimit(){
@@ -576,12 +598,11 @@ class newSwipper{
         const bound = element.getBoundingClientRect();
         return {
             left: bound.left,
-            with: bound.width
+            width: bound.width
         };
     }
 
-    getcloser(positionParent){
-
+    getcloserRight(positionParent){
         let flag = false;
         let childReturn = null;
         let diference = 0;
@@ -614,13 +635,126 @@ class newSwipper{
                 child.classList.remove(className);
             }else if(flag == 1){
                 child.classList.add(className);
+                this.child_selected = child;
                 flag = 2;
             }
         });
     }
 
+    activatePrevElement(){
+        let length = this.children.length - 1;
+        let flag = 0;
+        const className = this.children_selected_class || "active";
+        for(let i = length; i >= 0; i--){
+            const child = this.children[i]
+            if(child.classList.contains(className) && i > 0 && flag == 0){
+                flag = 1;
+                child.classList.remove(className);
+            }else if(flag == 1){
+                child.classList.add(className);
+                flag = 2;
+                this.child_selected = child;
+            }
+        }
+    }
+
+    translateSlowSwipper(){
+        this.swipper.style.transition = `all ease 0.3s`;
+        this.translateSwipper();
+    }
+
     translateSwipper(){
         this.swipper.style.transform = `translateX(${this.translate * -1}px)`;
+    }
+
+    translateForceSwipper(){
+        this.swipper.style.transition = `all ease 0.0s`;
+        this.translateSwipper();
+    }
+
+    swipperControl(){
+
+        this.swipper.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            
+            console.info("Arrastrar");
+            
+            this.limit = this.getLimit().limit;
+
+            const start_mouse_X = event.clientX;
+            let last_movement = this.translate;
+            this.swipper.style.transition = "all ease 0.0s";
+
+            let onMouseMove = (event_window) => {
+                console.log("Se movió");
+                const x_move = event_window.clientX;
+                let move = start_mouse_X - x_move;
+                const new_movement = last_movement + move;
+                if(new_movement < 0){
+                    this.translate = 0;
+                }else if(new_movement > this.limit){
+                    this.translate = this.limit;
+                }else{
+                    this.translate = last_movement  + move;
+                }
+                
+                this.translateForceSwipper();
+
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.onmouseup = () => {
+                // this.translate = this.translate + movement;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.onmouseup = null;
+            }
+        });
+
+        // this.swipper.addEventListener('mousedowna', (event) => {
+        //     console.log("Se ejecuta");
+        //     const start_mouse_X = event.clientX;
+        //     event.preventDefault();
+        //     this.swipper.style.transition = "all ease 0.0s";
+        //     let movement = this.translate;
+
+        //     let onMouseMove = (event_window) => {
+        //         const x_move = event_window.clientX;
+        //         if (x_move > start_mouse_X) {
+        //             movement = x_move - start_mouse_X;
+        //         } else {
+        //             movement = (start_mouse_X - x_move) * -1;
+        //         }
+        
+        //         let new_movement = this.translate + movement;
+        
+        //         if (new_movement < (this.limit * -1)) {
+        //             new_movement = this.limit * -1;
+        //             this.translate = this.limit * -1;
+        //             movement = 0;
+        //         } else if (new_movement > 0) {
+        //             new_movement = movement = 0;
+        //             this.translate = 0;
+        //         }
+        
+        
+        //         this.swipper.style.transform = `translateX(${new_movement}px)`;
+        //     };
+
+        //     document.addEventListener('mousemove', onMouseMove);
+        //     document.onmouseup = () => {
+        //         this.translate = this.translate + movement;
+        //         document.removeEventListener('mousemove', onMouseMove);
+        //         document.onmouseup = null;
+        //     }
+        // });
+    }
+
+    childControl(){
+        this.children.forEach(child => {
+            child.addEventListener('click', (event) => {
+                console.warn("Click a hijo");
+            });
+        });
     }
 
     getCssProperty(element, property = null){
@@ -1228,4 +1362,396 @@ class Calendar {
         }
         return result;
     }
+}
+
+class BeautifyBackDrop {
+    // Elemento backdrop
+    backdrop = null;
+    init = false;
+    htmlCollection = null;
+    parentNode = null;
+    backdropProperties = {
+        typeOfUnitySpace: "px",
+        paddingLeft: 5,
+        paddingRight: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        background: "red",
+        borderRadius: "10px",
+        transitionDuration: 300,
+        transitionTimingFunction: "ease",
+        event: "click",
+        classActivate: "active"
+    };
+
+    paddingleft = this.backdropProperties.paddingLeft;
+    paddingTop = this.backdropProperties.paddingTop;
+
+    allowElementsFather = [
+        "div",
+        "nav",
+        "header",
+        "sidebar",
+        "footer",
+        "ul",
+        "tr",
+        "td",
+        "thead",
+        "table",
+        "tbody"
+    ];
+
+
+
+    allowElementsChildren = [
+
+    ];
+
+    arg_one = false;
+    arg_two = false;
+
+    constructor() {
+        // Obtiene los argumentos
+        const count_arguments = arguments.length;
+        // Solo se permiten dos argumentos
+        if (count_arguments > 0 && count_arguments < 3) {
+            switch (count_arguments) {
+                case 1:
+                    this.one_argument(arguments[0]);
+                    break;
+                case 2:
+                    let aux = this.refactArguments(arguments);
+                    this.two_argument(aux[1]);
+                    this.one_argument(aux[0]);
+                    break;
+                case 3:
+                    break;
+            }
+        } else if (count_arguments > 2) {
+            this.errorsManagement(1);
+        } else {
+            this.errorsManagement(2);
+        }
+
+    }
+
+    // Se verifica el orden de los argumentos
+    refactArguments(args) {
+        let aux;
+        if ((
+                (typeof args[1]).toLowerCase() == "string" ||
+                args[1] instanceof HTMLCollection ||
+                args[1] instanceof HTMLElement
+            ) &&
+            (
+                args[0] instanceof Object
+            )) {
+            aux = args[0];
+            args[0] = args[1];
+            args[1] = aux;
+        }
+
+        return args;
+    }
+
+    // El primer argumento se evalúa
+    one_argument(argument) {
+        // Si el arbumento es un string
+        if ((typeof argument).toLowerCase() == "string") {
+            // Si el string trata de un id de un elemento
+            var aux = document.getElementById(argument);
+            if (aux != null && aux != undefined) {
+                this.parentNode = aux;
+                this.getHTMLCollectionfromParent();
+            }
+            // Si es una clase de una serie de elementos
+            else {
+                aux = document.getElementsByClassName(argument);
+                aux.length != 0 ? this.getParentElement(aux) : this.errorsManagement(3);
+            }
+        }
+        // Si se pasó una lista de elementos
+        else if (argument instanceof HTMLCollection) {
+            // Se dió una colección de objetos HTML para agregar el efecto
+            if (argument.length != 0) {
+                this.getParentElement(argument);
+            } else {
+                this.warningsManagement(3);
+            }
+        }
+        // Si se pasó el contenedor padre
+        else if (argument instanceof HTMLElement) {
+            // Se obtuvo el elemento padre para iterar a sus hijos
+            this.parentNode = argument;
+            this.getHTMLCollectionfromParent();
+        }
+        // Dato no válido
+        else {
+            this.errorsManagement(4);
+        }
+    }
+
+    // Se evalúan las opciones
+    two_argument(argument) {
+        // Se obtienen las propiedades css del backdrop
+        if (argument instanceof Object) {
+
+            if (argument.paddingX) {
+                this.backdropProperties.paddingLeft = argument.paddingX
+                this.backdropProperties.paddingRight = argument.paddingX
+            }
+
+            if (argument.paddingY) {
+                this.backdropProperties.paddingTop = argument.paddingY
+                this.backdropProperties.paddingBottom = argument.paddingY
+            }
+
+            if (argument.padding >= 0) {
+                this.backdropProperties.paddingLeft = argument.padding
+                this.backdropProperties.paddingRight = argument.padding
+                this.backdropProperties.paddingTop = argument.padding
+                this.backdropProperties.paddingBottom = argument.padding
+            }
+
+            if (argument.background) {
+                this.backdropProperties.background = argument.background;
+            }
+
+            if (argument.transitionDuration) {
+                this.backdropProperties.transitionDuration = argument.transitionDuration;
+            }
+
+            if (argument.borderRadius) {
+                this.backdropProperties.borderRadius = argument.borderRadius;
+            }
+
+            if (argument.transitionTimingFunction) {
+                this.backdropProperties.transitionTimingFunction = argument.transitionTimingFunction;
+            }
+
+            if (argument.typeOfUnitySpace) {
+                this.backdropProperties.typeOfUnitySpace = argument.typeOfUnitySpace;
+            }
+
+            if (argument.event && (argument.event == "mouseover" || argument.event == "click")) {
+                this.backdropProperties.event = argument.event;
+            }
+
+            if(typeof argument.classActivate.toLowerCase() == "string" && argument.classActivate != ""){
+                this.backdropProperties.classActivate = argument.classActivate;
+            }
+        } else {
+            this.errorsManagement(4);
+        }
+    }
+
+    // Se obtiene la lista de elementos a los que se agregará el efecto
+    getHTMLCollectionfromParent() {
+
+        let name = (this.parentNode.nodeName).toLowerCase();
+
+        // Solo se admiten ciertos elementos como padre
+        if (this.allowElementsFather.includes(name)) {
+
+            // Se obtienen los elementos hijos a agregarles el efecto
+            this.htmlCollection = this.parentNode.children;
+            if (this.htmlCollection.length == 0) {
+                this.warningsManagement(1);
+            } else {
+                this.init = true;
+                this.build();
+            }
+        } else {
+            this.warningsManagement(2);
+        }
+
+
+    }
+
+    // Se obtiene el elemento contenedor en base a la colección de objetos HTML
+    getParentElement(collection) {
+        this.htmlCollection = collection;
+        const aux = this.htmlCollection[0].parentElement;
+        // Si no hay un elemento padre
+        if (aux != null && aux != undefined) {
+            let name = (aux.nodeName).toLowerCase();
+
+            // Solo se admiten ciertos elementos como padre
+            if (this.allowElementsFather.includes(name)) {
+                this.parentNode = aux;
+                this.init = true;
+                this.build();
+            } else {
+                this.warningsManagement(2);
+            }
+        }
+    }
+
+    // Se construye el elemento backdrop
+    build() {
+
+        this.events(); // Se añaden los eventos antes de construírse
+        this.backdrop = document.createElement("div");
+        this.backdrop.setAttribute("class", "backdrop");
+        this.parentNode.appendChild(this.backdrop);
+        this.backdrop.style.paddingTop = this.backdropProperties.paddingTop + this.backdropProperties.typeOfUnitySpace;
+        this.backdrop.style.paddingLeft = this.backdropProperties.paddingLeft + this.backdropProperties.typeOfUnitySpace;
+        this.backdrop.style.paddingRight = this.backdropProperties.paddingRight + this.backdropProperties.typeOfUnitySpace;
+        this.backdrop.style.paddingBottom = this.backdropProperties.paddingBottom + this.backdropProperties.typeOfUnitySpace;
+
+        this.backdrop.style.zIndex = "1";
+        this.backdrop.style.background = this.backdropProperties.background;
+
+        this.backdrop.style.borderRadius = this.backdropProperties.borderRadius;
+
+        this.backdrop.style.transition = "all " + this.backdropProperties.transitionDuration + "ms " + this.backdropProperties.transitionTimingFunction;
+
+        this.paddingleft = this.backdropProperties.paddingLeft;
+        this.paddingTop = this.backdropProperties.paddingTop;
+
+        this.backdrop.style.position = "absolute";
+
+        // El elemento padre debe tener un "position" diferente a "static"
+        this.parentNode.style.position = "relative";
+
+        // El efecto se aplica al primer elemento por defecto
+        this.calculate(this.htmlCollection[0]);
+
+
+    }
+
+    // Se agregan los eventos a los elementos
+    events() {
+        let flag = false;
+        for (let item of this.htmlCollection) {
+            if(!flag){
+                this.cleanClassActive();
+                item.classList.add(this.backdropProperties.classActivate);
+                flag = true;
+            }
+            item.style.zIndex = "5"; // Evita que el efecto esté por encima del item
+            item.style.position = "relative"; // Debe tener un "position" diferente a "static"
+            
+            item.addEventListener(this.backdropProperties.event, (event) => {
+                this.cleanClassActive();
+                item.classList.add(this.backdropProperties.classActivate);
+                // Cada acción del evento se activará el efecto
+                this.calculate(item);
+            });
+        }
+    }
+
+    cleanClassActive(){
+        for(let item of this.htmlCollection){
+            item.classList.remove(this.backdropProperties.classActivate);
+        }
+    }
+
+    // Calcula la posición del backdrop
+    calculate(element) {
+        let boundElement = this.getPosition(element);
+        let boundFather = this.getPosition(this.parentNode);
+        let calc = {
+            left: 0,
+            right: 0,
+            with: 0,
+            height: 0
+        };
+
+        calc.left = boundElement.left - boundFather.left;
+        calc.top = boundElement.top - boundFather.top;
+        calc.width = boundElement.width;
+        calc.height = boundElement.height;
+
+        this.moveElement(calc);
+    }
+
+
+    // Obtiene el posicionamiento en la ventana y tamaño del elemento
+    getPosition(element) {
+        if (this.init) {
+            const bound = element.getBoundingClientRect();
+            return {
+                left: bound.left,
+                top: bound.top,
+                width: bound.width,
+                height: bound.height
+            };
+        } else {
+            console.warn("No se ha provisto ningún elemento ")
+        }
+    }
+
+    // Se aplica el movimiento al backdrop
+    moveElement(data) {
+        this.backdrop.style.left = (data.left - this.paddingleft) + "px"; // Se aplica la diferencia de espacio para el padding
+        this.backdrop.style.top = (data.top - this.paddingTop) + "px";
+        this.backdrop.style.width = (data.width + this.backdropProperties.paddingLeft + this.backdropProperties.paddingRight) + "px"; // El padding X que tendrá el backdrop
+        this.backdrop.style.height = (data.height + this.backdropProperties.paddingTop + this.backdropProperties.paddingBottom) + "px"; // El padding Y que tendrá el backdrop
+    }
+
+    // Manejo de errores
+    errorsManagement(e) {
+        switch (e) {
+            case 1:
+                console.error("Error: Se supera el número de argumentos.");
+                break;
+            case 2:
+                console.error("Error: No se proveyó ningún elemento válido.");
+                break;
+            case 3:
+                console.error("Error: No se encontró ningún elemento con ese id o clase.");
+                break;
+            case 4:
+                console.error("Error: Argumento no válido. Por favor, provee una coleccion de objetos HTML, un elemento HTML, el nombre de una clase o nombre de un id.");
+                break;
+            case 5:
+                console.error("");
+                break;
+            case 6:
+                console.error("");
+                break;
+            case 7:
+                console.error("");
+                break;
+        }
+    }
+
+    // Manejo de Advertencias
+    warningsManagement(w) {
+        switch (w) {
+            case 1:
+                console.warn("Aviso: El elemento obtenido no contiene ningún elemento hijo.");
+                break;
+            case 2:
+                console.warn("Aviso: El elemento padre no está permitido, por favor use 'addNewAllowedElement method' para agregar nuevos nombres de nodos.");
+                break;
+            case 3:
+                console.warn("Aviso: Se provió una colección de objetos vacía.");
+                break;
+            case 4:
+                console.warn("");
+                break;
+            case 5:
+                console.warn("");
+                break;
+            case 6:
+                console.warn("");
+                break;
+            case 7:
+                console.warn("");
+                break;
+        }
+    }
+
+    refresh() {
+        let backdrop = this.parentNode.getElementsByClassName("backdrop")[0];
+
+        if (backdrop) {
+            backdrop.remove();
+        }
+        this.backdrop = null;
+        this.getHTMLCollectionfromParent();
+    }
+
 }

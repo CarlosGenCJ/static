@@ -13,6 +13,7 @@ html {
   height: 100vh;
   font-family: "Inter";
   background-color: #E6E6E6;
+  color: #1E1E1E;
 }
 body .ripple,
 html .ripple {
@@ -216,6 +217,158 @@ footer {
   height: 50px;
   transform: translateY(100%);
   background-color: aquamarine;
+}
+
+.wallet_container .wallet {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+.wallet_container .wallet .wallet_content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.wallet_container .wallet .wallet_content .wallet_name {
+  font-size: 20px;
+  font-weight: 700;
+}
+.wallet_container .wallet .wallet_content .divider {
+  width: 1px;
+  height: 100%;
+  margin: 0 30px;
+  background-color: #1E1E1E;
+}
+.wallet_container .wallet .wallet_content .wallet_info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.wallet_container .wallet .wallet_content .wallet_info .wallet_info_label {
+  font-size: 12px;
+  font-weight: 400;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.wallet_container .wallet .wallet_content .wallet_info .wallet_info_text {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.btn_controls_container .btn_controls {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+}
+.btn_controls_container .btn_controls .button {
+  padding: 6px 0;
+  width: 200px;
+  max-width: 50%;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  border: 1px solid #484848;
+  border-radius: 50px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  cursor: pointer;
+}
+.btn_controls_container .btn_controls .button:last-child {
+  background-color: #E9511D;
+  border: 1px solid rgba(0, 0, 0, 0);
+  color: #fff;
+}
+
+.controls_container .controls {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.controls_container .controls .accounts_switch {
+  padding: 5px;
+  background-color: #1E1E1E;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  border-radius: 50px;
+}
+.controls_container .controls .accounts_switch .label {
+  display: inline-block;
+  width: 40px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 400;
+  text-align: center;
+  height: 100%;
+  padding: 5px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+.controls_container .controls .accounts_switch .label.active {
+  color: #000;
+  cursor: default;
+  font-weight: 700;
+}
+.controls_container .controls .btn_new_account {
+  --dimension-btn-account: 30px;
+  --dimension-btn-account-icon: 20px;
+  height: var(--dimension-btn-account);
+  max-width: var(--dimension-btn-account);
+  border-radius: 50px;
+  background-color: #1E1E1E;
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  transition: all ease 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  position: relative;
+}
+.controls_container .controls .btn_new_account:hover {
+  max-width: 130px;
+}
+.controls_container .controls .btn_new_account:hover .btn_icon {
+  transform: rotate(-180deg);
+}
+.controls_container .controls .btn_new_account .btn_icon, .controls_container .controls .btn_new_account .label {
+  display: inline-block;
+  color: #fff;
+  pointer-events: none;
+}
+.controls_container .controls .btn_new_account .btn_icon {
+  width: var(--dimension-btn-account-icon);
+  height: var(--dimension-btn-account-icon);
+  transition: all ease 0.3s;
+}
+.controls_container .controls .btn_new_account .label {
+  white-space: nowrap;
+  margin-left: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  padding-right: 5px;
 }
 
 .accounts_container {

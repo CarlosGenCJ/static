@@ -15,6 +15,7 @@ html {
     font-family: 'Inter';
     background-color: $background_color_secondary;
     @include ripple_effect;
+    color: $text_color_primary;
 }
 
 /*
@@ -142,6 +143,150 @@ footer {
     height: 50px;
     transform: translateY(100%);
     background-color: aquamarine;
+}
+
+.wallet_container{
+    .wallet{
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        .wallet_content{
+            @include row-center(true, true);
+
+            .wallet_name{
+                font-size: 20px;
+                font-weight: 700;
+            }
+
+            .divider{
+                width: 1px;
+                height: 100%;
+                margin: 0 30px;
+                background-color: $background_color_thirdy;
+            }
+
+            .wallet_info{
+                @include col-center(false, false);
+                .wallet_info_label{
+                    font-size: 12px;
+                    font-weight: 400;
+                    user-select: none;
+                }
+
+                .wallet_info_text{
+                    font-size: 15px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+}
+
+.btn_controls_container{
+    .btn_controls{
+        width: 100%;
+        @include row-center(false, true);
+
+        .button{
+            padding: 6px 0;
+            width: 200px;
+             max-width: 50%;
+             font-size: 14px;
+             font-weight: 400;
+             text-align: center;
+             border: $main_border;
+             border-radius: $border_radius_round;
+             user-select: none;
+             cursor: pointer;
+
+             &:last-child{
+                background-color: $main_color;
+                border: 1px solid rgba(0,0,0,0);
+                color: $text_color_contrast;
+             }
+        }
+    }
+}
+
+.controls_container{
+    .controls{
+        width: 100%;
+        @include row-center(true, true);
+
+        .accounts_switch{ 
+            padding: 5px;
+            background-color: $background_color_thirdy;
+            @include row-center(true, true);
+            border-radius: $border_radius_round;
+
+            .label{
+                display: inline-block;
+                width: 40px;
+                color: $text_color_contrast;
+                font-size: 10px;
+                font-weight: 400;
+                text-align: center;
+                height: 100%;
+                padding: 5px;
+                border-radius: $border_radius_round;
+                cursor: pointer;
+                transition: all ease 0.3s;
+
+                &.active{
+                    // background-color: $text_color_contrast;
+                    color: $text_color;
+                    cursor:default;
+                    font-weight: 700;
+                }
+            }
+        }
+
+        .btn_new_account{
+            --dimension-btn-account: 30px;
+            --dimension-btn-account-icon: 20px;
+            height: var(--dimension-btn-account);
+            max-width: var(--dimension-btn-account);
+            border-radius: $border_radius_round;
+            background-color: $background_color_thirdy;
+            padding:  5px;
+            @include row-center(true, true);
+            flex-wrap: nowrap;
+            transition: all ease 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+            user-select: none;
+            position: relative;
+            &:hover{
+                max-width: 130px;
+
+                .btn_icon{
+                    transform: rotate(-180deg);
+                }
+            }
+
+            .btn_icon, .label{
+                display: inline-block;
+                color: $text_color_contrast;
+                pointer-events: none;
+            }
+
+            .btn_icon{
+                width: var(--dimension-btn-account-icon);
+                height: var(--dimension-btn-account-icon);
+                transition: all ease 0.3s;
+            }
+
+            .label{
+                // min-width: 200px;
+                // word-break: keep-all;
+                white-space: nowrap;
+                margin-left: 5px;
+                font-size: 10px;
+                font-weight: 700;
+                padding-right: 5px;
+            }
+        }
+    }
 }
 
 @mixin swipper {
