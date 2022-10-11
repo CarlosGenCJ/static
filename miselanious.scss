@@ -35,10 +35,12 @@ $background_controls_calendar: #E9511D;
 $background_days_active: #E9511D;
 $background_day_current: #FFE6DD;
 $background_days_hover: #fff;
-$text_color_inactive_calendar: #a7a7a7;
+$text_color_inactive_calendar: #d9d9d9;
 $text_color_hover_calendar: #000;
 $text_color_calendar: #000;
 $text_color_active_calendar: #fff;
+$label_color: #b0b0b0;
+$label_color_secondary: #d9d9d9;
 
 
 @mixin display-center-children {

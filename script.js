@@ -800,6 +800,11 @@ class Calendar {
     // Cuerpo del calendario
     calendar_body = null;
 
+    // * NUEVO
+    calendar_body_days = null;
+    calendar_body_months = null;
+    calendar_body_years = null;
+
     row_day_names = null;
 
     id = "";
@@ -829,6 +834,8 @@ class Calendar {
 
     date_selected = {};
     date_selected_end = {};
+
+    month_selected = {};
 
     monthsNames = ["Enero", "Febrero", "Marzo", "April", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     months_short = ["Ene", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dic"];
@@ -866,18 +873,30 @@ class Calendar {
 
         this.divider = this.create_element('div', "divider");
 
-        // *
         this.calendar_container = this.constructor_calendar_container();
-        // !
-        this.calendar_body = this.constructor_calendar_body();
-
         this.header_calendar = this.constructor_calendar_header();
 
-        this.row_day_names = this.constructor_calendar_days_name(this.calendar_body);
+        // ? DIAS DEL CALENDARIO
+        this.calendar_body = this.constructor_calendar_body();
+        // ? MESES DEL CALENDARIO
+        this.calendar_body_days = this.constructor_calendar_days();
 
-        this.days_matrix = this.constructor_days(this.calendar_body);
+        this.row_day_names = this.constructor_calendar_days_name(this.calendar_body_days);
+        this.days_matrix = this.constructor_days(this.calendar_body_days);
+
+
+        this.calendar_body_months = this.constructor_calendar_months();
+        this.calendar_months = this.constructor_months(this.calendar_body_months);
+
+
+        this.calendar_body_years = this.constructor_calendar_years();
+        
+
+
 
         this.container_select.innerHTML = "";
+        this.init_calendar();
+        
         this.container_select.appendChild(this.label_container);
         this.container_select.appendChild(this.input_toggle);
         this.container_select.appendChild(this.calendar_container);
@@ -886,9 +905,18 @@ class Calendar {
         this.calendar.appendChild(this.divider);
         this.calendar.appendChild(this.calendar_body);
 
-        this.init_calendar();
+        this.calendar_body.appendChild(this.calendar_body_days);
+        this.calendar_body.appendChild(this.calendar_body_months);
+        this.calendar_body.appendChild(this.calendar_body_years);
 
-        this.event_controls();
+
+        this.asignate_new_height_to_calendar(this.calendar_body_days);
+
+        this.event_month_button();
+
+        // this.event_months();
+        // ! DEPRECADO
+        // this.event_controls();
 
     }
 
@@ -907,8 +935,16 @@ class Calendar {
             val: "./resouces/arrow_menu_black.svg"
         }]);
 
-        label_container.appendChild(icon_calendar);
-        label_container.appendChild(label);
+        // * NUEVO
+        const aux_container = this.create_element('div', 'container_label');
+
+        // label_container.appendChild(icon_calendar);
+        // label_container.appendChild(label);
+        // label_container.appendChild(icon_arrow);
+
+        aux_container.appendChild(icon_calendar);
+        aux_container.appendChild(label);
+        label_container.appendChild(aux_container);
         label_container.appendChild(icon_arrow);
 
         this.toggle = label;
@@ -941,22 +977,34 @@ class Calendar {
             attr: "src",
             val: "./resouces/arrow_menu_withe.svg"
         }];
+
+        // ! Deprecado
+        // * Botones del calendario
         const header_buttons_container = this.create_element("div", "head_right");
         const header_button_next = this.create_element("button", "ripple");
         const button_next_icon = this.create_element("img", "icon_next", attr_icons);
         const header_button_prev = this.create_element("button", "ripple");
         const button_prev_icon = this.create_element("img", "icon_next", attr_icons);
 
+        // * NUEVO HEAD RIGHT
+        const month_name = this.create_element('div', 'month_name');
+
+        
+
         // * Injección al DOM
         header_calendar.appendChild(header_title);
         header_calendar.appendChild(header_buttons_container);
 
-        header_buttons_container.appendChild(header_button_prev);
-        header_button_prev.appendChild(button_prev_icon);
-        header_buttons_container.appendChild(header_button_next);
-        header_button_next.appendChild(button_next_icon);
+        // ! Deprecado
+        // header_buttons_container.appendChild(header_button_prev);
+        // header_button_prev.appendChild(button_prev_icon);
+        // header_buttons_container.appendChild(header_button_next);
+        // header_button_next.appendChild(button_next_icon);
+
+        header_buttons_container.appendChild(month_name);
 
         this.header_title = header_title;
+        this.header_title_month = month_name;
         this.header_button_next = header_button_next;
         this.header_button_prev = header_button_prev;
 
@@ -966,6 +1014,21 @@ class Calendar {
     constructor_calendar_body() {
         const calendar_body = this.create_element("div", "calendar_body");
         return calendar_body;
+    }
+
+    constructor_calendar_days() {
+        const calendar_body_days = this.create_element("div", "calendar_body_days show");
+        return calendar_body_days;
+    }
+
+    constructor_calendar_months() {
+        const calendar_body_months = this.create_element("div", "calendar_body_months");
+        return calendar_body_months;
+    }
+
+    constructor_calendar_years() {
+        const calendar_body_years = this.create_element("div", "calendar_body_years");
+        return calendar_body_years;
     }
 
     constructor_calendar_days_name(container) {
@@ -1037,6 +1100,34 @@ class Calendar {
         // console.log(this.days_matrix);
         return days;
         // this.days_matrix = days;
+    }
+
+    constructor_months(months_container){
+        let month_number = 0;
+        let today = new Date();
+        let current_month = today.getMonth();
+        for(let i = 0; i < 4; i++){
+            const row_month = this.create_element("div", "row_month");
+            months_container.appendChild(row_month);
+            for(let j = 0; j < 3; j++){
+                
+                const month = this.create_element('div', "month ripple", [
+                    {
+                        attr: "data-month",
+                        val: month_number+ ""
+                    }
+                ]);
+                month.innerHTML = this.monthsNames[month_number];
+                row_month.appendChild(month);
+                if(current_month == month_number){
+                    this.month_selected.element = month;
+                    this.month_selected.month = month_number;
+                    month.classList.add('select');
+                }
+                month_number++;
+                this.event_months(month);
+            }
+        }
     }
 
     init_calendar() {
@@ -1162,7 +1253,10 @@ class Calendar {
     }
 
     print_current_date_calendar_head() {
-        this.header_title.innerHTML = this.current_month_name + " " + this.yearCalendar;
+        // ! Deprecado
+        // this.header_title.innerHTML = this.current_month_name + " " + this.yearCalendar;
+        this.header_title.innerHTML = this.yearCalendar;
+        this.header_title_month.innerHTML = this.current_month_name;
     }
 
     print_current_date_label() {
@@ -1195,6 +1289,46 @@ class Calendar {
             this.load_Calendar();
             if (Object.entries(this.date_selected_end).length !== 0) {
                 this.range_dates();
+            }
+        });
+    }
+
+    event_month_button(){
+        this.header_title_month.addEventListener('click', (event) => {
+            if(this.calendar_body_months.classList.contains('show')){
+                this.calendar_body_days.classList.add('show');
+                this.calendar_body_months.classList.remove('show');
+                this.calendar_body_years.classList.remove('show');
+
+                this.asignate_new_height_to_calendar(this.calendar_body_days);
+            }else{
+                this.calendar_body_days.classList.remove('show');
+                this.calendar_body_months.classList.add('show');
+                this.calendar_body_years.classList.remove('show');
+
+                this.asignate_new_height_to_calendar(this.calendar_body_months);
+            }
+        });
+    }
+
+    event_months(element_month){
+        element_month.addEventListener('click', event => {
+            const translateMonth = element_month.dataset.month - this.month_selected.month;
+
+            if(translateMonth != 0){
+                let newMonth = new Date(this.yearCalendar, this.monthCalendar + translateMonth, 1);this.monthCalendar = newMonth.getMonth();
+                this.yearCalendar = newMonth.getFullYear();
+                this.current_month_name = this.monthsNames[this.monthCalendar];
+                this.load_Calendar();
+                if (Object.entries(this.date_selected_end).length !== 0) {
+                    this.range_dates();
+                }
+
+                
+                this.month_selected.element.classList.remove('select');
+                this.month_selected.element = element_month;
+                this.month_selected.month = element_month.dataset.month;
+                element_month.classList.add('select');
             }
         });
     }
@@ -1325,6 +1459,36 @@ class Calendar {
             time = new Date(year, month - 1, day).getTime();
         }
         return time
+    }
+
+    asignate_new_height_to_calendar(element){
+        const new_height = this.calculate_new_height(element);
+        this.calendar_body.style.height = new_height + "px";
+    }
+
+    calculate_new_height(element){
+        
+        // const header_height = parseInt(this.getCssProperty(this.header_calendar, 'height'));
+        const element_height = parseInt(this.getCssProperty(element, 'height'));
+        return element_height;
+    }
+
+    height_header(){
+        const style = this.header_calendar.currentStyle || window.getComputedStyle(this.header_calendar);
+        const height = parseInt(style.height);
+        return isNaN(height) ? 0 : height;
+    }
+
+    getCssProperty(element, property = null){
+        const style = element.currentStyle ||  getComputedStyle(element);
+        if(property){
+            return style[property];
+        }
+        return style;
+    }
+
+    setProperty(element, property, value){
+        element.style.setProperty(property, value);
     }
 
     create_element(nodeName, className, attribute = []) {
