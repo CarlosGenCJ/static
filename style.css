@@ -377,6 +377,7 @@ footer .menu .item:nth-child(5) {
   align-content: center;
   justify-content: space-between;
   border-radius: 50px;
+  transition: all ease 0.3s;
 }
 .controls_container .controls .accounts_switch .label {
   display: inline-block;
@@ -652,10 +653,12 @@ footer .menu .item:nth-child(5) {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  transition: all ease 0.3s;
 }
 .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .text {
   font-size: 12px;
   font-weight: 700;
+  transition: all ease 0.3s;
 }
 .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info:last-child {
   margin: 0;
@@ -676,6 +679,7 @@ footer .menu .item:nth-child(5) {
   align-items: center;
   text-align: center;
   position: relative;
+  transition: all ease 0.3s;
 }
 .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph {
   font-size: 10px;
@@ -687,9 +691,11 @@ footer .menu .item:nth-child(5) {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  transition: all ease 0.3s;
 }
 .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .amount_graph {
   font-weight: 700;
+  transition: all ease 0.3s;
 }
 .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after, .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
   content: "";
@@ -1079,6 +1085,12 @@ footer .menu .item:nth-child(5) {
   .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after, .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
     border-width: 8px;
   }
+  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .placeholder {
+    font-size: 17px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .amount_graph {
+    font-size: 17px;
+  }
   .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info {
     border: 1px solid #BFBFBF;
     background-color: #fff;
@@ -1102,6 +1114,9 @@ footer .menu .item:nth-child(5) {
   }
   .controls_container .controls .accounts_switch .backdrop {
     box-shadow: -1.27273px 1.27273px 2.54545px rgba(0, 0, 0, 0.11);
+  }
+  .column-reverse {
+    flex-direction: column-reverse;
   }
 }
 @media (max-width: 767px) {

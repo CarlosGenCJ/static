@@ -276,6 +276,7 @@ footer {
             background-color: $background_color_thirdy;
             @include row-center(true, true);
             border-radius: $border_radius_round;
+            transition: all ease 0.3s;
 
             .label {
                 display: inline-block;
@@ -579,11 +580,13 @@ footer {
                         font-size: 10px;
                         font-weight: 400;
                         user-select: none;
+                        transition: all ease 0.3s;
                     }
 
                     .text {
                         font-size: 12px;
                         font-weight: 700;
+                        transition: all ease 0.3s;
                     }
 
                     &:last-child {
@@ -603,6 +606,7 @@ footer {
                 @include display-center-children;
                 text-align: center;
                 position: relative;
+                transition: all ease 0.3s;
 
                 .info_graph {
                     font-size: 10px;
@@ -611,10 +615,12 @@ footer {
                     .placeholder {
                         font-weight: 400;
                         user-select: none;
+                        transition: all ease 0.3s;
                     }
 
                     .amount_graph {
                         font-weight: 700;
+                        transition: all ease 0.3s;
                     }
                 }
 
@@ -1047,6 +1053,7 @@ footer {
 
 @mixin account_info_panel_container {
     .account_info_panel_container{
+        // margin-bottom: 0;
         .relleno{
             height: 0;
         }
@@ -1070,6 +1077,15 @@ footer {
 
                     &::after,&::before{
                         border-width: 8px;
+                    }
+
+                    .info_graph{
+                        .placeholder{
+                            font-size: 17px;
+                        }
+                        .amount_graph{
+                            font-size: 17px;
+                        }
                     }
                 }
             }
@@ -1104,6 +1120,10 @@ footer {
     // @include btn_controls_container();
     @include account_info_panel_container();
     @include controls_container();
+
+    .column-reverse{
+        flex-direction: column-reverse;
+    }
 }
 
 @media (max-width: 767px){
