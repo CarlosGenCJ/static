@@ -5,6 +5,9 @@
   padding: 0;
   box-sizing: border-box;
   --width-navbar: 150px;
+  --translate-navbar: var(--width-navbar);
+  --height-footer: 80px;
+  --margin-bottom-footer: 0px;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
@@ -135,6 +138,7 @@ nav {
   top: 0;
   left: 0;
   color: #fff;
+  transition: all ease 0.3s 0.3s;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -200,8 +204,10 @@ nav .group_links .icons .icon.active, nav .group_links .icons .icon:hover {
 
 section {
   display: inline-block;
-  width: calc(100% - var(--width-navbar));
-  margin-left: var(--width-navbar);
+  width: calc(100% - var(--translate-navbar));
+  margin-left: var(--translate-navbar);
+  margin-bottom: var(--margin-bottom-footer);
+  transition: all ease 0.3s;
 }
 section .container {
   margin-top: 30px;
@@ -220,7 +226,63 @@ footer {
   width: 100%;
   height: 50px;
   transform: translateY(100%);
-  background-color: aquamarine;
+  transition: all ease 0.3s 0s;
+  height: var(--height-footer);
+}
+footer .menu {
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+  color: #fff;
+}
+footer .menu .item {
+  --icon_tam: 25px;
+  opacity: 0.6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  transform: translateY(100%);
+  position: relative;
+}
+footer .menu .item .icon {
+  width: var(--icon_tam);
+  height: var(--icon_tam);
+  margin-bottom: 10px;
+}
+footer .menu .item .icon img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+footer .menu .item .labe {
+  font-size: 12px;
+  font-weight: 500;
+}
+footer .menu .item.active {
+  opacity: 1;
+}
+footer .menu .item:nth-child(1) {
+  transition: all ease 0.3s 0s, transform ease 0.3s 0.4s;
+}
+footer .menu .item:nth-child(2) {
+  transition: all ease 0.3s 0s, transform ease 0.3s 0.5s;
+}
+footer .menu .item:nth-child(3) {
+  transition: all ease 0.3s 0s, transform ease 0.3s 0.6s;
+}
+footer .menu .item:nth-child(4) {
+  transition: all ease 0.3s 0s, transform ease 0.3s 0.7s;
+}
+footer .menu .item:nth-child(5) {
+  transition: all ease 0.3s 0s, transform ease 0.3s 0.8s;
 }
 
 .wallet_container .wallet {
@@ -994,11 +1056,43 @@ footer {
   .wallet_container .wallet .wallet_content .wallet_info .wallet_info_text {
     font-size: 25px;
   }
-  .btn_controls_container .btn_controls {
-    justify-content: space-between;
-  }
   .account_info_panel_container .relleno {
     height: 0;
+  }
+  .account_info_panel_container .account_info_panel {
+    flex-direction: column-reverse;
+    padding: 0;
+    border: 1px solid rgba(0, 0, 0, 0);
+    background-color: transparent;
+    gap: 15px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_graph {
+    border: 1px solid #BFBFBF;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 40px 20px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle {
+    max-width: 100%;
+    --dimension: 250px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after, .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
+    border-width: 8px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info {
+    border: 1px solid #BFBFBF;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .label {
+    font-size: 13px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .text {
+    font-size: 15px;
+  }
+  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container.account_name {
+    display: none;
   }
   .controls_container .controls .accounts_switch {
     background-color: transparent;
@@ -1008,5 +1102,25 @@ footer {
   }
   .controls_container .controls .accounts_switch .backdrop {
     box-shadow: -1.27273px 1.27273px 2.54545px rgba(0, 0, 0, 0.11);
+  }
+}
+@media (max-width: 767px) {
+  nav {
+    transform: translateX(calc(var(--width-navbar) * -1));
+    transition: all ease 0.3s 0s;
+  }
+  section {
+    --translate-navbar: 0px;
+    --margin-bottom-footer: var(--height-footer);
+  }
+  section .container {
+    max-width: 666px;
+  }
+  footer {
+    transform: translateY(0%);
+    transition: all ease 0.3s 0.3s;
+  }
+  footer .menu .item {
+    transform: translateY(0%);
   }
 }/*# sourceMappingURL=style.css.map */

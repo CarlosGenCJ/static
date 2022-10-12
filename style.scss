@@ -6,6 +6,10 @@
     box-sizing: border-box;
 
     --width-navbar: 150px;
+    --translate-navbar: var(--width-navbar);
+
+    --height-footer: 80px;
+    --margin-bottom-footer: 0px;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
@@ -67,6 +71,7 @@ nav {
     top: 0;
     left: 0;
     color: $text_color_navbar;
+    transition: all ease 0.3s 0.3s;
     @include col-center(true, true);
 
     .group_links {
@@ -123,8 +128,10 @@ nav {
 
 section {
     display: inline-block;
-    width: calc(100% - var(--width-navbar));
-    margin-left: var(--width-navbar);
+    width: calc(100% - var(--translate-navbar));
+    margin-left: var(--translate-navbar);
+    margin-bottom: var(--margin-bottom-footer);
+    transition: all ease 0.3s;
 
     // ? ****************************************
     .container {
@@ -147,7 +154,46 @@ footer {
     width: 100%;
     height: 50px;
     transform: translateY(100%);
-    background-color: aquamarine;
+    transition: all ease 0.3s 0.0s;
+    height: var(--height-footer);
+    .menu{
+        width: 100%;
+        height: 100%;
+        background-color: $text_color;
+        @include row-center(false, true);
+        color: $text_color_contrast;
+        .item{
+            --icon_tam : 25px;
+            // transition: all ease 0.2s;
+            opacity: 0.6;
+            @include col-center(true, true);
+            transform: translateY(100%);
+            position: relative;
+            .icon{
+                width: var(--icon_tam);
+                height: var(--icon_tam);
+                margin-bottom: 10px;
+                img{
+                    @include image-cover;
+                }
+            }
+            .labe{
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            &.active{
+                opacity: 1;
+            }
+        }
+
+        @for $i from 1 through 5{
+            .item:nth-child(#{$i}){
+                $value: 0.3s + (0.1s * $i);
+                transition: all ease 0.3s 0.0s, transform ease 0.3s $value; 
+            }
+        }
+    }
 }
 
 .wallet_container {
@@ -940,6 +986,12 @@ footer {
     }
 }
 
+
+// **********************************************
+// !                MODO RESPONSIVE
+// **********************************************
+
+
 @mixin wallet_container {
     .wallet_container{
         .wallet{
@@ -969,13 +1021,13 @@ footer {
     }
 }
 
-@mixin btn_controls_container {
-    .btn_controls_container{
-        .btn_controls{
-            justify-content: space-between;
-        }
-    }
-}
+// @mixin btn_controls_container {
+//     .btn_controls_container{
+//         .btn_controls{
+//             // justify-content: space-between;
+//         }
+//     }
+// }
 
 @mixin controls_container {
     .controls_container {
@@ -998,16 +1050,83 @@ footer {
         .relleno{
             height: 0;
         }
+
+        .account_info_panel{
+            flex-direction: column-reverse;
+            padding: 0;
+            border: $main_border_inactive;
+            background-color: transparent;
+            gap: 15px;
+
+            .account_info_panel_graph{
+                border: $main_border;
+                background-color: $background_color;
+                border-radius: $border_radius_main;
+                padding: 40px 20px;
+                .graph_circle{
+                    // aspect-ratio: 1/1;
+                    max-width: 100%;
+                    --dimension: 250px;
+
+                    &::after,&::before{
+                        border-width: 8px;
+                    }
+                }
+            }
+
+            .account_info_panel_data{
+                .info_panel_container{
+                    
+                    .info{
+                        border: $main_border;
+                        background-color: $background_color;
+                        border-radius: $border_radius_main;
+                        padding: 10px;
+                        .label{
+                            font-size: 13px;
+                        }
+                        .text{
+                            font-size: 15px;
+                        }
+                    }
+
+                    &.account_name{
+                        display: none;
+                    }
+                }
+            }
+        }
     }
 }
 
 @media (max-width: 991px) {
     @include wallet_container();
-    @include btn_controls_container();
+    // @include btn_controls_container();
     @include account_info_panel_container();
     @include controls_container();
 }
 
-// **********************************************
-// !                MODO RESPONSIVE
-// **********************************************
+@media (max-width: 767px){
+    nav{
+        transform: translateX(calc(var(--width-navbar) * -1));
+        transition: all ease 0.3s 0.0s;
+    }
+
+    section{
+        --translate-navbar: 0px;
+        --margin-bottom-footer: var(--height-footer);
+        .container{
+            max-width: 666px;
+        }
+    }
+
+    footer{
+        transform: translateY(0%);
+        transition: all ease 0.3s 0.3s;
+        .menu{
+            .item{
+                transform: translateY(0%);
+            }
+        }
+    }
+}
