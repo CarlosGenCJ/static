@@ -6,6 +6,7 @@
     box-sizing: border-box;
 
     --width-navbar: 150px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 body,
@@ -131,6 +132,10 @@ section {
 
         >.row {
             margin-bottom: 15px;
+
+            >div {
+                margin-bottom: 15px;
+            }
         }
     }
 }
@@ -145,81 +150,88 @@ footer {
     background-color: aquamarine;
 }
 
-.wallet_container{
-    .wallet{
+.wallet_container {
+    .wallet {
         width: 100%;
         display: flex;
         justify-content: flex-start;
-        .wallet_content{
+
+        .wallet_content {
             @include row-center(true, true);
 
-            .wallet_name{
+            .wallet_name {
                 font-size: 20px;
                 font-weight: 700;
+                transition: all ease 0.3s;
             }
 
-            .divider{
+            .divider {
                 width: 1px;
                 height: 100%;
                 margin: 0 30px;
                 background-color: $background_color_thirdy;
             }
 
-            .wallet_info{
+            .wallet_info {
                 @include col-center(false, false);
-                .wallet_info_label{
+
+                .wallet_info_label {
                     font-size: 12px;
                     font-weight: 400;
                     user-select: none;
+                    transition: all ease 0.3s;
                 }
 
-                .wallet_info_text{
+                .wallet_info_text {
                     font-size: 15px;
                     font-weight: 700;
+                    transition: all ease 0.3s;
                 }
             }
         }
     }
 }
 
-.btn_controls_container{
-    .btn_controls{
+.btn_controls_container {
+    .btn_controls {
         width: 100%;
         @include row-center(false, true);
 
-        .button{
+        .button {
             padding: 6px 0;
             width: 200px;
-             max-width: 50%;
-             font-size: 14px;
-             font-weight: 400;
-             text-align: center;
-             border: $main_border;
-             border-radius: $border_radius_round;
-             user-select: none;
-             cursor: pointer;
+            max-width: 45%;
+            font-size: 12px;
+            font-weight: 400;
+            text-align: center;
+            border: $main_border;
+            border-radius: $border_radius_round;
+            user-select: none;
+            cursor: pointer;
 
-             &:last-child{
+            &:last-child {
                 background-color: $main_color;
-                border: 1px solid rgba(0,0,0,0);
+                border: 1px solid rgba(0, 0, 0, 0);
                 color: $text_color_contrast;
-             }
+            }
         }
     }
 }
 
-.controls_container{
-    .controls{
+.controls_container {
+    margin-bottom: 15px;
+
+    .controls {
         width: 100%;
         @include row-center(true, true);
 
-        .accounts_switch{ 
+        .accounts_switch {
             padding: 5px;
             background-color: $background_color_thirdy;
             @include row-center(true, true);
             border-radius: $border_radius_round;
 
-            .label{
+            .label {
                 display: inline-block;
                 width: 40px;
                 color: $text_color_contrast;
@@ -232,23 +244,23 @@ footer {
                 cursor: pointer;
                 transition: all ease 0.3s;
 
-                &.active{
+                &.active {
                     // background-color: $text_color_contrast;
                     color: $text_color;
-                    cursor:default;
+                    cursor: default;
                     font-weight: 700;
                 }
             }
         }
 
-        .btn_new_account{
+        .btn_new_account {
             --dimension-btn-account: 30px;
             --dimension-btn-account-icon: 20px;
             height: var(--dimension-btn-account);
             max-width: var(--dimension-btn-account);
             border-radius: $border_radius_round;
             background-color: $background_color_thirdy;
-            padding:  5px;
+            padding: 5px;
             @include row-center(true, true);
             flex-wrap: nowrap;
             transition: all ease 0.3s;
@@ -256,27 +268,29 @@ footer {
             overflow: hidden;
             user-select: none;
             position: relative;
-            &:hover{
+
+            &:hover {
                 max-width: 130px;
 
-                .btn_icon{
+                .btn_icon {
                     transform: rotate(-180deg);
                 }
             }
 
-            .btn_icon, .label{
+            .btn_icon,
+            .label {
                 display: inline-block;
                 color: $text_color_contrast;
                 pointer-events: none;
             }
 
-            .btn_icon{
+            .btn_icon {
                 width: var(--dimension-btn-account-icon);
                 height: var(--dimension-btn-account-icon);
                 transition: all ease 0.3s;
             }
 
-            .label{
+            .label {
                 // min-width: 200px;
                 // word-break: keep-all;
                 white-space: nowrap;
@@ -290,7 +304,7 @@ footer {
 }
 
 @mixin swipper {
-    .swipper_container_children{
+    .swipper_container_children {
         width: auto;
         @include row-center(true, true);
         display: inline-flex;
@@ -324,13 +338,15 @@ footer {
 
     .container_aux {
         width: 100%;
+        max-width: 100%;
         overflow: hidden;
         position: relative;
         @include swipper;
 
         // .accounts, 
-        .swipper_container_children { // swipper_container_children
-            width: auto;  
+        .swipper_container_children {
+            // swipper_container_children
+            width: auto;
             @include row-center(true, true);
             display: inline-flex;
             overflow: hidden;
@@ -349,7 +365,8 @@ footer {
                 border: $main_border;
                 position: relative;
                 user-select: none;
-                &:last-child{
+
+                &:last-child {
                     margin: 0;
                 }
 
@@ -380,7 +397,8 @@ footer {
                 }
 
                 &.active {
-                    background-color: $main_color;
+                    // background-color: $main_color;
+                    background-image: $background_color_gradient;
                     color: $text_color_contrast;
                     border: $main_border_inactive;
                     z-index: 2;
@@ -463,6 +481,7 @@ footer {
                 }
             }
         }
+
         // .next,
         // .prev {
         //     position: absolute;
@@ -471,11 +490,11 @@ footer {
         //     cursor: pointer;
         //     user-select: none;
         // }
-    
+
         // .next {
         //     left: var(--space_button_controls);
         // }
-    
+
         // .prev {
         //     right: var(--space_button_controls);
         // }
@@ -486,6 +505,10 @@ footer {
 .account_info_panel_container {
     color: $text_color_primary;
 
+    .relleno {
+        height: 42px;
+    }
+
     .account_info_panel {
         // @include width-height-max;
         // border: $main_border;
@@ -495,6 +518,7 @@ footer {
         display: flex;
         padding: 15px;
         justify-content: center;
+        height: auto;
 
         .account_info_panel_data {
             @include col-center(true);
@@ -607,7 +631,7 @@ footer {
         input {
             display: none;
 
-            &:checked ~ .calendar_container {
+            &:checked~.calendar_container {
 
                 transform: scale(1);
                 opacity: 1;
@@ -651,7 +675,7 @@ footer {
                     // ? NUEVO
                     justify-content: flex-end;
 
-                    .month_name{
+                    .month_name {
                         color: $background_controls_calendar;
                         // font-size: 10px;
                         font-weight: 400;
@@ -699,7 +723,7 @@ footer {
 
                 .calendar_body_days,
                 .calendar_body_months,
-                .calendar_body_years{
+                .calendar_body_years {
                     position: absolute;
                     top: 0;
                     left: 0;
@@ -707,7 +731,7 @@ footer {
                     opacity: 0;
                     transition: all ease 0.3s 0.0s;
 
-                    &.show{
+                    &.show {
                         z-index: 2;
                         opacity: 1;
                         transition: all ease 0.3s 0.3s;
@@ -715,7 +739,7 @@ footer {
 
                 }
 
-                .calendar_body_months{
+                .calendar_body_months {
                     display: grid;
                     grid-template-columns: repeat(1, 1fr);
                     grid-auto-rows: 1fr;
@@ -724,20 +748,21 @@ footer {
                     text-align: center;
                     width: 100%;
 
-                    .row_month{
+                    .row_month {
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
                         grid-auto-rows: 1fr;
                         column-gap: 5px;
 
-                        .month{
+                        .month {
                             font-size: 10px;
                             padding: 8px 0;
                             border-radius: 5px;
                             transition: all ease 0.3s;
                             cursor: pointer;
 
-                            &:hover, &.select{
+                            &:hover,
+                            &.select {
                                 background-color: $main_color;
                                 color: $text_color_contrast;
                             }
@@ -745,7 +770,7 @@ footer {
                     }
                 }
 
-                .calendar_body_days{
+                .calendar_body_days {
                     display: grid;
                     grid-template-columns: repeat(1, 1fr);
                     grid-auto-rows: 1fr;
@@ -897,6 +922,7 @@ footer {
             .row {
                 margin-bottom: 20px;
                 text-align: center;
+
                 span {
                     font-size: 10px;
                     font-weight: 400;
@@ -906,10 +932,82 @@ footer {
                     }
                 }
 
-                &:first-child{
+                &:first-child {
                     user-select: none;
                 }
             }
         }
     }
 }
+
+@mixin wallet_container {
+    .wallet_container{
+        .wallet{
+            .wallet_content{
+                flex-direction: column;
+                align-items: flex-start;
+                .wallet_name{
+                    font-size: 16px;
+                    font-weight: 400;
+                }
+                .divider{
+                    width: 0px;
+                    margin: 0;
+                }
+                .wallet_info{
+                    flex-direction: column-reverse;
+                    .wallet_info_label{
+                        color: $label_color;
+                    }
+                    .wallet_info_text{
+                        font-size: 25px;
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+@mixin btn_controls_container {
+    .btn_controls_container{
+        .btn_controls{
+            justify-content: space-between;
+        }
+    }
+}
+
+@mixin controls_container {
+    .controls_container {
+        .controls {
+            .accounts_switch {
+                background-color: transparent;
+                .label{
+                    color: $text_color;
+                }
+                .backdrop{ 
+                    box-shadow: $box_shadow_backdrop_responsive;
+                }
+            }
+        }
+    }
+}
+
+@mixin account_info_panel_container {
+    .account_info_panel_container{
+        .relleno{
+            height: 0;
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    @include wallet_container();
+    @include btn_controls_container();
+    @include account_info_panel_container();
+    @include controls_container();
+}
+
+// **********************************************
+// !                MODO RESPONSIVE
+// **********************************************

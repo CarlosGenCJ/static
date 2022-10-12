@@ -13,17 +13,20 @@ $background_color: #fff;
 $background_color_secondary: #E6E6E6;
 $background_color_thirdy: #1E1E1E;
 
-$main_border: 1px solid #484848;
-$border_head: 1px solid #1E1E1E;
+$main_border: 1px solid #BFBFBF;
+$border_head: 1px solid #BFBFBF;
 $main_border_inactive: 1px solid rgba(0, 0, 0, 0);
 $box_shadow_submenus: 0px 4px 4px rgba(0, 0, 0, 0.25);
 $border_radius_main: 5px;
 $border_radius_round: 50px;
 $border_radius_complete: 50%;
 
+$box_shadow_backdrop_responsive: -1.27273px 1.27273px 2.54545px rgba(0, 0, 0, 0.11);
+
 
 $main_color: #E9511D;
 $main_color_grad: #FFE6DD;
+$background_color_gradient: linear-gradient(129.2deg, #E9511D 27.54%, #FF7748 115.35%);
 
 $transparent: rgba(0, 0, 0, 0);
 

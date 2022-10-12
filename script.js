@@ -388,9 +388,12 @@ class newSwipper{
     dimensionControls = "20px";
     children = [];
     children_selected_class = "";
+    childre_clicked_class = "click-touch";
     width_child = null;
     limit = 0;
     translate = 0;
+
+    clicked = 0;
 
 
     constructor(){
@@ -475,7 +478,9 @@ class newSwipper{
     constructorContainer(){
         this.swipper_container.innerHTML = '';
         const width = this.getCssProperty(this.swipper_container,"width");
-        this.swipper_container.style.maxWidth = this.swipper_container.style.width = width == "0px" ? "100%" : width;
+        // this.swipper_container.style.width = width == "0px" ? "100%" : width;
+        this.swipper_container.style.width = "100%";
+        this.swipper_container.style.maxWidth = "100%";
         this.swipper_container.style.overflow = "hidden";
         const position = this.getCssProperty(this.swipper_container, "position").toLowerCase();
         this.swipper_container.style.position = position == 'static' ? 'relative' : position;
@@ -542,10 +547,16 @@ class newSwipper{
         });
     }
 
-    translateNexOrPrev(goRight = false){
+    translateNexOrPrev(goRight = 0){
 
         this.limit = this.getLimit().limit;
-        goRight ? this.activateNextElement() : this.activatePrevElement();
+        if(goRight == 0){
+            this.activatePrevElement();
+        }else if(goRight == 1){
+            this.activateNextElement(); 
+        }else{
+            this.activateWithClick();
+        }
 
         let newTranslate = 0;
 
@@ -658,6 +669,15 @@ class newSwipper{
         }
     }
 
+    activateWithClick(){
+        const className = this.children_selected_class || "active";
+        this.children.forEach((child) => {
+            child.classList.remove(className);
+        });
+
+        this.child_selected.classList.add(className);
+    }
+
     translateSlowSwipper(){
         this.swipper.style.transition = `all ease 0.3s`;
         this.translateSwipper();
@@ -676,6 +696,7 @@ class newSwipper{
 
         this.swipper.addEventListener('mousedown', (event) => {
             event.preventDefault();
+            this.clicked = 0;
             
             console.info("Arrastrar");
             
@@ -683,9 +704,10 @@ class newSwipper{
 
             const start_mouse_X = event.clientX;
             let last_movement = this.translate;
-            this.swipper.style.transition = "all ease 0.0s";
+            // this.swipper.style.transition = "all ease 0.0s";
 
             let onMouseMove = (event_window) => {
+                this.clicked++;
                 console.log("Se movió");
                 const x_move = event_window.clientX;
                 let move = start_mouse_X - x_move;
@@ -704,56 +726,79 @@ class newSwipper{
 
             document.addEventListener('mousemove', onMouseMove);
             document.onmouseup = () => {
-                // this.translate = this.translate + movement;
                 document.removeEventListener('mousemove', onMouseMove);
                 document.onmouseup = null;
             }
         });
 
-        // this.swipper.addEventListener('mousedowna', (event) => {
-        //     console.log("Se ejecuta");
-        //     const start_mouse_X = event.clientX;
-        //     event.preventDefault();
-        //     this.swipper.style.transition = "all ease 0.0s";
-        //     let movement = this.translate;
+        this.swipper.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.clicked = 0;
 
-        //     let onMouseMove = (event_window) => {
-        //         const x_move = event_window.clientX;
-        //         if (x_move > start_mouse_X) {
-        //             movement = x_move - start_mouse_X;
-        //         } else {
-        //             movement = (start_mouse_X - x_move) * -1;
-        //         }
-        
-        //         let new_movement = this.translate + movement;
-        
-        //         if (new_movement < (this.limit * -1)) {
-        //             new_movement = this.limit * -1;
-        //             this.translate = this.limit * -1;
-        //             movement = 0;
-        //         } else if (new_movement > 0) {
-        //             new_movement = movement = 0;
-        //             this.translate = 0;
-        //         }
-        
-        
-        //         this.swipper.style.transform = `translateX(${new_movement}px)`;
-        //     };
+            this.limit = this.getLimit().limit;
 
-        //     document.addEventListener('mousemove', onMouseMove);
-        //     document.onmouseup = () => {
-        //         this.translate = this.translate + movement;
-        //         document.removeEventListener('mousemove', onMouseMove);
-        //         document.onmouseup = null;
-        //     }
-        // });
+            const touched = event.touches[0];
+            const start_mouse_X = touched.clientX;
+            let last_movement = this.translate;
+
+            // this.swipper.style.transition = "all ease 0.0s";
+
+            let onMouseMove = (event_window) => {
+                this.clicked++;
+                const touched_move = event_window.touches[0];
+                const x_move = touched_move.clientX;
+                let move = start_mouse_X - x_move;
+
+                const new_movement = last_movement + move;
+
+                if(new_movement < 0){
+                    this.translate = 0;
+                }else if(new_movement > this.limit){
+                    this.translate = this.limit;
+                }else{
+                    this.translate = last_movement + move;
+                }
+
+                this.translateForceSwipper();
+            };
+
+            document.addEventListener('touchmove', onMouseMove);
+            document.ontouchend = (event) => {
+                document.removeEventListener('touchmove', onMouseMove);
+                document.ontouchend = null;
+            }
+        });
     }
 
     childControl(){
         this.children.forEach(child => {
-            child.addEventListener('click', (event) => {
-                console.warn("Click a hijo");
-            });
+            child.addEventListener('click', (event)=> {clickEvent(child, event);});
+            child.addEventListener('touchend', (event)=> {clickEvent(child, event);});
+
+            // child.addEventListener('touchend', (event) => {
+            // });
+
+            let clickEvent = (child, event) => {
+                if(this.clicked < 5){
+                    this.clicked = 0;
+                    this.child_selected = child;
+                    this.translateNexOrPrev(2);
+                    if(event.type == "touchend"){
+                        this.click_to_child_element(child, event.target);
+                    }
+                }
+                this.clicked = 0;
+            }
+        });
+    }
+
+    click_to_child_element(parent, element){
+        const children = parent.getElementsByClassName(this.childre_clicked_class);
+        Array.from(children).forEach(child => {
+            if(child.contains(element)){
+                child.click();
+            }
         });
     }
 
