@@ -272,7 +272,11 @@ class YearsList{
         this.calendar_body_years.addEventListener('wheel', (event) => {
             const up = event.deltaY < 0 ? true : false;
             this.not_scroll = true;
-            console.log(up);
+            if(up){
+                this.previous();
+            }else{
+                this.next();
+            }
         });
     }
 
@@ -305,7 +309,10 @@ class YearsList{
             if(!this.current_years.siguiente){
                 this.append();
             }
-            // this.current_years.print(true);
+
+            this.current_years.container_years.style.transform = `translateY(0%)`;
+            // this.current_years.siguiente.container_years.style.transform = `translateY(0%)`;
+            this.current_years.anterior.container_years.style.transform = `translateY(-100%)`;
         }
     }
 
@@ -315,6 +322,9 @@ class YearsList{
             if(!this.current_years.anterior){
                 this.prepend();
             }
+            this.current_years.container_years.style.transform = `translateY(0%)`;
+            // this.current_years.siguiente.container_years.style.transform = `translateY(0%)`;
+            this.current_years.siguiente.container_years.style.transform = `translateY(100%)`;
             // this.current_years.print(true);
         }
     }
