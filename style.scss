@@ -21,6 +21,7 @@ html {
     background-color: $background_color_secondary;
     @include ripple_effect;
     color: $text_color_primary;
+    overflow-x: hidden;
 }
 
 /*
@@ -703,8 +704,10 @@ footer {
             transition: all ease 0.2s;
             transform: scale(0.5);
             opacity: 0;
-            transform-origin: top left;
+            transform-origin: top right;
             width: var(--width);
+            top: 100%;
+            right: 0;
             // border: $main_border;
             // border-radius: $border_radius_main;
             border-radius: 20px;
@@ -831,7 +834,71 @@ footer {
                     padding: 10px;
                     text-align: center;
                     width: 100%;
-                    // display: none;
+
+                    .menu_container{
+                        position: absolute;
+                        transform: translate(-50%, 0%);
+                        padding: 5px;
+                        border-radius: $border_radius_round;
+                        background-color: red;
+                        overflow: hidden;
+                        pointer-events: none;
+                        cursor: pointer;
+                        .option{
+                            position: absolute;
+                            // white-space: none;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%) scale(1);
+                            color: $text_color_contrast;
+                            font-size: 10px;
+                        }
+
+                        &.show{
+                            animation: show 0.4s ease forwards;
+                            pointer-events: all;
+                        }
+
+                        &.hidden{
+                            animation: hidden 0.4s ease forwards;
+
+                            .option{
+                                // transform: scale(0.8);
+                                transform: translate(-50%, -50%) scale(0.8);
+                            }
+                        }
+
+                        @keyframes show {
+                            0%{
+                                transform: translate(-50%, 0%);
+                            }
+                            50%{
+                                transform: translate(-50%, -100%);
+                            }
+                            100%{
+                                transform: translate(-50%, -100%);
+                                width: 70px;
+                            }
+                        }
+
+                        @keyframes hidden {
+                            0%{
+                                // transform: translate(-50%, 0%);
+                                transform: translate(-50%, -100%);
+                                width: 70px;
+                            }
+                            50%{
+                                transform: translate(-50%, -100%);
+                                width: var(--width, 0px);
+                            }
+                            100%{
+                                // transform: translate(-50%, -100%);
+                                transform: translate(-50%, 0%);
+                                opacity: 0;
+                                width: var(--width, 0px);
+                            }
+                        }
+                    }
 
                     .row_calendar {
                         display: grid;
@@ -898,6 +965,9 @@ footer {
 
                                     // }
                                 }
+                            }
+                            &.tarjet{
+                                transform: scale(1.4);
                             }
                         }
                     }

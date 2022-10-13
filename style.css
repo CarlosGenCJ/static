@@ -18,6 +18,7 @@ html {
   font-family: "Inter";
   background-color: #E6E6E6;
   color: #1E1E1E;
+  overflow-x: hidden;
 }
 body .ripple,
 html .ripple {
@@ -807,8 +808,10 @@ footer .menu .item:nth-child(5) {
   transition: all ease 0.2s;
   transform: scale(0.5);
   opacity: 0;
-  transform-origin: top left;
+  transform-origin: top right;
   width: var(--width);
+  top: 100%;
+  right: 0;
   border-radius: 20px;
   background-color: #fff;
   border: 1px solid #BFBFBF;
@@ -928,6 +931,90 @@ footer .menu .item:nth-child(5) {
   text-align: center;
   width: 100%;
 }
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container {
+  position: absolute;
+  transform: translate(-50%, 0%);
+  padding: 5px;
+  border-radius: 50px;
+  background-color: red;
+  overflow: hidden;
+  pointer-events: none;
+  cursor: pointer;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container .option {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  color: #fff;
+  font-size: 10px;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.show {
+  -webkit-animation: show 0.4s ease forwards;
+          animation: show 0.4s ease forwards;
+  pointer-events: all;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden {
+  -webkit-animation: hidden 0.4s ease forwards;
+          animation: hidden 0.4s ease forwards;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden .option {
+  transform: translate(-50%, -50%) scale(0.8);
+}
+@-webkit-keyframes show {
+  0% {
+    transform: translate(-50%, 0%);
+  }
+  50% {
+    transform: translate(-50%, -100%);
+  }
+  100% {
+    transform: translate(-50%, -100%);
+    width: 70px;
+  }
+}
+@keyframes show {
+  0% {
+    transform: translate(-50%, 0%);
+  }
+  50% {
+    transform: translate(-50%, -100%);
+  }
+  100% {
+    transform: translate(-50%, -100%);
+    width: 70px;
+  }
+}
+@-webkit-keyframes hidden {
+  0% {
+    transform: translate(-50%, -100%);
+    width: 70px;
+  }
+  50% {
+    transform: translate(-50%, -100%);
+    width: var(--width, 0px);
+  }
+  100% {
+    transform: translate(-50%, 0%);
+    opacity: 0;
+    width: var(--width, 0px);
+  }
+}
+@keyframes hidden {
+  0% {
+    transform: translate(-50%, -100%);
+    width: 70px;
+  }
+  50% {
+    transform: translate(-50%, -100%);
+    width: var(--width, 0px);
+  }
+  100% {
+    transform: translate(-50%, 0%);
+    opacity: 0;
+    width: var(--width, 0px);
+  }
+}
 .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -981,6 +1068,9 @@ footer .menu .item:nth-child(5) {
   background-color: #E9511D;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
   color: #fff;
+}
+.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.tarjet {
+  transform: scale(1.4);
 }
 
 .history_container .history {

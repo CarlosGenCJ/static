@@ -43,7 +43,7 @@ window.addEventListener('click', (event) => {
             rippleContainer.classList.add('ripple-container');
             rippleEffect.classList.add('ripple-effect');
 
-            const offset = element.getBoundingClientRect();
+            const offset = ripple_button.getBoundingClientRect();
 
             rippleEffect.style.top = (event.pageY - offset.top) + "px";
             rippleEffect.style.left = (event.pageX - offset.left) + "px";
@@ -51,11 +51,11 @@ window.addEventListener('click', (event) => {
             rippleContainer.classList.add('ripple-effect-animation');
 
             rippleContainer.appendChild(rippleEffect);
-            element.appendChild(rippleContainer);
+            ripple_button.appendChild(rippleContainer);
 
             setTimeout(() => {
                 rippleContainer.removeChild(rippleEffect);
-                element.removeChild(rippleContainer);
+                ripple_button.removeChild(rippleContainer);
             }, 400);
         }
     });
@@ -524,7 +524,6 @@ class newSwipper{
 
     printChild(){
         this.children.forEach( child => {
-            console.log(child);
             this.swipper.appendChild(child);
         });
 
@@ -888,6 +887,16 @@ class Calendar {
     daysNames = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"];
     days_short = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
 
+    timer_sostain_click= null;
+    sostain_click = false;
+    sostain_click_time_out = 1000;
+
+    timer_menu_options = null;
+    menu_option_selected = null;
+    menu_options = null;
+    option_button = null;
+    is_targeted_date = false;
+
     constructor(id) {
         if (typeof id != "string" && !this.isHTMLElement(id)) {
             return new Error('Error: El argumento debe ser de tipo string u objeto html')
@@ -929,6 +938,9 @@ class Calendar {
         this.row_day_names = this.constructor_calendar_days_name(this.calendar_body_days);
         this.days_matrix = this.constructor_days(this.calendar_body_days);
 
+        this.menu_options = this.constructor_menu_options();
+        this.calendar_body_days.appendChild(this.menu_options);
+
 
         this.calendar_body_months = this.constructor_calendar_months();
         this.calendar_months = this.constructor_months(this.calendar_body_months);
@@ -958,6 +970,8 @@ class Calendar {
         this.asignate_new_height_to_calendar(this.calendar_body_days);
 
         this.event_month_button();
+
+        this.event_menu();
 
         // this.event_months();
         // ! DEPRECADO
@@ -1003,8 +1017,11 @@ class Calendar {
         }, {
             attr: "type",
             val: "checkbox"
+        }, {
+            attr: "checked",
+            val: "true"
         }]);
-        return input;
+        return input; 
     }
 
     constructor_calendar_container() {
@@ -1145,6 +1162,16 @@ class Calendar {
         // console.log(this.days_matrix);
         return days;
         // this.days_matrix = days;
+    }
+
+    constructor_menu_options(){
+        const menu_container = this.create_element('div', 'menu_container');
+        const option = this.create_element('div', 'option');
+        option.innerHTML = "Marcar";
+        menu_container.appendChild(option);
+        menu_container.classList.add("ripple");
+
+        return menu_container;
     }
 
     constructor_months(months_container){
@@ -1379,9 +1406,15 @@ class Calendar {
     }
 
     event_days(element) {
+        element.addEventListener('contextmenu', (event) => {
+            // console.log(event);            
+            this.open_options_menu(element);
+        });
         element.addEventListener('click', (event) => {
+
             if (element.dataset.daysOut == 'active') {
-                if (!event.shiftKey) {
+                if (!event.shiftKey && !this.is_targeted_date) {
+                    this.remove_menu_options();
                     if (this.date_selected.container) {
                         this.date_selected.container.classList.remove('active');
                     }
@@ -1404,10 +1437,20 @@ class Calendar {
                     this.range_dates();
                 }
             }
+
+            if(this.menu_option_selected){
+                this.menu_option_selected.classList.remove('tarjet');
+            }
+            this.is_targeted_date = false;
+            // console.log("Se activa");
         });
 
         element.addEventListener('touchend', (event) => {
+
+            clearTimeout(this.timer_sostain_click);
+
             event.stopPropagation();
+            // ! OBTIENE EL ELEMENTO EN EL QUE SE DEJO DE PRESIONAR
             let flag = true;
             const quit = event.changedTouches[0];
             let event_target = document.elementFromPoint(quit.clientX, quit.clientY);
@@ -1415,38 +1458,121 @@ class Calendar {
             if (event_target && event_target.nodeName.toLowerCase() == "span" && event_target.classList.contains('day_label')) {
                 let aux = event_target.parentElement;
                 aux ? event_target = aux : flag = false;
+            }else if(element_parent_target && element_parent_target.classList.contains("col_day") && event_target.nodeName.toLowerCase() == "div"){
+                event_target = element_parent_target;
             }
             if (!event_target) {
-                return false;
+                this.sostain_click = false;
+                return;
             }
             if (!event_target.nodeName) {
+                this.sostain_click = false;
                 return;
             }
             if (!event_target.nodeName.toLowerCase() == "div") {
+                this.sostain_click = false;
                 return;
             }
             if (!event_target.classList.contains('col_day')) {
+                this.sostain_click = false;
                 return;
             }
             if (!flag) {
+                this.sostain_click = false;
                 return
             }
-            if (event_target.dataset.daysOut != "inactive") {
+
+            if (event_target == element){
+                if (this.sostain_click){
+                    this.open_options_menu(element);
+                // }else {
+                //     console.log("no lo sostuviste");
+                }
+                this.sostain_click = false;
+            }else{
+                return;
+            }
+            // if (event_target.dataset.daysOut != "inactive") {
+            //     this.date_selected.day = element.dataset.day;
+            //     this.date_selected.dayMonth = element.dataset.dayMonth;
+            //     this.date_selected.month = element.dataset.month;
+            //     this.date_selected.year = element.dataset.year;
+            //     this.date_selected.container = element;
+
+            //     this.date_selected_end.day = event_target.dataset.day;
+            //     this.date_selected_end.dayMonth = event_target.dataset.dayMonth;
+            //     this.date_selected_end.year = event_target.dataset.year;
+            //     this.date_selected_end.month = element.dataset.month;
+            //     this.date_selected_end.container = event_target;
+            //     this.range_dates();
+            //     this.print_current_date_label();
+            // }
+        });
+
+        element.addEventListener('touchstart', (event) => {
+            this.remove_menu_options();
+            this.timer_sostain_click = setTimeout(()=>{
+                this.sostain_click = true;
+            }, this.sostain_click_time_out);
+        })
+    }
+
+    open_options_menu(element){
+        clearTimeout(this.timer_menu_options);
+        if(!this.calendar_body_days.contains(this.menu_options)){
+            this.calendar_body_days.appendChild(this.menu_options);
+        }
+
+        const bound = this.getPosition(element);
+        const bound_parent = this.getPosition(this.calendar_body_days);
+        const coo_X = (bound.left - bound_parent.left) + (bound.width / 2);
+        const coo_Y = (bound.top - bound_parent.top);
+        
+        this.menu_options.style.top = coo_Y + "px";
+        this.menu_options.style.left = coo_X + "px";
+        this.menu_options.style.width = bound.width + "px";
+        this.menu_options.style.height = bound.height + "px";
+        this.menu_options.style.setProperty("--width", bound.width + "px");
+        this.menu_options.classList.add('show');
+        this.menu_options.classList.remove('hidden');
+
+        // if(this.menu_option_selected){
+        //     this.menu_option_selected.classList.remove('tarjet');
+        // }
+
+        this.menu_option_selected = element;
+
+        this.timer_menu_options = setTimeout(()=>{
+            this.remove_menu_options();
+        }, 5000);
+    }
+
+    event_menu(){
+        this.menu_options.addEventListener('click', (event) => {
+            if(this.menu_option_selected){
+                
+            
+                if (this.date_selected.container) {
+                    this.date_selected.container.classList.remove('active');
+                    this.date_selected.container.classList.remove('tarjet');
+                }
+                this.is_targeted_date = true;
+                const element = this.menu_option_selected;
                 this.date_selected.day = element.dataset.day;
                 this.date_selected.dayMonth = element.dataset.dayMonth;
                 this.date_selected.month = element.dataset.month;
                 this.date_selected.year = element.dataset.year;
                 this.date_selected.container = element;
-
-                this.date_selected_end.day = event_target.dataset.day;
-                this.date_selected_end.dayMonth = event_target.dataset.dayMonth;
-                this.date_selected_end.year = event_target.dataset.year;
-                this.date_selected_end.month = element.dataset.month;
-                this.date_selected_end.container = event_target;
-                this.range_dates();
+                if (Object.entries(this.date_selected_end).length !== 0) {
+                    this.range_dates(true);
+                }
+                element.classList.add('active');
+                element.classList.add('tarjet');
                 this.print_current_date_label();
             }
-        });
+
+            this.remove_menu_options();
+        })
     }
 
     range_dates(clean = false) {
@@ -1484,6 +1610,13 @@ class Calendar {
                 activate_range(i, j, clean);
             }
         }
+    }
+
+    remove_menu_options(){
+        clearTimeout(this.timer_menu_options);
+        this.menu_options.classList.remove('show');
+        this.menu_options.classList.add('hidden');
+        // this.calendar_body_days.removeChild(this.menu_options);
     }
 
     get_time_to_container_day(element, is_object = false) {
@@ -1530,6 +1663,16 @@ class Calendar {
             return style[property];
         }
         return style;
+    }
+
+    getPosition(element){
+        const bound = element.getBoundingClientRect();
+        return {
+            left: bound.left,
+            width: bound.width,
+            top: bound.top,
+            height: bound.height
+        };
     }
 
     setProperty(element, property, value){
