@@ -972,6 +972,75 @@ footer {
                         }
                     }
                 }
+
+                .calendar_body_years{
+                    width: 100%;
+                    height: 180px;
+                    position: relative;
+
+                    .years_container{
+                        @include full_father;
+                        display: grid;
+                        grid-template-columns: repeat(1, 1fr);
+                        grid-auto-rows: 1fr;
+                        grid-column-gap: var(--spacing_days);
+                        grid-row-gap: var(--spacing_days);
+                        padding: 10px;
+                        text-align: center;
+
+                        .year_row{
+                            display: grid;
+                            grid-template-columns: repeat(5, 1fr);
+                            grid-auto-rows: 1fr;
+                            grid-column-gap: var(--spacing_days);
+                            grid-row-gap: var(--spacing_days);
+
+                            // align-items: center;
+
+                            .year{
+                                border-radius: $border_radius_main;
+                                width: 100%;
+                                height: 100%;
+                                @include display-center-children;
+                                transition: all ease 0.3s;
+                                cursor: pointer;
+
+                                &:hover{
+                                    background-color: $background_days_hover;
+                                    box-shadow: $box_shadow_buttons_calendar;
+                                }
+
+                                &.current{
+                                    background-color: $background_day_current;
+                                    box-shadow: $box_shadow_buttons_calendar;
+
+                                    &:hover{
+                                        background-color: $background_days_active;
+                                        color: $text_color_active_calendar;
+                                    }
+                                }
+
+                                &.active{
+                                    background-color: $background_days_active;
+                                    color: $text_color_active_calendar;
+                                    box-shadow: $box_shadow_buttons_calendar;
+                                }
+                            }
+                        
+                            // @include display-center-children;
+                        
+                            font-size: 12px;
+                        }
+
+                        // display: none;
+
+                        &:not(&:first-child){
+                            display: none;
+                        }
+
+                        
+                    }
+                }
             }
         }
     }

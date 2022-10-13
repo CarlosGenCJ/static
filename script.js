@@ -64,6 +64,262 @@ window.addEventListener('click', (event) => {
 });
 
 
+class Years{
+    
+    minimo = 0;
+    maximo = 0;
+    container_years = null;
+    years = [];
+    translate = 0;
+    dimensions = {
+        x: 5,
+        y: 5
+    };
+    length_matrix = 0;
+
+    func = null;
+    inst = null;
+
+    createElement = null;
+
+    instanceFather = null;
+
+    siguiente = null;
+    anterior = null;
+
+    current_year = 0;
+
+    timer_scroll = null;
+
+    constructor(instanceFather){
+        this.instanceFather = instanceFather;
+        this.length_matrix = this.dimensions.x * this.dimensions.y;
+
+
+    }
+
+    init(first = false){
+        if(first){
+            this.first();
+        }else{
+            this.enter();
+        }
+    }
+
+    first(){
+        const date =  new Date();
+        const year_now = date.getFullYear();
+        const cant = this.dimensions.x * this.dimensions.y;
+        const position = Math.ceil(cant / 2);
+        const start = year_now - position + 1;
+
+        this.current_year = year_now;
+        this.instanceFather.current_year_object.year = year_now;
+    
+        this.createMatrix(start);
+    }
+
+    enter(){
+        if(this.siguiente){
+            const minimo = this.siguiente.minimo - this.length_matrix;
+            this.createMatrix(minimo);
+        }else if(this.anterior){
+            const minimo = this.anterior.maximo + 1;
+            this.createMatrix(minimo);
+        }
+    }
+
+    constructorContainer(){
+        this.container_years = this.create_element('div', "years_container");
+    }
+
+    constructorYearRow(){
+        return this.create_element('div', 'year_row');
+    }
+
+    constructorYear(year_num){
+        const year = this.create_element('div', 'year_span');
+        year.innerHTML = year_num;
+        const year_box = this.create_element('div', 'year', [{attr: "data-year", val: year_num}]);
+
+        if(this.instanceFather.current_year_object.year == year_num){
+            year_box.classList.add('active');
+            this.instanceFather.current_year_object.year_element = year_box;
+        }
+
+        if(this.current_year == year_num){
+            year_box.classList.add('current');
+        }
+
+        year_box.appendChild(year);
+        return year_box;
+    }
+
+    event_years(element){
+        element.addEventListener('click', (event) => {
+            element.classList.add("active");
+            this.instanceFather.current_year_object.year_element.classList.remove('active');
+            this.instanceFather.current_year_object = {
+                year_element: element,
+                year: element.dataset.year
+            };
+        });
+    }
+
+    event_parent(){
+        console.log("Evento asignado", this.container_years);
+        this.container_years.addEventListener('wheel', (event) => {
+            this.instanceFather.not_scroll = true;
+            console.log("Se hizo scroll", event);
+        });
+    }
+
+    createMatrix(init){
+        this.minimo = init;
+
+        this.constructorContainer();
+
+        for(let i = 0; i < this.dimensions.x; i++){
+            this.years[i] = [];
+            const year_row = this.constructorYearRow();
+            for(let j = 0; j < this.dimensions.y; j++){
+
+                const year_container = this.constructorYear(init);
+                year_row.appendChild(year_container);
+
+                this.event_years(year_container);
+
+                this.years[i][j] = year_container;
+                this.maximo = init;
+                init++;
+            }
+            this.container_years.appendChild(year_row);
+        }
+        // this.event_parent();
+
+        this.instanceFather.calendar_body_years.appendChild(this.container_years);
+    }
+
+    // print(main = false){
+
+    //     if(main){
+    //         this.anterior.print();
+    //     }
+    
+    //     console.log(this.minimo, this.years, this.maximo);
+
+    //     if(main){
+    //         this.siguiente.print();
+    //     }
+    // }
+
+    next(){
+        this.instanceFather.next();
+    }
+
+    previous(){
+        this.instanceFather.previous();
+    }
+
+    create_element(nodeName, className, attributes = []){
+        return Calendar.prototype.create_element(nodeName, className, attributes);
+    }
+}
+
+class YearsList{
+    current_years = null;
+    current_year_object = {
+        year: 0,
+        year_element: null
+    };
+    year_selected = 0;
+    inicio = null;
+    fin = null;
+    length = 0;
+
+    not_scroll = false;
+
+    constructor(){
+    }
+
+    init_year_list(){
+        const first = new Years(this);
+        this.inicio = first;
+        this.fin = this.inicio;
+        this.current_years = first;
+        this.length++;
+
+        this.current_years.init(true);
+
+        this.prepend();
+        this.append();
+
+
+        this.eventScrollWindow();
+        this.event_container_years_wheel();
+    }
+
+    eventScrollWindow(){
+        window.addEventListener('wheel', (event) => {
+            if(this.not_scroll){
+                event.preventDefault();
+                this.not_scroll = false;
+            }
+        }, {passive: false});
+    }
+
+    event_container_years_wheel(){
+        this.calendar_body_years.addEventListener('wheel', (event) => {
+            const up = event.deltaY < 0 ? true : false;
+            this.not_scroll = true;
+            console.log(up);
+        });
+    }
+
+    append(){
+        let newNode = new Years(this);
+
+        this.fin.siguiente = newNode;
+        newNode.anterior = this.fin;
+        this.fin = newNode;
+
+        newNode.init();
+
+        this.length++;
+    }
+    prepend(){
+        let newNode = new Years(this);
+
+        newNode.siguiente = this.inicio;
+        this.inicio.anterior = newNode;
+        this.inicio = newNode;
+
+        newNode.init();
+
+        this.length++;
+    }
+
+    next(){
+        if(this.current_years.siguiente){
+            this.current_years = this.current_years.siguiente;
+            if(!this.current_years.siguiente){
+                this.append();
+            }
+            // this.current_years.print(true);
+        }
+    }
+
+    previous(){
+        if(this.current_years.anterior){
+            this.current_years = this.current_years.anterior;
+            if(!this.current_years.anterior){
+                this.prepend();
+            }
+            // this.current_years.print(true);
+        }
+    }
+}
+
 class Swipper {
     container = null;
     next = null;
@@ -706,20 +962,22 @@ class newSwipper{
             // this.swipper.style.transition = "all ease 0.0s";
 
             let onMouseMove = (event_window) => {
-                this.clicked++;
-                console.log("Se movió");
-                const x_move = event_window.clientX;
-                let move = start_mouse_X - x_move;
-                const new_movement = last_movement + move;
-                if(new_movement < 0){
-                    this.translate = 0;
-                }else if(new_movement > this.limit){
-                    this.translate = this.limit;
-                }else{
-                    this.translate = last_movement  + move;
+                if(this.limit > 0){
+                    this.clicked++;
+                    console.log("Se movió");
+                    const x_move = event_window.clientX;
+                    let move = start_mouse_X - x_move;
+                    const new_movement = last_movement + move;
+                    if(new_movement < 0){
+                        this.translate = 0;
+                    }else if(new_movement > this.limit){
+                        this.translate = this.limit;
+                    }else{
+                        this.translate = last_movement  + move;
+                    }
+                    
+                    this.translateForceSwipper();
                 }
-                
-                this.translateForceSwipper();
 
             }
 
@@ -817,7 +1075,7 @@ class newSwipper{
     }
 }
 
-class Calendar {
+class Calendar extends YearsList {
 
     // El selector principal que será construído por JS
     container_select = null;
@@ -898,6 +1156,7 @@ class Calendar {
     is_targeted_date = false;
 
     constructor(id) {
+        super();
         if (typeof id != "string" && !this.isHTMLElement(id)) {
             return new Error('Error: El argumento debe ser de tipo string u objeto html')
         }
@@ -972,6 +1231,10 @@ class Calendar {
         this.event_month_button();
 
         this.event_menu();
+
+        this.init_year_list();
+
+        this.event_year_button();
 
         // this.event_months();
         // ! DEPRECADO
@@ -1379,6 +1642,24 @@ class Calendar {
                 this.calendar_body_years.classList.remove('show');
 
                 this.asignate_new_height_to_calendar(this.calendar_body_months);
+            }
+        });
+    }
+
+    event_year_button(){
+        this.header_title.addEventListener('click', (event) => {
+            if(this.calendar_body_years.classList.contains('show')){
+                this.calendar_body_days.classList.add('show');
+                this.calendar_body_months.classList.remove('show');
+                this.calendar_body_years.classList.remove('show');
+
+                this.asignate_new_height_to_calendar(this.calendar_body_days);
+            }else{
+                this.calendar_body_days.classList.remove('show');
+                this.calendar_body_months.classList.remove('show');
+                this.calendar_body_years.classList.add('show');
+
+                this.asignate_new_height_to_calendar(this.calendar_body_years);
             }
         });
     }
@@ -2106,4 +2387,153 @@ class BeautifyBackDrop {
         this.getHTMLCollectionfromParent();
     }
 
+}
+
+
+
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+        this.previous = null;
+    }
+}
+
+class DoublyLinkedList {
+    constructor(value) {
+        this.head = {
+            value: value,
+            next: null,
+            previous: null
+        };
+        this.length = 1;
+        this.tail = this.head;
+        this.current = this.tail;
+    }
+
+    printList() {
+        let array = [];
+        let currentList = this.head;
+        while (currentList !== null) {
+            array.push(currentList.value);
+            currentList = currentList.next;
+        }
+
+        console.log(array.join(' <--> '));
+        return this;
+    }
+
+    // Insert node at end of the list
+    append(value) {
+        let newNode = new Node(value);
+
+        this.tail.next = newNode;
+        newNode.previous = this.tail;
+        this.tail = newNode;
+
+        this.length++;
+        this.printList();
+    }
+
+    // Insert node at the start of the list
+    prepend(value) {
+        let newNode = new Node(value);
+
+        newNode.next = this.head;
+        this.head.previous = newNode;
+        this.head = newNode;
+
+        this.length++;
+        this.printList();
+    }
+
+    // Insert node at a given index
+    insert (index, value) {
+        if (!Number.isInteger(index) || index < 0 || index > this.length + 1) {
+            console.log(`Invalid index. Current length is ${this.length}.`);
+            return this;
+        }
+
+        // If index is 0, prepend
+        if (index === 0) {
+            this.prepend(value);
+            return this;
+        }
+
+        // If index is equal to this.length, append
+        if (index === this.length) {
+            this.append(value);
+            return this;
+        }
+
+        // Reach the node at that index
+        let newNode = new Node(value);
+        let previousNode = this.head;
+
+        for (let k = 0; k < index - 1; k++) {
+            previousNode = previousNode.next;
+        }
+
+        let nextNode = previousNode.next;
+        
+        newNode.next = nextNode;
+        previousNode.next = newNode;
+        newNode.previous = previousNode;
+        nextNode.previous = newNode;
+
+        this.length++;
+        this.printList();
+    }
+
+    // Remove a node
+    remove (index) {
+        if (!Number.isInteger(index) || index < 0 || index > this.length) {
+            console.log(`Invalid index. Current length is ${this.length}.`);
+            return this;
+        }
+
+        // Remove head
+        if (index === 0) {
+            this.head = this.head.next;
+            this.head.previous = null;
+
+            this.length--;
+            this.printList();
+            return this;
+        }
+
+        // Remove tail
+        if (index === this.length - 1) {
+            this.tail = this.tail.previous;
+            this.tail.next = null;
+
+            this.length--;
+            this.printList();
+            return this;
+        }
+
+        // Remove node at an index
+        let previousNode = this.head;
+
+        for (let k = 0; k < index - 1; k++) {
+            previousNode = previousNode.next;
+        }
+        let deleteNode = previousNode.next;
+        let nextNode = deleteNode.next;
+
+        previousNode.next = nextNode;
+        nextNode.previous = previousNode;
+
+        this.length--;
+        this.printList();
+        return this;
+    }
+
+    next(){
+        if(this.current && this.current.next){
+            this.current = this.current.next;
+        }
+
+        console.log(this.current.value);
+    }
 }
