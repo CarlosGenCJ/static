@@ -123,9 +123,11 @@ class Years{
         if(this.siguiente){
             const minimo = this.siguiente.minimo - this.length_matrix;
             this.createMatrix(minimo);
+            this.container_years.style.transform = "translateY(-100%)";
         }else if(this.anterior){
             const minimo = this.anterior.maximo + 1;
             this.createMatrix(minimo);
+            this.container_years.style.transform = "translateY(100%)";
         }
     }
 
@@ -157,8 +159,8 @@ class Years{
 
     event_years(element){
         element.addEventListener('click', (event) => {
-            element.classList.add("active");
             this.instanceFather.current_year_object.year_element.classList.remove('active');
+            element.classList.add("active");
             this.instanceFather.current_year_object = {
                 year_element: element,
                 year: element.dataset.year
@@ -195,23 +197,9 @@ class Years{
             }
             this.container_years.appendChild(year_row);
         }
-        // this.event_parent();
 
         this.instanceFather.calendar_body_years.appendChild(this.container_years);
     }
-
-    // print(main = false){
-
-    //     if(main){
-    //         this.anterior.print();
-    //     }
-    
-    //     console.log(this.minimo, this.years, this.maximo);
-
-    //     if(main){
-    //         this.siguiente.print();
-    //     }
-    // }
 
     next(){
         this.instanceFather.next();
@@ -239,6 +227,8 @@ class YearsList{
 
     not_scroll = false;
 
+    transition = false;
+
     constructor(){
     }
 
@@ -257,26 +247,97 @@ class YearsList{
 
         this.eventScrollWindow();
         this.event_container_years_wheel();
+        this.event_container_years_touch();
+        this.current_years.siguiente.container_years.style.transform = `translateY(100%)`;
+        this.current_years.anterior.container_years.style.transform = `translateY(-100%)`;
     }
 
     eventScrollWindow(){
-        window.addEventListener('wheel', (event) => {
+        document.addEventListener('wheel', (event) => {
             if(this.not_scroll){
                 event.preventDefault();
                 this.not_scroll = false;
+            }
+        }, {passive: false});
+
+        document.addEventListener('scroll', (event) => {
+            if(this.not_scroll){
+                event.preventDefault();
+                console.log("Se debe cancelar");
             }
         }, {passive: false});
     }
 
     event_container_years_wheel(){
         this.calendar_body_years.addEventListener('wheel', (event) => {
-            const up = event.deltaY < 0 ? true : false;
             this.not_scroll = true;
-            if(up){
-                this.previous();
-            }else{
-                this.next();
+            if(!this.transition){
+                const up = event.deltaY < 0 ? true : false;
+                if(up){
+                    this.previous();
+                }else{
+                    this.next();
+                }
             }
+        });
+    }
+
+    event_container_years_touch(){
+        this.calendar_body_years.addEventListener('touchstart', (event)=>{
+            this.not_scroll = true;
+            event.preventDefault();
+
+            const touches = event.touches[0];
+            const Y_start = touches.clientY;
+            
+            // ! LIMITES PARA DESPLAZAR AL TERMINAR DE DESLIZAR
+            const aux_limit = this.getPosition(this.current_years.container_years).height;
+            const limit = Math.ceil(aux_limit / 2);
+            const negative_limit = limit * -1;
+
+            // ! LIMITE DE DESPLAZAMIENTO AL MOMENTO DE DESLIZAR
+            const positive_limit_move = Math.ceil((aux_limit / 3) * 2);
+            const negative_limit_move = positive_limit_move * -1;
+
+            let new_move = 0;
+            let is_next = false;
+
+            let move_years = (event_window) => {
+                const touches_window = event_window.touches[0];
+                const move_Y = touches_window.clientY;
+                new_move = move_Y - Y_start;
+
+                if(new_move > negative_limit_move && new_move < positive_limit_move){
+
+                    this.current_years.container_years.style.transform = `translateY(${new_move}px)`;
+                    this.current_years.container_years.style.transition = `all ease 0.0s`;
+                    if(new_move > 0){
+                        this.current_years.anterior.container_years.style.transform = `translateY(calc(-100% + ${new_move}px))`;
+                        this.current_years.anterior.container_years.style.transition = `all ease 0.0s`;
+                    }else{
+                        is_next = true;
+                        this.current_years.siguiente.container_years.style.transform = `translateY(calc(100% + (${new_move}px)))`;
+                        this.current_years.siguiente.container_years.style.transition = `all ease 0.0s`;
+                    }
+                }
+            }
+
+            document.addEventListener('touchmove', move_years);
+
+            document.ontouchend = (event_touch_end) => {
+                this.not_scroll = false;
+                document.removeEventListener('touchmove', move_years);
+                document.ontouchend = null;
+
+                if(new_move > limit){
+                    this.previous();
+                }else if(new_move < negative_limit){
+                    this.next();
+                }else{
+                    this.resetPosition();
+                }
+            }
+
         });
     }
 
@@ -311,8 +372,10 @@ class YearsList{
             }
 
             this.current_years.container_years.style.transform = `translateY(0%)`;
-            // this.current_years.siguiente.container_years.style.transform = `translateY(0%)`;
+            this.current_years.container_years.style.transition = `all ease 0.3s`;
             this.current_years.anterior.container_years.style.transform = `translateY(-100%)`;
+            this.current_years.anterior.container_years.style.transition = `all ease 0.3s`;
+            this.delay();
         }
     }
 
@@ -323,10 +386,27 @@ class YearsList{
                 this.prepend();
             }
             this.current_years.container_years.style.transform = `translateY(0%)`;
-            // this.current_years.siguiente.container_years.style.transform = `translateY(0%)`;
+            this.current_years.container_years.style.transition = `all ease 0.3s`;
             this.current_years.siguiente.container_years.style.transform = `translateY(100%)`;
-            // this.current_years.print(true);
+            this.current_years.siguiente.container_years.style.transition = `all ease 0.3s`;
+            this.delay();
         }
+    }
+
+    delay(){
+        this.transition = true;
+        setTimeout(()=>{
+            this.transition = false;
+        },400);
+    }
+
+    resetPosition(){
+        this.current_years.anterior.container_years.style.transform = `translateY(-100%)`;
+        this.current_years.anterior.container_years.style.transition = `all ease 0.3s`;
+        this.current_years.container_years.style.transform = `translateY(0%)`;
+        this.current_years.container_years.style.transition = `all ease 0.3s`;
+        this.current_years.siguiente.container_years.style.transform = `translateY(100%)`;
+        this.current_years.siguiente.container_years.style.transition = `all ease 0.3s`;
     }
 }
 
