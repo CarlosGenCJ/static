@@ -443,13 +443,18 @@ footer .menu .item:nth-child(5) {
 .accounts_container {
   max-width: 100%;
   position: relative;
-  --space_button_controls: 20px;
+  --space_button_controls: -20px;
 }
 .accounts_container .container_aux {
   width: 100%;
   max-width: 100%;
-  overflow: hidden;
   position: relative;
+}
+.accounts_container .container_aux .swipper_container {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  overflow: hidden;
 }
 .accounts_container .container_aux .swipper_container_children {
   width: auto;
@@ -507,6 +512,9 @@ footer .menu .item:nth-child(5) {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  transition: all ease 0s 0s;
+  opacity: 1;
+  transform: scale(1);
 }
 .accounts_container .container_aux .swipper_container_children .account:last-child {
   margin: 0;
@@ -538,12 +546,22 @@ footer .menu .item:nth-child(5) {
   color: #fff;
   border: 1px solid rgba(0, 0, 0, 0);
   z-index: 2;
+  transition: all ease 0s var(--delay, 0s);
 }
 .accounts_container .container_aux .swipper_container_children .account.active .account_name,
 .accounts_container .container_aux .swipper_container_children .account.active .text {
   -webkit-user-select: all;
      -moz-user-select: all;
           user-select: all;
+}
+.accounts_container .container_aux .swipper_container_children .account.desapearing {
+  transition: all ease 0.6s 0s;
+  opacity: 0;
+}
+.accounts_container .container_aux .swipper_container_children .account.destroy {
+  transform: scale(0.6);
+  opacity: 0;
+  transition: all ease 0.3s var(--delay, 0.1s);
 }
 .accounts_container .container_aux .swipper_container_children .account .menu_action_container {
   --button_size: 18px;
@@ -561,7 +579,13 @@ footer .menu .item:nth-child(5) {
 .accounts_container .container_aux .swipper_container_children .account .menu_action_container label {
   position: relative;
   position: absolute;
-  transform: rotate(90deg);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
   font-weight: 700;
   line-height: var(--button_size);
   cursor: pointer;
@@ -821,7 +845,9 @@ footer .menu .item:nth-child(5) {
 }
 .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_left {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
+  cursor: pointer;
+  color: #E9511D;
 }
 .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right {
   width: 100px;

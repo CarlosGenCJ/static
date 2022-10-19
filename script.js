@@ -35,8 +35,6 @@ window.addEventListener('click', (event) => {
     Array.from(ripple_buttons).forEach((ripple_button) => {
         if (ripple_button.contains(element)) {
 
-            // const event = event.event;
-
             const rippleContainer = document.createElement('div');
             const rippleEffect = document.createElement('span');
 
@@ -45,8 +43,8 @@ window.addEventListener('click', (event) => {
 
             const offset = ripple_button.getBoundingClientRect();
 
-            rippleEffect.style.top = (event.pageY - offset.top) + "px";
-            rippleEffect.style.left = (event.pageX - offset.left) + "px";
+            rippleEffect.style.top = (event.clientY - offset.top) + "px";
+            rippleEffect.style.left = (event.clientX - offset.left) + "px";
 
             rippleContainer.classList.add('ripple-effect-animation');
 
@@ -59,6 +57,15 @@ window.addEventListener('click', (event) => {
             }, 400);
         }
     });
+
+    var container_menu = this.document.getElementsByClassName("toggle_container");
+    var target = event.target;
+    Array.from(container_menu).forEach(element => {
+        if (!element.contains(target)) {
+            let input = element.getElementsByClassName("toggle_input_menu")[0];
+            input ? input.checked = false : false;
+        }
+    })
 
 
 });
@@ -165,7 +172,24 @@ class Years{
                 year_element: element,
                 year: element.dataset.year
             };
+            this.change_date_to_instence(this.instanceFather.current_year_object.year);
         });
+    }
+
+    change_date_to_instence(year = 0){
+
+            if(year != 0){
+                let newMonth = new Date(year, this.instanceFather.monthCalendar, 1);
+
+                this.instanceFather.monthCalendar = newMonth.getMonth();
+
+                this.instanceFather.yearCalendar = newMonth.getFullYear();
+                this.instanceFather.current_month_name = this.instanceFather.monthsNames[this.instanceFather.monthCalendar];
+                this.instanceFather.load_Calendar();
+                if (Object.entries(this.instanceFather.date_selected_end).length !== 0) {
+                    this.instanceFather.range_dates();
+                }
+            }
     }
 
     event_parent(){
@@ -619,23 +643,37 @@ class Swipper {
 
     add_events_to_children() {
         Array.from(this.children).forEach((element) => {
-            element.onclick = (event) => {
-                event.stopPropagation();
-                const bound_child = this.getBound(element);
-                const bound_container = this.getBound(this.container);
-                const diference = bound_child.left - bound_container.left;
-                var translate = 0;
-                if (diference > 0) {
-                    translate = this.getTranslateX() - diference;
-                } else {
-                    translate = this.getTranslateX() + Math.abs(diference);
-                }
-                if (Math.abs(translate) > this.limit) {
-                    translate = this.limit * -1;
-                }
-                this.swipper.style.setProperty("--translate", translate + "px");
-            }
+            this.event_to_child(element);
         });
+    }
+
+    remove_events_to_children(){
+        Array.from(this.children).forEach((element)=>{
+            this.remove_event_to_child(element);
+        });
+    } 
+
+    event_to_child(element){
+        element.onclick = (event) => {
+            event.stopPropagation();
+            const bound_child = this.getBound(element);
+            const bound_container = this.getBound(this.container);
+            const diference = bound_child.left - bound_container.left;
+            var translate = 0;
+            if (diference > 0) {
+                translate = this.getTranslateX() - diference;
+            } else {
+                translate = this.getTranslateX() + Math.abs(diference);
+            }
+            if (Math.abs(translate) > this.limit) {
+                translate = this.limit * -1;
+            }
+            this.swipper.style.setProperty("--translate", translate + "px");
+        }
+    }
+
+    remove_event_to_child(element){
+        element.onclick = null;
     }
 
     remove_active_class() {
@@ -728,6 +766,7 @@ class Swipper {
 class newSwipper{
 
     swipper = null;
+    swipper_envold = null;
     swipper_container = null;
     next = null;
     prev = null;
@@ -740,6 +779,10 @@ class newSwipper{
     translate = 0;
 
     clicked = 0;
+
+    formatMethod = null;
+
+    cloneChildAux = null;
 
 
     constructor(){
@@ -813,6 +856,7 @@ class newSwipper{
 
     init(){
         this.constructorContainer();
+        this.swipper_envold = this.constructorSwipperContainer()
         this.swipper = this.constructorSwipper();
         this.next = this.constructorNextControl();
         this.prev = this.constructorPrevControl();
@@ -827,9 +871,15 @@ class newSwipper{
         // this.swipper_container.style.width = width == "0px" ? "100%" : width;
         this.swipper_container.style.width = "100%";
         this.swipper_container.style.maxWidth = "100%";
-        this.swipper_container.style.overflow = "hidden";
+        // this.swipper_container.style.overflow = "hidden";
         const position = this.getCssProperty(this.swipper_container, "position").toLowerCase();
         this.swipper_container.style.position = position == 'static' ? 'relative' : position;
+    }
+
+    constructorSwipperContainer(){
+        const swipper = document.createElement("div");
+        swipper.className = "swipper_container";
+        return swipper;
     }
 
     constructorSwipper(){
@@ -860,7 +910,8 @@ class newSwipper{
     }
 
     print(){
-        this.swipper_container.appendChild(this.swipper);
+        this.swipper_container.appendChild(this.swipper_envold);
+        this.swipper_envold.appendChild(this.swipper);
         this.swipper_container.appendChild(this.prev);
         this.swipper_container.appendChild(this.next);
         
@@ -871,9 +922,22 @@ class newSwipper{
     printChild(){
         this.children.forEach( child => {
             this.swipper.appendChild(child);
+            this.inyect_data_to_children_to_child(child);
         });
 
         this.child_selected = this.children[0];
+    }
+
+    inyect_data_to_children_to_child(child){
+
+        
+        const data = child.dataset.value ?? ''
+
+        const children_to_child = child.getElementsByClassName("click-touch");
+
+        Array.from(children_to_child).forEach(child => {
+            child.dataset.value = data;
+        });
     }
 
     events(){
@@ -1120,24 +1184,31 @@ class newSwipper{
 
     childControl(){
         this.children.forEach(child => {
-            child.addEventListener('click', (event)=> {clickEvent(child, event);});
-            child.addEventListener('touchend', (event)=> {clickEvent(child, event);});
 
-            // child.addEventListener('touchend', (event) => {
-            // });
+            child.ontouchend = (event) => {
+                this.clickEvent(child, event);
+            };
 
-            let clickEvent = (child, event) => {
-                if(this.clicked < 5){
-                    this.clicked = 0;
-                    this.child_selected = child;
-                    this.translateNexOrPrev(2);
-                    if(event.type == "touchend"){
-                        this.click_to_child_element(child, event.target);
-                    }
-                }
-                this.clicked = 0;
-            }
+            child.onclick = (event) => {
+                this.clickEvent(child, event);
+            };
         });
+    }
+
+    clickEvent = (child, event) => {
+        if(this.clicked < 5){
+            this.clicked = 0;
+            if(this.child_selected != child){
+                this.child_selected = child;
+                this.translateNexOrPrev(2);
+                event.preventDefault();
+            }else{
+                if(event.type == "touchend"){
+                    this.click_to_child_element(child, event.target);
+                }
+            }
+        }
+        this.clicked = 0;
     }
 
     click_to_child_element(parent, element){
@@ -1147,6 +1218,237 @@ class newSwipper{
                 child.click();
             }
         });
+    }
+
+    remove(className = ""){
+
+        const length = this.children.length;
+        this.cloneChildAux = length == 1 ? this.children[0].cloneNode(true) : null;
+        for(let i = 0; i < length; i++){
+
+            const child = this.children[i];
+
+            if(child.classList.contains(className) || child.dataset.value == className){
+                child.ontouchend = child.onclick = null;
+
+                child.classList.add("desapearing");
+
+                setTimeout(()=>{
+                    if(child == this.child_selected){
+                        if(i != length - 1){
+                            this.child_selected = this.children[i + 1];
+                            this.translateNexOrPrev(2);
+                        }
+                    } 
+                    this.swipper.removeChild(child);
+    
+                    this.children.splice(i,1);
+                },600);
+
+                break;
+            }
+        }
+    }
+
+    /**
+     * 
+     * 
+     * Esto es una función
+     * 
+     * Al pasarle una funcion, ésta devolverá un elemento clonado de los elementos hijos;
+     * 
+     * y el callback deberá devolver el mismo elemento u otro elemento html
+     * 
+     * para agregar al swipper.
+     * 
+     * También puedes pasar un objeto, este será usado en el método personalizado que hayas
+     * 
+     * definido previamente para imprimir distintos elementos al swipper.
+     * 
+     * 
+     * El objeto deberá contener el identificador único para cada elemento
+     * 
+     * @typedef {(object: HTMLElement) => HTMLElement} Callback
+     * 
+     * @param {Callback | {identifier: string, data: any}} callback Funcion u objeto
+     * @param {string} [identifier] 
+     * 
+     * @example
+     *  newSwipper.clone((element) => {
+     *      element.innerHTML = "<span>Hello World!</span>";
+     *      return element;
+     * })
+     * 
+     *  newSwipper.clone({
+     *      data: any,
+     *      name: any
+     * })
+     * 
+     */
+    clone(callback, identifier = ""){
+        if(this.children.length == 0){
+            console.info("No existen elementos para clonar.")
+            return;
+        }
+
+        let cloneNode = this.children[0].cloneNode(true);
+        const type = (typeof callback).toLowerCase();
+        
+        if(type != "function" && type != "object"){
+            console.error("El callback debe ser de tipo 'function | object',", typeof callback, "dado");
+            return;
+        }
+
+        if(type == "object" && !callback.data){
+            console.error("Formato de objecto icorrecto.");
+            return;
+        }
+
+        if((type == "object" && !callback.identifier) || type == "function"){
+            identifier = identifier == "" ? this.make_id(10) : identifier;
+        }
+
+        let new_child = null;
+        try{
+            new_child = callback(cloneNode) || this.formatMethod(cloneNode);
+        }catch(error){
+            console.error(error);
+            return;
+        }
+
+        if(new_child == null){
+            console.error("El callback debe retornar un valor.");
+            return;
+        }
+
+        if(!this.isHTMLElement(new_child)){
+            console.error("El callback debe devolver un elemento html.");
+            return;
+        }
+
+        new_child.dataset.value = identifier;
+
+        this.add_new_child(new_child);
+    }
+
+    add_new_child(child){
+        console.log(child);
+
+        child.ontouchend = (event) => {
+            this.clickEvent(child, event);
+        };
+
+        child.onclick = (event) => {
+            this.clickEvent(child, event);
+        };
+
+        this.swipper.appendChild(child);
+        this.children.push(child);
+
+        this.inyect_data_to_children_to_child(child);
+    }
+
+    reload(){
+
+    }
+
+    clean(){
+        if(this.children.length != 0){
+
+            this.cloneChildAux = length == 1 ? this.children[0].cloneNode(true) : null;
+
+            Array.from(this.children).forEach((child, i) => {
+                const delay = (0.1 * i);
+                child.style.setProperty("--delay", delay + "s");
+                child.classList.add("destroy");
+
+                console.log(delay * 1000);
+
+                setTimeout(()=>{
+                    this.swipper.removeChild(child);
+                }, (delay * 1000 + 1000));
+            });
+
+            this.children = [];
+        }
+    }
+
+    reload_with_new_data(){
+        const length_args = arguments.length;
+
+        if(length_args == 0){
+            console.log("Se esperaba 1 | 2 argumento(s). Se obtuvieron 0");
+        }
+
+        const first = arguments[0];
+
+        if(!(typeof first).toLowerCase() == "number" && !(typeof first).toLowerCase() == "object" && !(typeof first).toLowerCase() == "function"){
+            console.error("Se esperaba como argumento un número, una función o un objeto iterable. Se obtuvo", typeof first);
+            return;
+        }
+
+        if(!(typeof first).toLowerCase() == "number" && first < 1){
+            console.error("La cantidad de iteraciones no debe ser un número negativo.");
+            return;
+        }
+        if(!(typeof first).toLowerCase() == "object" && first.length == 0){
+            console.error("El objeto debe contener más de 0 elementos");
+            return;
+        }
+
+        let second = null;
+        if(length_args == 2){
+            second = arguments[1];
+        }
+
+        let third = null;
+        if(length_args == 3){
+            third = arguments[2];
+        }
+
+        if(third && !(typeof third).toLowerCase() != "string"){
+            console.log("Se esperaba un string como argumento. Se obtuvo", typeof third);
+            return;
+        }
+
+        if(second && (!(typeof second).toLowerCase() == "function" && !(typeof second).toLowerCase() == "string")){
+            console.error("Se esperaba una función como argumento. Se obtuvo", typeof second);
+            return;
+        }
+
+        if(second && !(typeof first).toLowerCase() == "number"){
+            console.log("Se esperaba un número como argumento. Se obtuvo", typeof first);
+            return;
+        }
+
+
+        if(second){
+            for(let i = 0; i < first; i++){
+                const element = this.cloneChildAux.cloneNode(true);
+                let new_child = (typeof second) == "function" ? second(element) : this.formatMethod(element);
+
+                if(new_child == null){
+                    console.error("La función debe retornar un valor.");
+                    break;
+                }
+        
+                if(!this.isHTMLElement(new_child)){
+                    console.error("La función debe devolver un elemento html.");
+                    break;
+                }
+
+                const identifier = (typeof second) == "string" ? second : third ? third : this.make_id(10);
+                new_child.dataset.value = identifier;
+                
+    
+                this.add_new_child(new_child);
+            }
+        }
+
+
+    }
+
+    evaluate_first_argument(arg){
     }
 
     getCssProperty(element, property = null){
@@ -1162,6 +1464,17 @@ class newSwipper{
             typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
             o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
         );
+    }
+
+    make_id(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
     }
 }
 
@@ -1245,6 +1558,28 @@ class Calendar extends YearsList {
     option_button = null;
     is_targeted_date = false;
 
+    positions = {
+        day: {
+            pos: 0,
+            length: 2
+        },
+        month: {
+            pos: 1,
+            length: 2
+        },
+        year: {
+            pos: 2,
+            length: 4
+        },
+        separator: "-"
+    };
+
+    min_date = null;
+    max_date = null;
+    event = null;
+
+    customInput = null;
+
     constructor(id) {
         super();
         if (typeof id != "string" && !this.isHTMLElement(id)) {
@@ -1259,6 +1594,12 @@ class Calendar extends YearsList {
             return new Error('Error: No se encontró ningún elemento html');
         }
 
+        const children = this.container_select.children;
+
+        if(children){
+            this.evaluate_input(children[0]);
+        }
+
         this.init();
     }
 
@@ -1269,7 +1610,25 @@ class Calendar extends YearsList {
         );
     }
 
+    evaluate_input(input){
+        if(!this.isHTMLElement(input)){
+            return;
+        }
+
+        if(input.nodeName.toLowerCase() != "input"){
+            return;
+        }
+
+        if(input.getAttribute("type").toLowerCase() != "text"){
+            console.warn("El input debe ser de tipo texto.");
+            return;
+        }
+
+        this.customInput = input;
+    }
+
     init() {
+        this.evaluate_entries();
         this.id = this.make_id(5);
         this.label_container = this.constructor_toggle();
         this.input_toggle = this.constructor_toggle_input();
@@ -1288,7 +1647,6 @@ class Calendar extends YearsList {
         this.days_matrix = this.constructor_days(this.calendar_body_days);
 
         this.menu_options = this.constructor_menu_options();
-        this.calendar_body_days.appendChild(this.menu_options);
 
 
         this.calendar_body_months = this.constructor_calendar_months();
@@ -1296,11 +1654,14 @@ class Calendar extends YearsList {
 
 
         this.calendar_body_years = this.constructor_calendar_years();
-        
-
-
 
         this.container_select.innerHTML = "";
+        this.container_select.classList.add("toggle_container");
+        if(this.customInput){
+            this.container_select.appendChild(this.customInput);
+        }
+
+
         this.init_calendar();
         
         this.container_select.appendChild(this.label_container);
@@ -1329,6 +1690,162 @@ class Calendar extends YearsList {
         // this.event_months();
         // ! DEPRECADO
         // this.event_controls();
+
+    }
+
+    evaluate_entries(){
+        let dataset = this.container_select.dataset;
+
+        let min_max = [false, false];
+
+        if(dataset.min){
+            min_max[0] = this.evaluate_min_max(dataset.min);
+        }
+        if(dataset.max){
+            min_max[1] = this.evaluate_min_max(dataset.max, true);
+        }
+        if(dataset.format){
+            this.evaluate_format(dataset.format);
+        }
+        if(dataset.eventName){
+            this.event = dataset.eventName;
+        }
+        if(!min_max.includes(false) && this.min_date > this.max_date){
+            console.error("La fecha mínima no debe ser mayor a la fecha máxima. Lo arreglaría yo, pero no voy a andar arreglando tus kgdas >:v.");
+            this.min_date = this.max_date = null;
+        }
+    }
+
+    evaluate_format(format){
+        const bad_format = () => {
+            console.error('El formato es incorrecto.');
+            this.positions = {
+                day: {
+                    pos: 0,
+                    length: 2
+                },
+                month: {
+                    pos: 1,
+                    length: 2
+                },
+                year: {
+                    pos: 2,
+                    length: 4
+                },
+                separator: "-"
+            };
+            return;
+        }
+
+        let aux = format.split("-");
+        this.positions.separator = "-";
+        if(aux.length != 3){
+            aux = format.split("/");
+            this.positions.separator = "/";
+        }
+
+        const array_format = aux; 
+
+        if(array_format.length != 3){
+            return bad_format();
+        }
+
+        if(
+            array_format[0].length == 0 ||
+            array_format[1].length == 0 ||
+            array_format[2].length == 0
+        ){
+            return bad_format();
+        }
+
+        let flags = [false, false, false];
+
+        array_format.forEach((data, index) => {
+            if((data[0] == 'm' || data[0] == "M" && data.length > 1 && data.length < 5) && !flags[0]){
+                this.positions.month.pos = index;
+                this.positions.month.length = data.length;
+                flags[0] = true;
+            }
+            if(data[0] == 'd' || data[0] == "D" && !flags[1] && data.length > 1 && data.length < 5){
+                this.positions.day.pos = index;
+                this.positions.day.length = data.length;
+                flags[1] = true;
+            }
+            if(data[0] == 'y' || data[0] == "Y" && !flags[2] && (data.length == 2 || data.length == 4)){
+                this.positions.year.pos = index;
+                this.positions.year.length = data.length;
+                flags[2] = true;
+            }
+        });
+        if(flags.includes(false)){
+            bad_format();
+        }
+        
+    }
+
+    evaluate_min_max(data, max = false){
+        const bad_format = () => {
+            console.error('El formato es incorrecto.');
+            this.positions = {
+                day: {
+                    pos: 0,
+                    length: 2
+                },
+                month: {
+                    pos: 1,
+                    length: 2
+                },
+                year: {
+                    pos: 2,
+                    length: 4
+                },
+                separator: "-"
+            };
+            return false;
+        }
+
+        let aux = data.split("-");
+        if(aux.length != 3){
+            aux = data.split("/");
+        }
+
+        const array_format = aux; 
+
+        if(array_format.length != 3){
+            return bad_format();
+        }
+
+        if(
+            array_format[0].length == 0 ||
+            array_format[1].length == 0 ||
+            array_format[2].length == 0
+        ){
+            return bad_format();
+        }
+
+        if(array_format[2].length == 4 && array_format[0].length == 2){
+            let aux = array_format[0];
+            array_format[0] = array_format[2];
+            array_format[2] = aux;
+        }
+
+        const format = {
+            year: array_format[0],
+            dayMonth: array_format[2],
+            month: array_format[1]
+        }
+        const limit = this.get_time_to_container_day(format, true);
+        if(!isNaN(limit)){
+            if(max){
+                this.max_date = limit;
+            }else{
+                this.min_date = limit;
+            }
+            return true;
+        }else{
+            return bad_format();
+        }
+
 
     }
 
@@ -1374,6 +1891,7 @@ class Calendar extends YearsList {
             attr: "checked",
             val: "true"
         }]);
+        input.classList.add("toggle_input_menu");
         return input; 
     }
 
@@ -1608,7 +2126,25 @@ class Calendar extends YearsList {
                 auxDay.lastDay = j == 7 ? true : false;
 
                 // Si el día está fuera del mes actual
-                auxDay.daysOut = currentMonth != this.monthCalendar ? true : false;
+                // auxDay.daysOut = currentMonth != this.monthCalendar ? true : false;
+
+                const auxDateLimits = {
+                    dayMonth: auxDayMonth.getDate(),
+                    month: auxDayMonth.getMonth(),
+                    year: auxDayMonth.getFullYear()
+                };
+
+                const date_to_miliseconds = this.get_time_to_container_day(auxDateLimits, true);
+                if(currentMonth != this.monthCalendar){
+                    auxDay.daysOut = true;
+                }
+
+                if(this.min_date && date_to_miliseconds < this.min_date){
+                    auxDay.daysOut = true;
+                }
+                if(this.max_date && date_to_miliseconds > this.max_date){
+                    auxDay.daysOut = true;
+                }
 
                 // Si el día actual es igual al día evaluado
                 if (currentMonth == this.current_month && currentYear == this.current_year && currentDayMonth == this.current_day_month) {
@@ -1781,6 +2317,7 @@ class Calendar extends YearsList {
             // console.log(event);            
             this.open_options_menu(element);
         });
+
         element.addEventListener('click', (event) => {
 
             if (element.dataset.daysOut == 'active') {
@@ -1807,6 +2344,8 @@ class Calendar extends YearsList {
                     this.date_selected_end.container = element;
                     this.range_dates();
                 }
+
+                this.eventEmmiter()
             }
 
             if(this.menu_option_selected){
@@ -2084,6 +2623,72 @@ class Calendar extends YearsList {
                 charactersLength));
         }
         return result;
+    }
+
+    eventEmmiter(){
+
+        let date_emmiter = [];
+
+        const day_init = this.date_selected.dayMonth;
+        const month_init = this.date_selected.month;
+        const year_init = this.date_selected.year;
+        const date_init = this.eventEmmiterFormat(day_init, month_init, year_init);
+        date_emmiter.push(date_init);
+        if(Object.entries(this.date_selected_end).length != 0){
+            const day_end = this.date_selected_end.dayMonth;
+            const month_end = this.date_selected_end.month;
+            const year_end = this.date_selected_end.year;
+            const date_end = this.eventEmmiterFormat(day_end, month_end, year_end);
+            date_emmiter.push(date_end);
+        }
+        this.event ? this.dispatchEvent(date_emmiter) : false;
+        this.customInput ? this.emmiterToInput(date_emmiter) : false;
+    }
+
+    eventEmmiterFormat(day, month, year){
+        let date = [null,null,null];
+        let monthAux;
+        date[this.positions.day.pos] = day < 10 ? "0" + day : day;
+
+        if(this.positions.month.length == 3){
+            monthAux = this.months_short[month - 1];
+            date[this.positions.month.pos] = monthAux;
+        }else if(this.positions.month.length == 4){
+            monthAux = this.monthsNames[month - 1];
+            date[this.positions.month.pos] = monthAux;
+        }else{
+            date[this.positions.month.pos] = month;
+        }
+
+        date[this.positions.year.pos] = year;
+
+        const dateString = date[0] + this.positions.separator + date[1] + this.positions.separator + date[2];
+
+        return dateString;
+    }
+
+    dispatchEvent(data){
+        let date_emmiter = {};
+        if(data.length == 2){
+            date_emmiter.init = data[0];
+            date_emmiter.end = data[1];
+        }else{
+            date_emmiter.date = data[0];
+        }
+        if(this.event){
+            window.dispatchEvent(new CustomEvent(this.event,
+                {
+                    detail: date_emmiter
+                })
+            );
+        }
+    }
+
+    emmiterToInput(date){
+        let aux = date[0];
+        aux += date[1] ? " - " + date[1] : "";
+        this.customInput.value = aux;
+        this.customInput.dispatchEvent(new Event('input'));
     }
 }
 
@@ -2480,150 +3085,8 @@ class BeautifyBackDrop {
 }
 
 
-
-class Node {
-    constructor(value) {
-        this.value = value;
-        this.next = null;
-        this.previous = null;
-    }
-}
-
-class DoublyLinkedList {
-    constructor(value) {
-        this.head = {
-            value: value,
-            next: null,
-            previous: null
-        };
-        this.length = 1;
-        this.tail = this.head;
-        this.current = this.tail;
-    }
-
-    printList() {
-        let array = [];
-        let currentList = this.head;
-        while (currentList !== null) {
-            array.push(currentList.value);
-            currentList = currentList.next;
-        }
-
-        console.log(array.join(' <--> '));
-        return this;
-    }
-
-    // Insert node at end of the list
-    append(value) {
-        let newNode = new Node(value);
-
-        this.tail.next = newNode;
-        newNode.previous = this.tail;
-        this.tail = newNode;
-
-        this.length++;
-        this.printList();
-    }
-
-    // Insert node at the start of the list
-    prepend(value) {
-        let newNode = new Node(value);
-
-        newNode.next = this.head;
-        this.head.previous = newNode;
-        this.head = newNode;
-
-        this.length++;
-        this.printList();
-    }
-
-    // Insert node at a given index
-    insert (index, value) {
-        if (!Number.isInteger(index) || index < 0 || index > this.length + 1) {
-            console.log(`Invalid index. Current length is ${this.length}.`);
-            return this;
-        }
-
-        // If index is 0, prepend
-        if (index === 0) {
-            this.prepend(value);
-            return this;
-        }
-
-        // If index is equal to this.length, append
-        if (index === this.length) {
-            this.append(value);
-            return this;
-        }
-
-        // Reach the node at that index
-        let newNode = new Node(value);
-        let previousNode = this.head;
-
-        for (let k = 0; k < index - 1; k++) {
-            previousNode = previousNode.next;
-        }
-
-        let nextNode = previousNode.next;
-        
-        newNode.next = nextNode;
-        previousNode.next = newNode;
-        newNode.previous = previousNode;
-        nextNode.previous = newNode;
-
-        this.length++;
-        this.printList();
-    }
-
-    // Remove a node
-    remove (index) {
-        if (!Number.isInteger(index) || index < 0 || index > this.length) {
-            console.log(`Invalid index. Current length is ${this.length}.`);
-            return this;
-        }
-
-        // Remove head
-        if (index === 0) {
-            this.head = this.head.next;
-            this.head.previous = null;
-
-            this.length--;
-            this.printList();
-            return this;
-        }
-
-        // Remove tail
-        if (index === this.length - 1) {
-            this.tail = this.tail.previous;
-            this.tail.next = null;
-
-            this.length--;
-            this.printList();
-            return this;
-        }
-
-        // Remove node at an index
-        let previousNode = this.head;
-
-        for (let k = 0; k < index - 1; k++) {
-            previousNode = previousNode.next;
-        }
-        let deleteNode = previousNode.next;
-        let nextNode = deleteNode.next;
-
-        previousNode.next = nextNode;
-        nextNode.previous = previousNode;
-
-        this.length--;
-        this.printList();
-        return this;
-    }
-
-    next(){
-        if(this.current && this.current.next){
-            this.current = this.current.next;
-        }
-
-        console.log(this.current.value);
+function prueba(callback){
+    for(let i = 0; i < 10; i++){
+        callback(i);
     }
 }
