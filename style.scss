@@ -10,10 +10,10 @@
 
     --height-footer: 80px;
     --margin-bottom-footer: 0px;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-body{
+body {
     width: 100%;
     height: 100vh;
     font-family: 'Inter';
@@ -156,41 +156,46 @@ footer {
     transform: translateY(100%);
     transition: all ease 0.3s 0.0s;
     height: var(--height-footer);
-    .menu{
+
+    .menu {
         width: 100%;
         height: 100%;
         background-color: $text_color;
         @include row-center(false, true);
         color: $text_color_contrast;
-        .item{
-            --icon_tam : 25px;
+
+        .item {
+            --icon_tam: 25px;
             // transition: all ease 0.2s;
             opacity: 0.6;
             @include col-center(true, true);
             transform: translateY(100%);
             position: relative;
-            .icon{
+
+            .icon {
                 width: var(--icon_tam);
                 height: var(--icon_tam);
                 margin-bottom: 10px;
-                img{
+
+                img {
                     @include image-cover;
                 }
             }
-            .labe{
+
+            .labe {
                 font-size: 12px;
                 font-weight: 500;
             }
 
-            &.active{
+            &.active {
                 opacity: 1;
             }
         }
 
-        @for $i from 1 through 5{
-            .item:nth-child(#{$i}){
+        @for $i from 1 through 5 {
+            .item:nth-child(#{$i}) {
                 $value: 0.3s + (0.1s * $i);
-                transition: all ease 0.3s 0.0s, transform ease 0.3s $value; 
+                transition: all ease 0.3s 0.0s, transform ease 0.3s $value;
             }
         }
     }
@@ -264,9 +269,11 @@ footer {
     }
 }
 
-.controls_container {
-    margin-bottom: 15px;
+.btn_containers{
+    @include row-center(true, true);
+}
 
+.controls_container {
     .controls {
         width: 100%;
         @include row-center(true, true);
@@ -299,65 +306,18 @@ footer {
                 }
             }
         }
-
-        .btn_new_account {
-            --dimension-btn-account: 30px;
-            --dimension-btn-account-icon: 20px;
-            height: var(--dimension-btn-account);
-            max-width: var(--dimension-btn-account);
-            border-radius: $border_radius_round;
-            background-color: $background_color_thirdy;
-            padding: 5px;
-            @include row-center(true, true);
-            flex-wrap: nowrap;
-            transition: all ease 0.3s;
-            cursor: pointer;
-            overflow: hidden;
-            user-select: none;
-            position: relative;
-
-            &:hover {
-                max-width: 130px;
-
-                .btn_icon {
-                    transform: rotate(-180deg);
-                }
-            }
-
-            .btn_icon,
-            .label {
-                display: inline-block;
-                color: $text_color_contrast;
-                pointer-events: none;
-            }
-
-            .btn_icon {
-                width: var(--dimension-btn-account-icon);
-                height: var(--dimension-btn-account-icon);
-                transition: all ease 0.3s;
-            }
-
-            .label {
-                // min-width: 200px;
-                // word-break: keep-all;
-                white-space: nowrap;
-                margin-left: 5px;
-                font-size: 10px;
-                font-weight: 700;
-                padding-right: 5px;
-            }
-        }
     }
 }
 
 @mixin swipper {
 
-    .swipper_container{
+    .swipper_container {
         width: 100%;
         max-width: 100%;
         min-width: 100%;
         overflow: hidden;
     }
+
     .swipper_container_children {
         width: auto;
         @include row-center(true, true);
@@ -393,25 +353,21 @@ footer {
     .container_aux {
         width: 100%;
         max-width: 100%;
-        // overflow: hidden;
+        overflow: hidden;
         position: relative;
-        @include swipper;
 
-        // .accounts, 
-        .swipper_container_children {
-            // swipper_container_children
+        .accounts {
             width: auto;
             @include row-center(true, true);
             display: inline-flex;
             overflow: hidden;
             transform: translateX(var(--translate, 0px));
-            // transition: all ease 0.3s;
+            gap: 20px;
 
             .account {
-                width: 225px;
+                width: 243px;
                 min-height: 160px;
                 @include col-center(true, false);
-                margin-right: 20px;
                 border-radius: $border_radius_main;
                 padding: 15px 10px;
                 color: $text_color_placeholder;
@@ -454,7 +410,6 @@ footer {
                 }
 
                 &.active {
-                    // background-color: $main_color;
                     background-image: $background_color_gradient;
                     color: $text_color_contrast;
                     border: $main_border_inactive;
@@ -467,13 +422,12 @@ footer {
                     }
                 }
 
-                &.desapearing{
-                    // transform: scale(0.6);
+                &.desapearing {
                     transition: all ease 0.6s 0.0s;
                     opacity: 0;
                 }
 
-                &.destroy{
+                &.destroy {
                     transform: scale(0.6);
                     opacity: 0;
                     transition: all ease 0.3s var(--delay, 0.1s);
@@ -492,7 +446,6 @@ footer {
                     label {
                         position: relative;
                         position: absolute;
-                        // transform: rotate(90deg);
                         @include row-center(true, true);
                         width: 100%;
                         height: 100%;
@@ -522,9 +475,6 @@ footer {
                         transform: scale(0.5);
                         transform-origin: top left;
                         pointer-events: none;
-
-                        // max-width: var(--max_dimension_menu_container);
-                        // max-height: var(--max_dimension_menu_container);
                         .options {
                             display: grid;
                             grid-auto-rows: minmax(0, 1fr);
@@ -558,109 +508,27 @@ footer {
 
 }
 
-.account_info_panel_container {
-    color: $text_color_primary;
 
-    .relleno {
-        height: 42px;
-    }
-
-    .account_info_panel {
-        // @include width-height-max;
-        // border: $main_border;
-        // border-radius: $border_radius_main;
-        // background-color: $background_color;
-        @include container_style;
-        display: flex;
-        padding: 15px;
-        justify-content: center;
-        height: auto;
-
-        .account_info_panel_data {
-            @include col-center(true);
-
-            .info_panel_container {
-                @include col-center(true);
-
-                .info {
-                    margin-bottom: 10px;
-
-                    .label {
-                        font-size: 10px;
-                        font-weight: 400;
-                        user-select: none;
-                        transition: all ease 0.3s;
-                    }
-
-                    .text {
-                        font-size: 12px;
-                        font-weight: 700;
-                        transition: all ease 0.3s;
-                    }
-
-                    &:last-child {
-                        margin: 0;
-                    }
-                }
-            }
+.info_container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-columns: 1fr;
+    column-gap: 20px;
+    .info_content {
+        width: 100%;
+        padding: 20px 10px;
+        background-color: $background_color;
+        border-radius: $border_radius_main;
+        .label{
+            font-size: 12px;
+            user-select: none;
         }
-
-        .account_info_panel_graph {
-            @include display-center-children;
-            justify-content: space-around;
-
-            .graph_circle {
-                --dimension: 128px;
-                @include box(var(--dimension), true);
-                @include display-center-children;
-                text-align: center;
-                position: relative;
-                transition: all ease 0.3s;
-
-                .info_graph {
-                    font-size: 10px;
-                    z-index: 2;
-
-                    .placeholder {
-                        font-weight: 400;
-                        user-select: none;
-                        transition: all ease 0.3s;
-                    }
-
-                    .amount_graph {
-                        font-weight: 700;
-                        transition: all ease 0.3s;
-                    }
-                }
-
-                &::after,
-                &::before {
-                    content: '';
-                    @include full_father(true);
-                    border-radius: $border_radius_complete;
-                    transform: translate(-50%, -50%) rotate(-45deg);
-                }
-
-                &::after {
-                    border-left: 5px solid $main_color;
-                    border-top: 5px solid $main_color;
-
-                    border-right: 5px solid $transparent;
-                    border-bottom: 5px solid $transparent;
-                }
-
-                &::before {
-                    border-right: 5px solid $main_color_grad;
-                    border-bottom: 5px solid $main_color_grad;
-
-                    border-left: 5px solid $transparent;
-                    border-top: 5px solid $transparent;
-                }
-            }
+        .text{
+            font-weight: 700;
+            font-size: 15px;
         }
     }
 }
-
 
 @mixin calendar {
     .select {
@@ -706,9 +574,6 @@ footer {
             --dimension_days: 30px;
             position: absolute;
             pointer-events: none;
-            // top: 100%;
-            // left: 50%;
-            // transform: translate(-50%, 0);
             transition: all ease 0.2s;
             transform: scale(0.5);
             opacity: 0;
@@ -716,8 +581,6 @@ footer {
             width: var(--width);
             top: 100%;
             right: 0;
-            // border: $main_border;
-            // border-radius: $border_radius_main;
             border-radius: 20px;
             background-color: $background_calendar;
             border: $main_border;
@@ -845,7 +708,7 @@ footer {
                     text-align: center;
                     width: 100%;
 
-                    .menu_container{
+                    .menu_container {
                         position: absolute;
                         transform: translate(-50%, 0%);
                         padding: 5px;
@@ -854,9 +717,9 @@ footer {
                         overflow: hidden;
                         pointer-events: none;
                         cursor: pointer;
-                        .option{
+
+                        .option {
                             position: absolute;
-                            // white-space: none;
                             top: 50%;
                             left: 50%;
                             transform: translate(-50%, -50%) scale(1);
@@ -864,45 +727,46 @@ footer {
                             font-size: 10px;
                         }
 
-                        &.show{
+                        &.show {
                             animation: show 0.4s ease forwards;
                             pointer-events: all;
                         }
 
-                        &.hidden{
+                        &.hidden {
                             animation: hidden 0.4s ease forwards;
 
-                            .option{
-                                // transform: scale(0.8);
+                            .option {
                                 transform: translate(-50%, -50%) scale(0.8);
                             }
                         }
 
                         @keyframes show {
-                            0%{
+                            0% {
                                 transform: translate(-50%, 0%);
                             }
-                            50%{
+
+                            50% {
                                 transform: translate(-50%, -100%);
                             }
-                            100%{
+
+                            100% {
                                 transform: translate(-50%, -100%);
                                 width: 70px;
                             }
                         }
 
                         @keyframes hidden {
-                            0%{
-                                // transform: translate(-50%, 0%);
+                            0% {
                                 transform: translate(-50%, -100%);
                                 width: 70px;
                             }
-                            50%{
+
+                            50% {
                                 transform: translate(-50%, -100%);
                                 width: var(--width, 0px);
                             }
-                            100%{
-                                // transform: translate(-50%, -100%);
+
+                            100% {
                                 transform: translate(-50%, 0%);
                                 opacity: 0;
                                 width: var(--width, 0px);
@@ -950,10 +814,6 @@ footer {
                                 background-color: $background_days_active;
                                 box-shadow: $box_shadow_buttons_calendar;
                                 color: $text_color_active_calendar;
-
-                                // &:hover{
-
-                                // }
                             }
 
                             &.current {
@@ -970,25 +830,22 @@ footer {
                                     background-color: $background_days_active;
                                     box-shadow: $box_shadow_buttons_calendar;
                                     color: $text_color_active_calendar;
-
-                                    // &:hover{
-
-                                    // }
                                 }
                             }
-                            &.tarjet{
+
+                            &.tarjet {
                                 transform: scale(1.4);
                             }
                         }
                     }
                 }
 
-                .calendar_body_years{
+                .calendar_body_years {
                     width: 100%;
                     height: 180px;
                     position: relative;
 
-                    .years_container{
+                    .years_container {
                         @include full_father;
                         display: grid;
                         grid-template-columns: repeat(1, 1fr);
@@ -998,16 +855,15 @@ footer {
                         padding: 10px;
                         text-align: center;
 
-                        .year_row{
+                        .year_row {
                             display: grid;
                             grid-template-columns: repeat(5, 1fr);
                             grid-auto-rows: 1fr;
                             grid-column-gap: var(--spacing_days);
                             grid-row-gap: var(--spacing_days);
 
-                            // align-items: center;
 
-                            .year{
+                            .year {
                                 border-radius: $border_radius_main;
                                 width: 100%;
                                 height: 100%;
@@ -1015,40 +871,30 @@ footer {
                                 transition: all ease 0.3s;
                                 cursor: pointer;
 
-                                &:hover{
+                                &:hover {
                                     background-color: $background_days_hover;
                                     box-shadow: $box_shadow_buttons_calendar;
                                 }
 
-                                &.current{
+                                &.current {
                                     background-color: $background_day_current;
                                     box-shadow: $box_shadow_buttons_calendar;
 
-                                    &:hover{
+                                    &:hover {
                                         background-color: $background_days_active;
                                         color: $text_color_active_calendar;
                                     }
                                 }
 
-                                &.active{
+                                &.active {
                                     background-color: $background_days_active;
                                     color: $text_color_active_calendar;
                                     box-shadow: $box_shadow_buttons_calendar;
                                 }
                             }
-                        
-                            // @include display-center-children;
-                        
+
                             font-size: 12px;
                         }
-
-                        // display: none;
-
-                        // &:not(&:first-child){
-                        //     display: none;
-                        // }
-
-                        
                     }
                 }
             }
@@ -1066,7 +912,7 @@ footer {
         .graph_head {
             @include row-center(true, true);
 
-            .head_left {
+            .graph_head_left {
                 @include row-center(true, true);
                 gap: 27px;
 
@@ -1083,8 +929,24 @@ footer {
                 }
             }
 
-            .head_right {
+            .graph_head_right {
+                @include row-center(true,true);
                 @include calendar;
+                border: $main_border;
+                border-radius: $border_radius_round;
+
+                .select{
+                    .toggle_menu{
+                        border: none;
+                        width: 100px;
+                        .icon_calendar{
+                            display: none;
+                        }
+                        .arrow_open{
+                            display: none;
+                        }
+                    }
+                }
             }
         }
     }
@@ -1148,25 +1010,30 @@ footer {
 
 
 @mixin wallet_container {
-    .wallet_container{
-        .wallet{
-            .wallet_content{
+    .wallet_container {
+        .wallet {
+            .wallet_content {
                 flex-direction: column;
                 align-items: flex-start;
-                .wallet_name{
+
+                .wallet_name {
                     font-size: 16px;
                     font-weight: 400;
                 }
-                .divider{
+
+                .divider {
                     width: 0px;
                     margin: 0;
                 }
-                .wallet_info{
+
+                .wallet_info {
                     flex-direction: column-reverse;
-                    .wallet_info_label{
+
+                    .wallet_info_label {
                         color: $label_color;
                     }
-                    .wallet_info_text{
+
+                    .wallet_info_text {
                         font-size: 25px;
                     }
                 }
@@ -1176,23 +1043,17 @@ footer {
     }
 }
 
-// @mixin btn_controls_container {
-//     .btn_controls_container{
-//         .btn_controls{
-//             // justify-content: space-between;
-//         }
-//     }
-// }
-
 @mixin controls_container {
     .controls_container {
         .controls {
             .accounts_switch {
                 background-color: transparent;
-                .label{
+
+                .label {
                     color: $text_color;
                 }
-                .backdrop{ 
+
+                .backdrop {
                     box-shadow: $box_shadow_backdrop_responsive;
                 }
             }
@@ -1200,100 +1061,45 @@ footer {
     }
 }
 
-@mixin account_info_panel_container {
-    .account_info_panel_container{
-        // margin-bottom: 0;
-        .relleno{
-            height: 0;
-        }
-
-        .account_info_panel{
-            flex-direction: column-reverse;
-            padding: 0;
-            border: $main_border_inactive;
-            background-color: transparent;
-            gap: 15px;
-
-            .account_info_panel_graph{
-                border: $main_border;
-                background-color: $background_color;
-                border-radius: $border_radius_main;
-                padding: 40px 20px;
-                .graph_circle{
-                    // aspect-ratio: 1/1;
-                    max-width: 100%;
-                    --dimension: 250px;
-
-                    &::after,&::before{
-                        border-width: 8px;
-                    }
-
-                    .info_graph{
-                        .placeholder{
-                            font-size: 17px;
-                        }
-                        .amount_graph{
-                            font-size: 17px;
-                        }
-                    }
-                }
-            }
-
-            .account_info_panel_data{
-                .info_panel_container{
-                    
-                    .info{
-                        border: $main_border;
-                        background-color: $background_color;
-                        border-radius: $border_radius_main;
-                        padding: 10px;
-                        .label{
-                            font-size: 13px;
-                        }
-                        .text{
-                            font-size: 15px;
-                        }
-                    }
-
-                    &.account_name{
-                        display: none;
-                    }
-                }
-            }
-        }
+@mixin info_container{
+    .info_container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-columns: 1fr;
+        column-gap: 20px;
+        row-gap: 20px;
     }
 }
+
+
 
 @media (max-width: 991px) {
     @include wallet_container();
-    // @include btn_controls_container();
-    @include account_info_panel_container();
     @include controls_container();
-
-    .column-reverse{
-        flex-direction: column-reverse;
-    }
+    @include info_container();
 }
 
-@media (max-width: 767px){
-    nav{
+@media (max-width: 767px) {
+    nav {
         transform: translateX(calc(var(--width-navbar) * -1));
         transition: all ease 0.3s 0.0s;
     }
 
-    section{
+    section {
         --translate-navbar: 0px;
         --margin-bottom-footer: var(--height-footer);
-        .container{
+
+        .container {
             max-width: 666px;
         }
     }
 
-    footer{
+    footer {
         transform: translateY(0%);
         transition: all ease 0.3s 0.3s;
-        .menu{
-            .item{
+
+        .menu {
+            .item {
                 transform: translateY(0%);
             }
         }

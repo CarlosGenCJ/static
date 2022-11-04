@@ -352,9 +352,14 @@ footer .menu .item:nth-child(5) {
   color: #fff;
 }
 
-.controls_container {
-  margin-bottom: 15px;
+.btn_containers {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
 }
+
 .controls_container .controls {
   width: 100%;
   display: flex;
@@ -392,53 +397,6 @@ footer .menu .item:nth-child(5) {
   cursor: default;
   font-weight: 700;
 }
-.controls_container .controls .btn_new_account {
-  --dimension-btn-account: 30px;
-  --dimension-btn-account-icon: 20px;
-  height: var(--dimension-btn-account);
-  max-width: var(--dimension-btn-account);
-  border-radius: 50px;
-  background-color: #1E1E1E;
-  padding: 5px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  transition: all ease 0.3s;
-  cursor: pointer;
-  overflow: hidden;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  position: relative;
-}
-.controls_container .controls .btn_new_account:hover {
-  max-width: 130px;
-}
-.controls_container .controls .btn_new_account:hover .btn_icon {
-  transform: rotate(-180deg);
-}
-.controls_container .controls .btn_new_account .btn_icon,
-.controls_container .controls .btn_new_account .label {
-  display: inline-block;
-  color: #fff;
-  pointer-events: none;
-}
-.controls_container .controls .btn_new_account .btn_icon {
-  width: var(--dimension-btn-account-icon);
-  height: var(--dimension-btn-account-icon);
-  transition: all ease 0.3s;
-}
-.controls_container .controls .btn_new_account .label {
-  white-space: nowrap;
-  margin-left: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  padding-right: 5px;
-}
 
 .accounts_container {
   max-width: 100%;
@@ -448,15 +406,10 @@ footer .menu .item:nth-child(5) {
 .accounts_container .container_aux {
   width: 100%;
   max-width: 100%;
+  overflow: hidden;
   position: relative;
 }
-.accounts_container .container_aux .swipper_container {
-  width: 100%;
-  max-width: 100%;
-  min-width: 100%;
-  overflow: hidden;
-}
-.accounts_container .container_aux .swipper_container_children {
+.accounts_container .container_aux .accounts {
   width: auto;
   display: flex;
   flex-direction: row;
@@ -466,42 +419,14 @@ footer .menu .item:nth-child(5) {
   display: inline-flex;
   overflow: hidden;
   transform: translateX(var(--translate, 0px));
+  gap: 20px;
 }
-.accounts_container .container_aux .next,
-.accounts_container .container_aux .prev {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-}
-.accounts_container .container_aux .next {
-  right: var(--space_button_controls);
-}
-.accounts_container .container_aux .prev {
-  left: var(--space_button_controls);
-}
-.accounts_container .container_aux .swipper_container_children {
-  width: auto;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-  display: inline-flex;
-  overflow: hidden;
-  transform: translateX(var(--translate, 0px));
-}
-.accounts_container .container_aux .swipper_container_children .account {
-  width: 225px;
+.accounts_container .container_aux .accounts .account {
+  width: 243px;
   min-height: 160px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-right: 20px;
   border-radius: 5px;
   padding: 15px 10px;
   color: #D9D9D9;
@@ -516,17 +441,17 @@ footer .menu .item:nth-child(5) {
   opacity: 1;
   transform: scale(1);
 }
-.accounts_container .container_aux .swipper_container_children .account:last-child {
+.accounts_container .container_aux .accounts .account:last-child {
   margin: 0;
 }
-.accounts_container .container_aux .swipper_container_children .account .account_name {
+.accounts_container .container_aux .accounts .account .account_name {
   font-weight: 700;
   font-size: 15px;
 }
-.accounts_container .container_aux .swipper_container_children .account .account_info {
+.accounts_container .container_aux .accounts .account .account_info {
   display: flex;
 }
-.accounts_container .container_aux .swipper_container_children .account .account_info .info .label {
+.accounts_container .container_aux .accounts .account .account_info .info .label {
   font-size: 10px;
   font-weight: 400;
   -webkit-user-select: none;
@@ -534,36 +459,36 @@ footer .menu .item:nth-child(5) {
       -ms-user-select: none;
           user-select: none;
 }
-.accounts_container .container_aux .swipper_container_children .account .account_info .info .text {
+.accounts_container .container_aux .accounts .account .account_info .info .text {
   font-size: 15px;
   font-weight: 700;
 }
-.accounts_container .container_aux .swipper_container_children .account .account_info .info:first-child {
+.accounts_container .container_aux .accounts .account .account_info .info:first-child {
   margin-right: 25px;
 }
-.accounts_container .container_aux .swipper_container_children .account.active {
+.accounts_container .container_aux .accounts .account.active {
   background-image: linear-gradient(129.2deg, #E9511D 27.54%, #FF7748 115.35%);
   color: #fff;
   border: 1px solid rgba(0, 0, 0, 0);
   z-index: 2;
   transition: all ease 0s var(--delay, 0s);
 }
-.accounts_container .container_aux .swipper_container_children .account.active .account_name,
-.accounts_container .container_aux .swipper_container_children .account.active .text {
+.accounts_container .container_aux .accounts .account.active .account_name,
+.accounts_container .container_aux .accounts .account.active .text {
   -webkit-user-select: all;
      -moz-user-select: all;
           user-select: all;
 }
-.accounts_container .container_aux .swipper_container_children .account.desapearing {
+.accounts_container .container_aux .accounts .account.desapearing {
   transition: all ease 0.6s 0s;
   opacity: 0;
 }
-.accounts_container .container_aux .swipper_container_children .account.destroy {
+.accounts_container .container_aux .accounts .account.destroy {
   transform: scale(0.6);
   opacity: 0;
   transition: all ease 0.3s var(--delay, 0.1s);
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container {
+.accounts_container .container_aux .accounts .account .menu_action_container {
   --button_size: 18px;
   --max_dimension_menu_container: 300px;
   -webkit-user-select: none;
@@ -576,7 +501,7 @@ footer .menu .item:nth-child(5) {
   width: var(--button_size);
   height: var(--button_size);
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container label {
+.accounts_container .container_aux .accounts .account .menu_action_container label {
   position: relative;
   position: absolute;
   display: flex;
@@ -590,15 +515,15 @@ footer .menu .item:nth-child(5) {
   line-height: var(--button_size);
   cursor: pointer;
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container input {
+.accounts_container .container_aux .accounts .account .menu_action_container input {
   display: none;
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container input:checked + .menu_action {
+.accounts_container .container_aux .accounts .account .menu_action_container input:checked + .menu_action {
   transform: scale(1);
   opacity: 1;
   pointer-events: all;
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action {
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action {
   position: absolute;
   top: 100%;
   left: 50%;
@@ -610,7 +535,7 @@ footer .menu .item:nth-child(5) {
   transform-origin: top left;
   pointer-events: none;
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action .options {
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options {
   display: grid;
   grid-auto-rows: minmax(0, 1fr);
   grid-auto-flow: row;
@@ -624,122 +549,38 @@ footer .menu .item:nth-child(5) {
   font-weight: 400;
   overflow: hidden;
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action .options .option {
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options .option {
   padding: 10px;
   transition: all ease 0.1s;
 }
-.accounts_container .container_aux .swipper_container_children .account .menu_action_container .menu_action .options .option:hover {
+.accounts_container .container_aux .accounts .account .menu_action_container .menu_action .options .option:hover {
   background-color: #FFE6DD;
   cursor: pointer;
 }
 
-.account_info_panel_container {
-  color: #1E1E1E;
+.info_container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-columns: 1fr;
+  -moz-column-gap: 20px;
+       column-gap: 20px;
 }
-.account_info_panel_container .relleno {
-  height: 42px;
-}
-.account_info_panel_container .account_info_panel {
+.info_container .info_content {
   width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  border: 1px solid #BFBFBF;
-  border-radius: 5px;
+  padding: 20px 10px;
   background-color: #fff;
-  display: flex;
-  padding: 15px;
-  justify-content: center;
-  height: auto;
+  border-radius: 5px;
 }
-.account_info_panel_container .account_info_panel .account_info_panel_data {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info {
-  margin-bottom: 10px;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .label {
-  font-size: 10px;
-  font-weight: 400;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  transition: all ease 0.3s;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .text {
+.info_container .info_content .label {
   font-size: 12px;
-  font-weight: 700;
-  transition: all ease 0.3s;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info:last-child {
-  margin: 0;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-content: space-around;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle {
-  --dimension: 128px;
-  width: var(--dimension);
-  height: var(--dimension);
-  border-radius: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  transition: all ease 0.3s;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph {
-  font-size: 10px;
-  z-index: 2;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .placeholder {
-  font-weight: 400;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  transition: all ease 0.3s;
 }
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .amount_graph {
+.info_container .info_content .text {
   font-weight: 700;
-  transition: all ease 0.3s;
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after, .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 50%;
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after {
-  border-left: 5px solid #E9511D;
-  border-top: 5px solid #E9511D;
-  border-right: 5px solid rgba(0, 0, 0, 0);
-  border-bottom: 5px solid rgba(0, 0, 0, 0);
-}
-.account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
-  border-right: 5px solid #FFE6DD;
-  border-bottom: 5px solid #FFE6DD;
-  border-left: 5px solid rgba(0, 0, 0, 0);
-  border-top: 5px solid rgba(0, 0, 0, 0);
+  font-size: 15px;
 }
 
 .graph_container .graph {
@@ -764,7 +605,7 @@ footer .menu .item:nth-child(5) {
   align-content: center;
   justify-content: space-between;
 }
-.graph_container .graph .graph_head .head_left {
+.graph_container .graph .graph_head .graph_head_left {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -772,20 +613,29 @@ footer .menu .item:nth-child(5) {
   justify-content: space-between;
   gap: 27px;
 }
-.graph_container .graph .graph_head .head_left .option {
+.graph_container .graph .graph_head .graph_head_left .option {
   font-size: 15px;
   font-weight: 400;
   color: #484848;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_left .option.active {
+.graph_container .graph .graph_head .graph_head_left .option.active {
   font-weight: 700;
   color: #000;
 }
-.graph_container .graph .graph_head .head_right .select {
+.graph_container .graph .graph_head .graph_head_right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  border: 1px solid #BFBFBF;
+  border-radius: 50px;
+}
+.graph_container .graph .graph_head .graph_head_right .select {
   position: relative;
 }
-.graph_container .graph .graph_head .head_right .select label {
+.graph_container .graph .graph_head .graph_head_right .select label {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -800,24 +650,24 @@ footer .menu .item:nth-child(5) {
   border: 1px solid #BFBFBF;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_right .select label img {
+.graph_container .graph .graph_head .graph_head_right .select label img {
   margin-right: 10px;
 }
-.graph_container .graph .graph_head .head_right .select label img.arrow_open {
+.graph_container .graph .graph_head .graph_head_right .select label img.arrow_open {
   position: absolute;
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
 }
-.graph_container .graph .graph_head .head_right .select input {
+.graph_container .graph .graph_head .graph_head_right .select input {
   display: none;
 }
-.graph_container .graph .graph_head .head_right .select input:checked ~ .calendar_container {
+.graph_container .graph .graph_head .graph_head_right .select input:checked ~ .calendar_container {
   transform: scale(1);
   opacity: 1;
   pointer-events: all;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container {
   --width: 280px;
   --spacing_days: 5px;
   --dimension_days: 30px;
@@ -835,7 +685,7 @@ footer .menu .item:nth-child(5) {
   border: 1px solid #BFBFBF;
   box-shadow: 8px 8px 8px #d0d3d4, -0.6em 0 0.8em #f8f9f9;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -843,13 +693,13 @@ footer .menu .item:nth-child(5) {
   justify-content: space-between;
   padding: 10px 10px 0;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_left {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_left {
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
   color: #E9511D;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right {
   width: 100px;
   display: flex;
   flex-direction: row;
@@ -858,13 +708,13 @@ footer .menu .item:nth-child(5) {
   justify-content: space-between;
   justify-content: flex-end;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right .month_name {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right .month_name {
   color: #E9511D;
   font-weight: 400;
   font-size: 14px;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right button {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right button {
   border: none;
   outline: none;
   background-color: #E9511D;
@@ -877,18 +727,18 @@ footer .menu .item:nth-child(5) {
   border-radius: 5px;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right button:first-child img {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right button:first-child img {
   transform: rotate(90deg);
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_head .head_right button:last-child img {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right button:last-child img {
   transform: rotate(-90deg);
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .divider {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .divider {
   width: 100%;
   height: 0px;
   background-color: #7a7a7a;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -897,9 +747,9 @@ footer .menu .item:nth-child(5) {
   overflow: hidden;
   transition: all ease 0.3s;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days,
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months,
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days,
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months,
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years {
   position: absolute;
   top: 0;
   left: 0;
@@ -907,14 +757,14 @@ footer .menu .item:nth-child(5) {
   opacity: 0;
   transition: all ease 0.3s 0s;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days.show,
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months.show,
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years.show {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days.show,
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months.show,
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years.show {
   z-index: 2;
   opacity: 1;
   transition: all ease 0.3s 0.3s;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-auto-rows: 1fr;
@@ -923,25 +773,25 @@ footer .menu .item:nth-child(5) {
   text-align: center;
   width: 100%;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months .row_month {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 1fr;
   -moz-column-gap: 5px;
        column-gap: 5px;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month {
   font-size: 10px;
   padding: 8px 0;
   border-radius: 5px;
   transition: all ease 0.3s;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month:hover, .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month.select {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month:hover, .graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month.select {
   background-color: #E9511D;
   color: #fff;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-auto-rows: 1fr;
@@ -951,7 +801,7 @@ footer .menu .item:nth-child(5) {
   text-align: center;
   width: 100%;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container {
   position: absolute;
   transform: translate(-50%, 0%);
   padding: 5px;
@@ -961,7 +811,7 @@ footer .menu .item:nth-child(5) {
   pointer-events: none;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container .option {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container .option {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -969,16 +819,16 @@ footer .menu .item:nth-child(5) {
   color: #fff;
   font-size: 10px;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.show {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.show {
   -webkit-animation: show 0.4s ease forwards;
           animation: show 0.4s ease forwards;
   pointer-events: all;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden {
   -webkit-animation: hidden 0.4s ease forwards;
           animation: hidden 0.4s ease forwards;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden .option {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden .option {
   transform: translate(-50%, -50%) scale(0.8);
 }
 @-webkit-keyframes show {
@@ -1035,14 +885,14 @@ footer .menu .item:nth-child(5) {
     width: var(--width, 0px);
   }
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   grid-column-gap: var(--spacing_days);
   grid-row-gap: var(--spacing_days);
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .day_name {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .day_name {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1052,7 +902,7 @@ footer .menu .item:nth-child(5) {
   font-weight: 400;
   color: #b0b0b0;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day {
   border-radius: 50px;
   display: flex;
   justify-content: center;
@@ -1063,41 +913,41 @@ footer .menu .item:nth-child(5) {
   cursor: pointer;
   transition: all ease 0.3s;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.notMonth {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.notMonth {
   cursor: default;
   color: #d9d9d9;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day:not(.notMonth):hover {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day:not(.notMonth):hover {
   background-color: #fff;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active, .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active:hover {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active, .graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active:hover {
   background-color: #E9511D;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
   color: #fff;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current {
   background-color: #FFE6DD;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current:hover {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current:hover {
   background-color: #E9511D;
   color: #fff;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active, .graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active:hover {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active, .graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active:hover {
   background-color: #E9511D;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
   color: #fff;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.tarjet {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.tarjet {
   transform: scale(1.4);
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years {
   width: 100%;
   height: 180px;
   position: relative;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container {
   position: absolute;
   top: 0;
   left: 0;
@@ -1113,7 +963,7 @@ footer .menu .item:nth-child(5) {
   padding: 10px;
   text-align: center;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: 1fr;
@@ -1121,7 +971,7 @@ footer .menu .item:nth-child(5) {
   grid-row-gap: var(--spacing_days);
   font-size: 12px;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year {
   border-radius: 5px;
   width: 100%;
   height: 100%;
@@ -1131,22 +981,32 @@ footer .menu .item:nth-child(5) {
   transition: all ease 0.3s;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year:hover {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year:hover {
   background-color: #fff;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current {
   background-color: #FFE6DD;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current:hover {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current:hover {
   background-color: #E9511D;
   color: #fff;
 }
-.graph_container .graph .graph_head .head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.active {
+.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.active {
   background-color: #E9511D;
   color: #fff;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
+}
+.graph_container .graph .graph_head .graph_head_right .select .toggle_menu {
+  border: none;
+  width: 100px;
+}
+.graph_container .graph .graph_head .graph_head_right .select .toggle_menu .icon_calendar {
+  display: none;
+}
+.graph_container .graph .graph_head .graph_head_right .select .toggle_menu .arrow_open {
+  display: none;
 }
 
 .history_container .history {
@@ -1228,50 +1088,6 @@ footer .menu .item:nth-child(5) {
   .wallet_container .wallet .wallet_content .wallet_info .wallet_info_text {
     font-size: 25px;
   }
-  .account_info_panel_container .relleno {
-    height: 0;
-  }
-  .account_info_panel_container .account_info_panel {
-    flex-direction: column-reverse;
-    padding: 0;
-    border: 1px solid rgba(0, 0, 0, 0);
-    background-color: transparent;
-    gap: 15px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_graph {
-    border: 1px solid #BFBFBF;
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 40px 20px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle {
-    max-width: 100%;
-    --dimension: 250px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::after, .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle::before {
-    border-width: 8px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .placeholder {
-    font-size: 17px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_graph .graph_circle .info_graph .amount_graph {
-    font-size: 17px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info {
-    border: 1px solid #BFBFBF;
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 10px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .label {
-    font-size: 13px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container .info .text {
-    font-size: 15px;
-  }
-  .account_info_panel_container .account_info_panel .account_info_panel_data .info_panel_container.account_name {
-    display: none;
-  }
   .controls_container .controls .accounts_switch {
     background-color: transparent;
   }
@@ -1281,8 +1097,13 @@ footer .menu .item:nth-child(5) {
   .controls_container .controls .accounts_switch .backdrop {
     box-shadow: -1.27273px 1.27273px 2.54545px rgba(0, 0, 0, 0.11);
   }
-  .column-reverse {
-    flex-direction: column-reverse;
+  .info_container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-columns: 1fr;
+    -moz-column-gap: 20px;
+         column-gap: 20px;
+    row-gap: 20px;
   }
 }
 @media (max-width: 767px) {
