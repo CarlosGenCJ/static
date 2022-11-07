@@ -71,6 +71,21 @@ window.addEventListener('click', (event) => {
 
 });
 
+window.addEventListener('mousemove', event => {
+    const sunshineElements = document.querySelectorAll(".shane_effect");
+    const target = event.toElement;
+    sunshineElements.forEach(sun => {
+        if (sun.contains(target)) {
+            const bound = sun.getBoundingClientRect();
+            const x = event.clientX - bound.left;
+            const y = event.clientY - bound.top;
+            sun.style.setProperty("--x", x + "px");
+            sun.style.setProperty("--y", y + "px");
+
+        }
+    });
+});
+
 
 class Years {
 
@@ -444,7 +459,20 @@ class YearsList {
 class Swipper {
     swipperContainer = null;
     swipperContent = null;
-    children = null;
+    children = [];
+    childrenCloner = [];
+
+    classChildActivable = 'active';
+
+    // ! Atributos de nodos
+    swipperIdentifier = "swipper-identifier";
+    swipperChildAttribute = "[swipper-child]";
+    swipperAttribute = "[swipper]";
+    swipperAttributeCloner = 'swipper-cloner';
+    swipperNoActivable = 'swipper-no-activable';
+
+    // ? Clases para elementos
+    swipperClassDestroy = 'destroy';
 
     // * Variables de dimensiones
     limit = 0;
@@ -456,6 +484,12 @@ class Swipper {
     resizeObserver = null;
 
     widthContainer = 0;
+
+    // Variables auxiliares
+    timer = null;
+    clicks = 0;
+    startX = -1;
+    limitMovementToClick = 5;
 
     constructor(id, swipperContent) {
 
@@ -499,7 +533,7 @@ class Swipper {
         } else if (type != 'undefined') {
             throw new Error("Se esperaba un string o HTMLElement, se obtuvo ", type);
         } else {
-            swipper = this.swipperContainer.querySelector('[swipper]');
+            swipper = this.swipperContainer.querySelector(this.swipperAttribute);
         }
 
         if (type == 'string' && !swipper) {
@@ -519,7 +553,7 @@ class Swipper {
     }
 
     evaluateChildren() {
-        let children = this.swipperContent.querySelectorAll('[swipper-childa]');
+        let children = this.swipperContent.querySelectorAll(this.swipperChildAttribute);
         if (children.length != 0) {
             children.forEach(child => {
                 const parent = child.parentElement;
@@ -528,10 +562,39 @@ class Swipper {
                 }
             });
 
-            this.children = children;
+            // this.children = children;
         } else {
-            this.children = Array.from(this.swipperContent.children);
+            children = Array.from(this.swipperContent.children);
         }
+
+        this.inject_data_to_children(children);
+    }
+
+    inject_data_to_children(children) {
+        children.forEach(child => {
+            let identifier = child.getAttribute(this.swipperIdentifier);
+            if (!identifier) {
+                identifier = this.make_id(6);
+                child.setAttribute(this.swipperIdentifier, identifier);
+            }
+            child.swipperIdentifier = identifier;
+            const childObject = {
+                element: child,
+                identifier
+            };
+            this.children.push(childObject);
+
+            let cloner = child.getAttribute(this.swipperAttributeCloner);
+            let childClone = child.cloneNode(true);
+            childClone.swipperAttributeCloner = cloner;
+            if (cloner) {
+                const childObjectCloner = {
+                    element: childClone,
+                    identifier: cloner
+                };
+                this.childrenCloner.push(childObjectCloner);
+            }
+        });
     }
 
     init() {
@@ -548,12 +611,15 @@ class Swipper {
         this.touchEvents();
         this.resizeEvent();
 
+        this.activableEvent();
+
     }
 
     dragEvent() {
         this.swipperContent.addEventListener('mousedown', (event) => {
 
             this.limit = this.getLimit();
+            this.clicks = 0;
 
             const startX = event.clientX;
 
@@ -566,6 +632,7 @@ class Swipper {
 
             document.onmouseup = () => {
                 document.removeEventListener('mousemove', movingEvent);
+                this.startX = -1;
                 document.onmouseup = null;
             }
         });
@@ -574,6 +641,7 @@ class Swipper {
     touchEvents() {
         this.swipperContainer.addEventListener('touchstart', (event) => {
             this.limit = this.getLimit();
+            this.clicks = 0;
 
             const touches = event.touches;
             const startX = touches[0].clientX;
@@ -586,7 +654,8 @@ class Swipper {
             document.addEventListener('touchmove', touchmove);
 
             document.ontouchend = () => {
-
+                this.startX = -1;
+                this.clicks = 0;
                 document.removeEventListener('touchmove', touchmove);
 
                 document.ontouchend = null;
@@ -597,6 +666,12 @@ class Swipper {
     movingEventControl(event, startX, last_movement) {
         if (!this.canMove) {
             return;
+        }
+
+        if (this.clicks < this.limitMovementToClick) {
+            this.clicks++;
+        } else if (this.startX == -1) {
+            this.startX = event.clientX || event.touches[0].clientX;
         }
 
         const x_move = event.clientX || event.touches[0].clientX;
@@ -629,7 +704,7 @@ class Swipper {
         }
     }
 
-    translateMovement(newMovement = 0) {
+    translateMovement(newMovement = 0, ease = false) {
         if (newMovement < 0) {
             this.translate = 0;
         } else if (newMovement > this.limit) {
@@ -638,14 +713,72 @@ class Swipper {
             this.translate = newMovement;
         }
 
-        this.translateElement();
+        this.translateElement(ease);
     }
 
     translateElement(ease = false) {
         if (ease) {
             this.swipperContent.style.transition = 'left ease ' + this.transtition + "s";
+        } else {
+            this.swipperContent.style.transition = 'left ease ' + 0 + "s";
         }
         this.swipperContent.style.left = (this.translate * -1) + "px";
+    }
+
+    activableEvent() {
+        this.children.forEach(child => {
+            this.addEventToChild(child.element);
+        });
+    }
+
+    addEventToChild(child) {
+        child.addEventListener('click', (event) => {
+            this.clickToChildren(event, child);
+
+        });
+    }
+
+    removeEventToChild(child) {
+        child.removeEventListener('click', this.clickToChildren);
+    }
+
+    clickToChildren(event, child) {
+        if (this.clicks >= this.limitMovementToClick) {
+            this.clicks = 0;
+            return;
+        }
+        const bound = this.getBound(child);
+        const parentBound = this.getBound(this.swipperContainer);
+        const diferenceRight = bound.right - parentBound.right;
+        const diferenceLeft = parentBound.left - bound.left;
+        if (diferenceRight > 0) {
+            this.translate += diferenceRight;
+            this.transtition = 0.3;
+            this.translateMovement(this.translate, true);
+        } else if (diferenceLeft > 0) {
+            this.translate -= diferenceLeft;
+            this.transtition = 0.3;
+            this.translateMovement(this.translate, true);
+        }
+
+        const activable = !child.hasAttribute(this.swipperNoActivable);
+
+        if (activable) {
+            this.activableChild(child);
+        }
+    }
+
+    activableChild(child) {
+        this.removeClassActivable();
+        child.classList.add(this.classChildActivable);
+        child.classList.add('shane_effect');
+    }
+
+    removeClassActivable() {
+        this.children.forEach(child => {
+            child.element.classList.remove(this.classChildActivable);
+            child.element.classList.remove('shane_effect');
+        });
     }
 
     getLimit() {
@@ -683,7 +816,316 @@ class Swipper {
         return style;
     }
 
+    make_id(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
 
+
+    /**
+     * Elimina un elemento del swipper
+     * @type {Fucntion}
+     * 
+     * @param {string} identifier - Identificador del elemento a borrar
+     */
+    remove(identifier = '') {
+        const type = this.getType(identifier);
+        if (type == 'undefined') {
+            throw new Error('Se esperaba un argumento, se obtuvo 0 argumentos.');
+        }
+        if (type != 'string') {
+            throw new Error('Se esperaba un argumento de tipo string,', type, "dado.");
+        }
+        var invalid = /\s/;
+        if (invalid.test(identifier)) {
+            throw new Error('El identificador no debe tener espacios vacíos.');
+        }
+
+        this.removeElement(identifier);
+    }
+
+    removeElement(identificador) {
+        const element = this.getChildByIdentifier(identificador);
+        if (element.status == 0) {
+            throw new Error('Elemento no encontrado. Identificador:', identificador);
+        }
+        this.children.splice(element.index, 1);
+        this.swipperContent.removeChild(element.child.element);
+        this.removeEventToChild(element.child.element);
+    }
+
+    /**
+     * Se pasa como parametro el identificador del elemento de referencia para insertar antes de éste.
+     * En caso de requerir una copia de un elemento existente para asignarle nuevos valores, deberá 
+     * ingresar el identificador del elemento a clonar. Su atributo es swipper-cloner. Si no se requiere, puede pasar un false como argumento.
+     * 
+     * Por ultimo, una función callback que recibirá el elemento clonado para su formateo.
+     * Éste callback deberá retornar el elemento ya formateado para así agregarlo al swipper.
+     * @param {string} identificador - Identificador del elemento de referencia
+     * @param {string | boolean} clonerIdentifier - un string en caso de requerir un elemento a clonar
+     * @param {Fucntion } callback - Callback que recibirá el elemento clonado, si así lo decidió. Deberá retornar un elemento HTLM
+     */
+    addBefore(identificador = '', clonerIdentifier, callback) {
+        const newData = this.addAfterOrBefore(identificador, clonerIdentifier, callback);
+        const lengthChildren = this.children.length;
+        if (lengthChildren == 0) {
+            this.children.push(newData.newObject);
+        } else if (newData.index == 0) {
+            this.children.unshift(newData.newObject);
+        } else {
+            this.children.splice(newData.index - 1, newData.newObject);
+        }
+
+        console.log("Aca llega", newData);
+
+        newData.htmlElement.before(newData.newObject.element);
+        this.addEventToChild(newData.newObject.element);
+    }
+
+    /**
+     * Se pasa como parametro el identificador del elemento de referencia para insertar después de éste.
+     * En caso de requerir una copia de un elemento existente para asignarle nuevos valores, deberá 
+     * ingresar el identificador del elemento a clonar. Su atributo es swipper-cloner. Si no se requiere, puede pasar un false como argumento.
+     * 
+     * Por ultimo, una función callback que recibirá el elemento clonado para su formateo.
+     * Éste callback deberá retornar el elemento ya formateado para así agregarlo al swipper.
+     * @param {string} identificador - Identificador del elemento de referencia
+     * @param {string | boolean} clonerIdentifier - un string en caso de requerir un elemento a clonar
+     * @param {Fucntion } callback - Callback que recibirá el elemento clonado, si así lo decidió. Deberá retornar un elemento HTLM
+     */
+    addAfter(identificador = '', clonerIdentifier, callback) {
+        const newData = this.addAfterOrBefore(identificador, clonerIdentifier, callback);
+        const lengthChildren = this.children.length;
+
+        if (lengthChildren == 0) {
+            this.children.push(newData.newObject);
+            // }else if(newData.index == 0){
+            //     this.children.unshift(newData.newObject);
+        } else {
+            this.children.splice(newData.index, newData.newObject);
+        }
+
+        newData.htmlElement.after(newData.newObject.element);
+        this.addEventToChild(newData.newObject.element);
+
+    }
+
+    addAfterOrBefore(identificador = '', clonerIdentifier, callback) {
+        const type = this.getType(identificador);
+        if (type == 'undefined') {
+            throw new Error('Se esperaban dos argumentos, se obtuvo 0');
+        }
+        if (type != 'string') {
+            throw new Error('Se esperaba un string, se obtuvo ', type);
+        }
+
+        const element = this.getChildByIdentifier(identificador);
+        if (element.status == 0) {
+            throw new Error('Elemento con el identificador ', identificador, 'no encontrado.');
+        }
+
+        const typeCloner = this.getType(clonerIdentifier);
+        if (typeCloner != 'boolean' && typeCloner != 'string') {
+            throw new Error('Se esperaba un string o un boolean(false), se obtuvo', typeCloner);
+        }
+
+        let argumentToCallback = null;
+
+        if (typeCloner == 'string') {
+            const clone = this.getChildByIdentifier(clonerIdentifier, true);
+            if (clone.status == 0) {
+                throw new Error('El Swipper Cloner element no ha sido encontrado.');
+            }
+            argumentToCallback = clone.child.element;
+        }
+
+        const typeCallback = this.getType(callback);
+        if (typeCallback != 'function') {
+            throw new Error('Se esperaba una función como argumento, ', typeCallback, ' dado.');
+        }
+        const newElement = callback(argumentToCallback);
+
+        if (!this.isHTMLElement(newElement)) {
+            throw new Error('Se debe retornar un elemento HTML, ', this.getType(newElement), ' retornado.');
+        }
+
+        let identifierNewElement = newElement.swipperIdentifier || newElement.getAttribute(this.swipperIdentifier);
+
+        if (!identifierNewElement) {
+            identifierNewElement = this.addIdentifier(newElement);
+        }
+
+        const newElementObject = {
+            element: newElement,
+            identifier: identifierNewElement
+        }
+
+        return {
+            newObject: newElementObject,
+            htmlElement: element.child.element,
+            index: element.index
+        };
+
+        element.child.element.before(newElement);
+
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} element - Elemento HTML al que se le asignará un identificador
+     * @param {string=} identificador - Identificado a ser asignado
+     * @returns {string} Retorna el identificador asignado al elemento
+     */
+    addIdentifier(element, identificador) {
+        if (!this.isHTMLElement(element)) {
+            throw new Error('Se esperaba un elemento HTML como argumento,', this.getType(element), ' dado');
+        }
+        const type = this.getType(identificador);
+        if (type != 'string' && type != 'undefined') {
+            throw new Error('Se esperaba un string como argumento,', type, ' dado.');
+        }
+        const tester = /\s/;
+        if (tester.test(identificador)) {
+            throw new Error('El parametro identificador no sebe contener espacios vacíos.');
+        }
+
+        let identifier = '';
+
+        if (type == 'undefined') {
+            identifier = this.make_id(6);
+        } else {
+            identifier = identificador;
+        }
+        element.setAttribute(this.swipperIdentifier, identifier);
+        element.swipperIdentifier = identifier;
+
+        return identifier;
+    }
+
+    getChildByIdentifier(identificador, isCloner = false) {
+        let status = {
+            status: 0,
+            child: null,
+            index: -1
+        };
+        (isCloner ? this.childrenCloner : this.children).forEach((child, index) => {
+            const identifierChild = !isCloner ? (child.element.swipperIdentifier || child.element.getAttribute(this.swipperIdentifier)) : (child.element.swipperAttributeCloner || child.element.getAttribute(this.swipperAttributeCloner));
+            if (identificador == identifierChild) {
+                status.status = 1;
+                status.child = child;
+                status.index = index;
+            }
+        });
+        return status;
+
+    }
+
+    removeAll() {
+        return new Promise((resolve) => {
+
+            this.children.forEach((child, index) => {
+                child.element.classList.add(this.swipperClassDestroy);
+                child.element.style.setProperty('--delay', (0.1 * index) + 's');
+                this.removeEventToChild(child.element);
+            });
+
+            setTimeout(() => {
+                this.swipperContent.innerHTML = '';
+                resolve(true);
+            }, (100 * this.children.length) + 300);
+        });
+    }
+
+    /**
+     * Reconstruye el swipper eliminando todos los elementos y agregando más a su elección.
+     * 
+     * El callback recibirá el index de cada elemento, y si fue requerido, la lista de elementos posibles para clonar. 
+     * Usted deberá encargarse de iterar el arreglo de objetos a clonar y seleccionar el que deseé.
+     * 
+     * @param {Function} callback - Funcion que procesará el elemento a agregar al swipper
+     * @param {integer} iterations - Iteriaciones que se harán a cada 
+     * @param {boolean} clone_required 
+     */
+    async rebuild(callback, iterations, clone_required = false) {
+        await this.removeAll();
+        if (isNaN(iterations)) {
+            throw new Error('Se esperaba un argumento de tipo integer. Se obtuvo ' + typeof iterations);
+        }
+
+        if (iterations < 1) {
+            throw new Error('Se esperaba un número superior a 0. ' + iterations + ' dado');
+        }
+
+        if (this.getType(callback) != 'function') {
+            throw new Error('Se esperaba un argumento de tipo function. Se obtuvo ' + typeof callback);
+        }
+
+        if (this.getType(clone_required) != 'boolean') {
+            throw new Error('Se esperaba un argumento de tipo boolean. Se obtuvo ' + typeof clone_required);
+        }
+
+        for (let i = 0; i < iterations; i++) {
+            let cloneCollection = undefined;
+            if (clone_required) {
+                cloneCollection = this.childrenCloner;
+            }
+            const newElement = callback(i, cloneCollection);
+            if (!this.isHTMLElement(newElement)) {
+                throw new Error('Se esperaba un retorno de tipo HTMLElement. ' + typeof newElement + ' retornado.');
+            }
+
+            let identifierNewElement = newElement.swipperIdentifier || newElement.getAttribute(this.swipperIdentifier);
+            if (!identifierNewElement) {
+                identifierNewElement = this.addIdentifier(newElement);
+            }
+
+            const newObjectChildElement = {
+                element: newElement,
+                identifier: identifierNewElement
+            };
+            this.swipperContent.appendChild(newElement);
+            this.children.push(newObjectChildElement);
+            this.addEventToChild(newElement);
+        }
+    }
+
+    getType(variable) {
+        return (typeof variable).toLowerCase();
+    }
+
+
+}
+
+function prueba() {
+
+    // ? Se puede usar tanto after como before y funcionará igual
+    swipper_instance.addAfter('agregar', 'account', (cloneElement) => {
+        const title = cloneElement.getElementsByClassName('account_name')[0];
+        title.innerHTML = 'Demo - MT5 1062';
+
+        swipper_instance.addIdentifier(cloneElement, 'elemento_clonado');
+        return cloneElement;
+    });
+}
+
+function prueba2() {
+
+    swipper_instance.rebuild((index, cloneElements) => {
+
+
+        const element = document.createElement('button');
+        element.innerHTML = 'Hola' + index;
+
+        // Agregas el identificador que desees a cada elemento
+        swipper_instance.addIdentifier(element, 'identificador' + index);
+        return element;
+    }, 5, true);
 }
 
 
@@ -1090,6 +1532,9 @@ class Calendar extends YearsList {
         label_container.appendChild(aux_container);
         label_container.appendChild(icon_arrow);
 
+        label_container.classList.add('ripple');
+        label_container.classList.add('ripple-white');
+
         this.toggle = label;
         return label_container;
     }
@@ -1430,10 +1875,10 @@ class Calendar extends YearsList {
     }
 
     print_current_date_label() {
-        if(!this.placeholder || (typeof this.placeholder).toLowerCase() != 'string'){
+        if (!this.placeholder || (typeof this.placeholder).toLowerCase() != 'string') {
             const dayAux = this.date_selected.dayMonth < 10 ? '0' + this.date_selected.dayMonth : this.date_selected.dayMonth;
             this.toggle.innerHTML = this.months_short[this.date_selected.month - 1] + " " + dayAux + ", " + this.date_selected.year;
-        }else{
+        } else {
             this.toggle.innerHTML = this.placeholder;
             this.placeholder = null;
         }
@@ -1529,8 +1974,9 @@ class Calendar extends YearsList {
 
     event_days(element) {
         element.addEventListener('contextmenu', (event) => {
-            // console.log(event);            
-            this.open_options_menu(element);
+            if (element.dataset.daysOut && element.dataset.daysOut == 'active') {
+                this.open_options_menu(element);
+            }
         });
 
         element.addEventListener('click', (event) => {
@@ -1888,7 +2334,7 @@ class Calendar extends YearsList {
             date_emmiter.init = data[0];
             date_emmiter.end = data[1];
         } else {
-            date_emmiter.date = data[0];
+            date_emmiter.init = data[0];
         }
         if (this.event) {
             window.dispatchEvent(new CustomEvent(this.event, {
@@ -2297,12 +2743,6 @@ class BeautifyBackDrop {
 
 }
 
-
-function prueba(callback) {
-    for (let i = 0; i < 10; i++) {
-        callback(i);
-    }
-}
 
 // class newSwipper {
 
