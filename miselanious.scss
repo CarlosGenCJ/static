@@ -107,7 +107,7 @@ $label_color_secondary: #d9d9d9;
   }
 }
 
-@mixin full_father($full_center: false) {
+@mixin full_father($full_center: false, $full_dimension: true) {
   position: absolute;
 
   @if($full_center) {
@@ -121,7 +121,10 @@ $label_color_secondary: #d9d9d9;
     left: 0;
   }
 
-  @include width-height-max();
+
+  @if($full_dimension == true){
+    @include width-height-max();
+  }
 }
 
 @mixin container_style {

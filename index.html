@@ -107,7 +107,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="btn_controls_container">
+                    <div class="btn_controls_container web-sm">
                         <div class="btn_controls">
                             <div class="button ripple ripple-white">
                                 <div class="icon">
@@ -122,8 +122,8 @@
                                     <img src="./resouces//icon_transfer.svg" class="img_ajust">
                                 </div>
                                 <span>
-                                Transferencia interna
-                            </span>
+                                    Transferencia interna
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -241,6 +241,30 @@
                     </div>
                 </div>
             </div>
+            <div class="row mobile-sm">
+                <div class="btn_containers mobile-sm">
+                    <div class="btn_controls_container">
+                        <div class="btn_controls">
+                            <div class="button ripple ripple-white">
+                                <div class="icon">
+                                    <img src="./resouces//plus_icon_dark.svg" class="img_ajust">
+                                </div>
+                                <span>
+                                    Depositar fondos
+                                </span>
+                            </div>
+                            <div class="button ripple">
+                                <div class="icon">
+                                    <img src="./resouces//icon_transfer.svg" class="img_ajust">
+                                </div>
+                                <span>
+                                    Transferencia interna
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12 info_container">
                     <div class="info_content">
@@ -289,17 +313,24 @@
                                     Ordenes cerradas
                                 </div>
                             </div>
-                            <div class="graph_head_right">
-                                <div class="select" id="calendar" data-event-name="hola" data-format="MM/DD/YYYY"
-                                    data-min="2022-9-15" data-placeholder="Fecha inicio">
-                                    <input type="text" wire:click="hola">
-                                </div>
-                                <div class="icon_separator">
-                                    <img src="./resouces/arrow_calendar_separator.svg" alt="" class="img_ajsut">
-                                </div>
-                                <div class="select" id="calendar2" data-event-name="hola" data-format="MM/DD/YYYY"
-                                    data-min="2022-9-15" data-placeholder="Fecha fin">
-                                    <input type="text" wire:click="hola">
+                            <div class="graph_head_right toggle_container">
+                                <input type="checkbox" class="toggle_input_menu" id="calendar_menu_container">
+                                <div class="calendars_container">
+                                    <div class="select" id="calendar" data-event-name="hola" data-format="MM/DD/YYYY"
+                                        data-min="2022-9-15" data-placeholder="Fecha inicio">
+                                        <input type="text" wire:click="hola">
+                                    </div>
+                                    <div class="icon_separator">
+                                        <img src="./resouces/arrow_calendar_separator.svg" alt="" class="img_ajsut">
+                                    </div>
+                                    <div class="select" id="calendar2" data-event-name="hola" data-format="MM/DD/YYYY"
+                                        data-min="2022-9-15" data-placeholder="Fecha fin">
+                                        <input type="text" wire:click="hola">
+                                    </div>
+
+                                    <label class="calendar_icon ripple ripple-white" for="calendar_menu_container">
+                                        <img src="./resouces/icon_calendar.svg" class="img_ajust">
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -319,89 +350,88 @@
                             </div>
                         </div>
                         <div class="body">
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span class="title">Fecha</span>
                                 <span class="title">Transacción</span>
                                 <span class="title">Monto</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia interna hacia 10829
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10830</span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10831
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia interna hacia 10829
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10830</span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10831
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia interna hacia 10829
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10830</span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10831
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia interna hacia 10829
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10830</span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10831
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia interna hacia 10829
+                                </span>
                                 <span>$1,000.00 USD</span>
                             </div>
-                            <div class="row row-cols-3">
+                            <div class="row ">
                                 <span>20/09/2022</span>
-                                <span>Depósito</span>
-                                <span>$1,000.00 USD</span>
-                            </div>
-                            <div class="row row-cols-3">
-                                <span>20/09/2022</span>
-                                <span>Depósito</span>
-                                <span>$1,000.00 USD</span>
-                            </div>
-                            <div class="row row-cols-3">
-                                <span>20/09/2022</span>
-                                <span>Depósito</span>
+                                <span>Transferencia de 10830</span>
                                 <span>$1,000.00 USD</span>
                             </div>
                         </div>

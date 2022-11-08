@@ -1,6 +1,7 @@
 var container = null;
 var next = null;
 var prev = null;
+var isMobile = false;
 
 var swipper_instance = null;
 var calendar = null;
@@ -16,6 +17,10 @@ window.addEventListener('keydown', (event) => {
 });
 
 window.addEventListener('load', () => {
+    if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+        isMobile = true;
+    }
+    console.log(isMobile);
     swipper_instance = new Swipper("swipper");
     calendar = new Calendar("calendar");
     calendar = new Calendar("calendar2");
@@ -72,18 +77,20 @@ window.addEventListener('click', (event) => {
 });
 
 window.addEventListener('mousemove', event => {
-    const sunshineElements = document.querySelectorAll(".shane_effect");
-    const target = event.toElement;
-    sunshineElements.forEach(sun => {
-        if (sun.contains(target)) {
-            const bound = sun.getBoundingClientRect();
-            const x = event.clientX - bound.left;
-            const y = event.clientY - bound.top;
-            sun.style.setProperty("--x", x + "px");
-            sun.style.setProperty("--y", y + "px");
+    if (!isMobile) {
+        const sunshineElements = document.querySelectorAll(".shane_effect");
+        const target = event.toElement;
+        sunshineElements.forEach(sun => {
+            if (sun.contains(target)) {
+                const bound = sun.getBoundingClientRect();
+                const x = event.clientX - bound.left;
+                const y = event.clientY - bound.top;
+                sun.style.setProperty("--x", x + "px");
+                sun.style.setProperty("--y", y + "px");
 
-        }
-    });
+            }
+        });
+    }
 });
 
 
@@ -298,6 +305,8 @@ class YearsList {
         document.addEventListener('wheel', (event) => {
             if (this.not_scroll) {
                 event.preventDefault();
+                // event.stopImmediatePropagation();
+                // event.stopPropagation();
                 this.not_scroll = false;
             }
         }, {
@@ -307,6 +316,8 @@ class YearsList {
         document.addEventListener('scroll', (event) => {
             if (this.not_scroll) {
                 event.preventDefault();
+                // event.stopImmediatePropagation();
+                // event.stopPropagation();
                 console.log("Se debe cancelar");
             }
         }, {
@@ -331,7 +342,6 @@ class YearsList {
     event_container_years_touch() {
         this.calendar_body_years.addEventListener('touchstart', (event) => {
             this.not_scroll = true;
-            event.preventDefault();
 
             const touches = event.touches[0];
             const Y_start = touches.clientY;
@@ -349,6 +359,8 @@ class YearsList {
             let is_next = false;
 
             let move_years = (event_window) => {
+                
+                event_window.preventDefault();
                 const touches_window = event_window.touches[0];
                 const move_Y = touches_window.clientY;
                 new_move = move_Y - Y_start;
@@ -368,7 +380,7 @@ class YearsList {
                 }
             }
 
-            document.addEventListener('touchmove', move_years);
+            document.addEventListener('touchmove', move_years, {passive: false});
 
             document.ontouchend = (event_touch_end) => {
                 this.not_scroll = false;
@@ -1097,6 +1109,13 @@ class Swipper {
 
     getType(variable) {
         return (typeof variable).toLowerCase();
+    }
+
+    isMobile(){
+        if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -1876,8 +1895,14 @@ class Calendar extends YearsList {
 
     print_current_date_label() {
         if (!this.placeholder || (typeof this.placeholder).toLowerCase() != 'string') {
+
             const dayAux = this.date_selected.dayMonth < 10 ? '0' + this.date_selected.dayMonth : this.date_selected.dayMonth;
-            this.toggle.innerHTML = this.months_short[this.date_selected.month - 1] + " " + dayAux + ", " + this.date_selected.year;
+            if(this.isMobile()){
+                const monthAux = this.date_selected.month < 10 ? '0' + this.date_selected.month : this.date_selected.month;
+                this.toggle.innerHTML = dayAux + "/" + monthAux + "/" + this.date_selected.year;
+            }else{
+                this.toggle.innerHTML = this.months_short[this.date_selected.month - 1] + " " + dayAux + ", " + this.date_selected.year;
+            }
         } else {
             this.toggle.innerHTML = this.placeholder;
             this.placeholder = null;
@@ -2348,6 +2373,13 @@ class Calendar extends YearsList {
         aux += date[1] ? " - " + date[1] : "";
         this.customInput.value = aux;
         this.customInput.dispatchEvent(new Event('input'));
+    }
+
+    isMobile(){
+        if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+            return true;
+        }
+        return false;
     }
 }
 

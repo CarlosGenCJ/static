@@ -11,6 +11,10 @@
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+html {
+  overflow: hidden;
+}
+
 body {
   width: 100%;
   height: 100vh;
@@ -342,7 +346,78 @@ footer .menu .item:nth-child(5) {
   transition: all ease 0.3s;
 }
 
-.btn_controls_container .btn_controls {
+.btn_containers {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.btn_containers.mobile-sm {
+  justify-content: center;
+  overflow: hidden;
+  max-height: 0;
+  margin-bottom: 0 !important;
+  transition: all ease 0.3s;
+}
+.btn_containers.mobile-sm .btn_controls_container .btn_controls {
+  position: relative;
+}
+.btn_containers.mobile-sm .btn_controls_container .btn_controls .button {
+  position: relative;
+  transition: left ease 0.3s, right ease 0.3s;
+}
+.btn_containers.mobile-sm .btn_controls_container .btn_controls .button:first-child {
+  left: -100%;
+}
+.btn_containers.mobile-sm .btn_controls_container .btn_controls .button:last-child {
+  right: -100%;
+}
+.btn_containers .controls_container {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+.btn_containers .controls_container .controls {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+}
+.btn_containers .controls_container .controls .accounts_switch {
+  padding: 5px;
+  background-color: #1E1E1E;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  border-radius: 50px;
+  transition: all ease 0.3s;
+}
+.btn_containers .controls_container .controls .accounts_switch .label {
+  display: inline-block;
+  width: 40px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 400;
+  text-align: center;
+  height: 100%;
+  padding: 5px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all ease 0.3s;
+}
+.btn_containers .controls_container .controls .accounts_switch .label.active {
+  color: #000;
+  cursor: default;
+  font-weight: 700;
+  pointer-events: none;
+}
+.btn_containers .btn_controls_container .btn_controls {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -350,7 +425,7 @@ footer .menu .item:nth-child(5) {
   align-content: center;
   justify-content: space-around;
 }
-.btn_controls_container .btn_controls .button {
+.btn_containers .btn_controls_container .btn_controls .button {
   padding: 6px 0;
   width: 200px;
   max-width: 45%;
@@ -370,56 +445,10 @@ footer .menu .item:nth-child(5) {
   align-items: center;
   gap: 5px;
 }
-.btn_controls_container .btn_controls .button:last-child {
+.btn_containers .btn_controls_container .btn_controls .button:last-child {
   background-color: #1E1E1E;
   border: 1px solid rgba(0, 0, 0, 0);
   color: #fff;
-}
-
-.btn_containers {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-}
-
-.controls_container .controls {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-}
-.controls_container .controls .accounts_switch {
-  padding: 5px;
-  background-color: #1E1E1E;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  align-content: center;
-  justify-content: space-between;
-  border-radius: 50px;
-  transition: all ease 0.3s;
-}
-.controls_container .controls .accounts_switch .label {
-  display: inline-block;
-  width: 40px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 400;
-  text-align: center;
-  height: 100%;
-  padding: 5px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all ease 0.3s;
-}
-.controls_container .controls .accounts_switch .label.active {
-  color: #000;
-  cursor: default;
-  font-weight: 700;
 }
 
 .accounts_container {
@@ -645,6 +674,7 @@ footer .menu .item:nth-child(5) {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  transition: all ease 0.3s;
 }
 .graph_container .graph .graph_head {
   display: flex;
@@ -660,8 +690,10 @@ footer .menu .item:nth-child(5) {
   align-content: center;
   justify-content: space-between;
   gap: 27px;
+  overflow: hidden;
 }
 .graph_container .graph .graph_head .graph_head_left .option {
+  transition: all ease 0.3s;
   font-size: 15px;
   font-weight: 400;
   color: #484848;
@@ -671,19 +703,28 @@ footer .menu .item:nth-child(5) {
   font-weight: 700;
   color: #000;
 }
-.graph_container .graph .graph_head .graph_head_right {
+.graph_container .graph .graph_head .graph_head_left .option:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.graph_container .graph .graph_head .graph_head_right > input.toggle_input_menu {
+  display: none;
+}
+.graph_container .graph .graph_head .graph_head_right .calendars_container {
+  position: relative;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
   align-items: center;
-  align-content: center;
-  justify-content: space-between;
+  flex-direction: row;
   border: 1px solid #BFBFBF;
   border-radius: 50px;
+  transition: all ease 0.3s;
 }
-.graph_container .graph .graph_head .graph_head_right .select {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select {
   position: relative;
 }
-.graph_container .graph .graph_head .graph_head_right .select label {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select label {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -697,26 +738,27 @@ footer .menu .item:nth-child(5) {
   border-radius: 50px;
   border: 1px solid #BFBFBF;
   cursor: pointer;
+  transition: all ease 0.3s;
 }
-.graph_container .graph .graph_head .graph_head_right .select label img {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select label img {
   margin-right: 10px;
 }
-.graph_container .graph .graph_head .graph_head_right .select label img.arrow_open {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select label img.arrow_open {
   position: absolute;
   top: 50%;
   right: 10px;
   transform: translateY(-50%);
 }
-.graph_container .graph .graph_head .graph_head_right .select input {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select input {
   display: none;
 }
-.graph_container .graph .graph_head .graph_head_right .select input:checked ~ .calendar_container {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select input:checked ~ .calendar_container {
   transform: scale(1);
   opacity: 1;
   pointer-events: all;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container {
-  --width: 280px;
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container {
+  --width: 265px;
   --spacing_days: 5px;
   --dimension_days: 30px;
   position: absolute;
@@ -733,7 +775,7 @@ footer .menu .item:nth-child(5) {
   border: 1px solid #BFBFBF;
   box-shadow: 8px 8px 8px #d0d3d4, -0.6em 0 0.8em #f8f9f9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -741,13 +783,13 @@ footer .menu .item:nth-child(5) {
   justify-content: space-between;
   padding: 10px 10px 0;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_left {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head .head_left {
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
   color: #E9511D;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head .head_right {
   width: 100px;
   display: flex;
   flex-direction: row;
@@ -756,13 +798,13 @@ footer .menu .item:nth-child(5) {
   justify-content: space-between;
   justify-content: flex-end;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right .month_name {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head .head_right .month_name {
   color: #E9511D;
   font-weight: 400;
   font-size: 14px;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right button {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head .head_right button {
   border: none;
   outline: none;
   background-color: #E9511D;
@@ -775,18 +817,18 @@ footer .menu .item:nth-child(5) {
   border-radius: 5px;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right button:first-child img {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head .head_right button:first-child img {
   transform: rotate(90deg);
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_head .head_right button:last-child img {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_head .head_right button:last-child img {
   transform: rotate(-90deg);
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .divider {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .divider {
   width: 100%;
   height: 0px;
   background-color: #7a7a7a;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -795,9 +837,9 @@ footer .menu .item:nth-child(5) {
   overflow: hidden;
   transition: all ease 0.3s;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days,
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months,
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days,
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months,
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years {
   position: absolute;
   top: 0;
   left: 0;
@@ -805,14 +847,14 @@ footer .menu .item:nth-child(5) {
   opacity: 0;
   transition: all ease 0.3s 0s;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days.show,
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months.show,
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years.show {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days.show,
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months.show,
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years.show {
   z-index: 2;
   opacity: 1;
   transition: all ease 0.3s 0.3s;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-auto-rows: 1fr;
@@ -821,25 +863,25 @@ footer .menu .item:nth-child(5) {
   text-align: center;
   width: 100%;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months .row_month {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: 1fr;
   -moz-column-gap: 5px;
        column-gap: 5px;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months .row_month .month {
   font-size: 10px;
   padding: 8px 0;
   border-radius: 5px;
   transition: all ease 0.3s;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month:hover, .graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_months .row_month .month.select {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months .row_month .month:hover, .graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_months .row_month .month.select {
   background-color: #E9511D;
   color: #fff;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-auto-rows: 1fr;
@@ -849,7 +891,7 @@ footer .menu .item:nth-child(5) {
   text-align: center;
   width: 100%;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .menu_container {
   position: absolute;
   transform: translate(-50%, 0%);
   padding: 5px;
@@ -859,7 +901,7 @@ footer .menu .item:nth-child(5) {
   pointer-events: none;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container .option {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .menu_container .option {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -867,16 +909,16 @@ footer .menu .item:nth-child(5) {
   color: #fff;
   font-size: 10px;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.show {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .menu_container.show {
   -webkit-animation: show 0.4s ease forwards;
           animation: show 0.4s ease forwards;
   pointer-events: all;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden {
   -webkit-animation: hidden 0.4s ease forwards;
           animation: hidden 0.4s ease forwards;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden .option {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .menu_container.hidden .option {
   transform: translate(-50%, -50%) scale(0.8);
 }
 @-webkit-keyframes show {
@@ -933,14 +975,14 @@ footer .menu .item:nth-child(5) {
     width: var(--width, 0px);
   }
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   grid-column-gap: var(--spacing_days);
   grid-row-gap: var(--spacing_days);
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .day_name {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .day_name {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -950,7 +992,7 @@ footer .menu .item:nth-child(5) {
   font-weight: 400;
   color: #b0b0b0;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day {
   border-radius: 50px;
   display: flex;
   justify-content: center;
@@ -961,41 +1003,41 @@ footer .menu .item:nth-child(5) {
   cursor: pointer;
   transition: all ease 0.3s;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.notMonth {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.notMonth {
   cursor: default;
   color: #d9d9d9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day:not(.notMonth):hover {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day:not(.notMonth):hover {
   background-color: #fff;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active, .graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active:hover {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active, .graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.active:hover {
   background-color: #E9511D;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
   color: #fff;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current {
   background-color: #FFE6DD;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current:hover {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current:hover {
   background-color: #E9511D;
   color: #fff;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active, .graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active:hover {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active, .graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.current.active:hover {
   background-color: #E9511D;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
   color: #fff;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.tarjet {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_days .row_calendar .col_day.tarjet {
   transform: scale(1.4);
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years {
   width: 100%;
   height: 180px;
   position: relative;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container {
   position: absolute;
   top: 0;
   left: 0;
@@ -1011,7 +1053,7 @@ footer .menu .item:nth-child(5) {
   padding: 10px;
   text-align: center;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: 1fr;
@@ -1019,7 +1061,7 @@ footer .menu .item:nth-child(5) {
   grid-row-gap: var(--spacing_days);
   font-size: 12px;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year {
   border-radius: 5px;
   width: 100%;
   height: 100%;
@@ -1029,31 +1071,49 @@ footer .menu .item:nth-child(5) {
   transition: all ease 0.3s;
   cursor: pointer;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year:hover {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year:hover {
   background-color: #fff;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current {
   background-color: #FFE6DD;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current:hover {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.current:hover {
   background-color: #E9511D;
   color: #fff;
 }
-.graph_container .graph .graph_head .graph_head_right .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.active {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .calendar_container .calendar_body .calendar_body_years .years_container .year_row .year.active {
   background-color: #E9511D;
   color: #fff;
   box-shadow: 2px 2px 2px #a6acaf, -1px 0 0.6em #f8f9f9;
 }
-.graph_container .graph .graph_head .graph_head_right .select .toggle_menu {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .calendar_icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  --calendar-icon: 30px;
+  width: var(--calendar-icon);
+  height: var(--calendar-icon);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all ease 0.3s;
+}
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select {
+  transition: all ease 0.3s;
+}
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .toggle_menu {
   border: none;
   width: 100px;
 }
-.graph_container .graph .graph_head .graph_head_right .select .toggle_menu .icon_calendar {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .toggle_menu .icon_calendar {
   display: none;
 }
-.graph_container .graph .graph_head .graph_head_right .select .toggle_menu .arrow_open {
+.graph_container .graph .graph_head .graph_head_right .calendars_container .select .toggle_menu .arrow_open {
   display: none;
 }
 
@@ -1065,7 +1125,7 @@ footer .menu .item:nth-child(5) {
   border: 1px solid #BFBFBF;
   border-radius: 5px;
   background-color: #fff;
-  padding: 25px;
+  padding: 20px;
   min-height: 500px;
   color: #484848;
 }
@@ -1098,7 +1158,10 @@ footer .menu .item:nth-child(5) {
 }
 .history_container .history .body .row {
   margin-bottom: 20px;
-  text-align: center;
+  text-align: start;
+  display: grid;
+  grid-template-columns: 75px 1fr 110px;
+  grid-template-rows: 1fr;
 }
 .history_container .history .body .row span {
   font-size: 10px;
@@ -1112,9 +1175,13 @@ footer .menu .item:nth-child(5) {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  text-align: center;
 }
 
 @media (max-width: 991px) {
+  .web-md {
+    display: none;
+  }
   .wallet_container .wallet .wallet_content {
     flex-direction: column;
     align-items: flex-start;
@@ -1136,13 +1203,13 @@ footer .menu .item:nth-child(5) {
   .wallet_container .wallet .wallet_content .wallet_info .wallet_info_text {
     font-size: 25px;
   }
-  .controls_container .controls .accounts_switch {
+  .btn_containers .controls_container .controls .accounts_switch {
     background-color: transparent;
   }
-  .controls_container .controls .accounts_switch .label {
+  .btn_containers .controls_container .controls .accounts_switch .label {
     color: #000;
   }
-  .controls_container .controls .accounts_switch .backdrop {
+  .btn_containers .controls_container .controls .accounts_switch .backdrop {
     box-shadow: -1.27273px 1.27273px 2.54545px rgba(0, 0, 0, 0.11);
   }
   .info_container {
@@ -1155,6 +1222,9 @@ footer .menu .item:nth-child(5) {
   }
 }
 @media (max-width: 767px) {
+  .web-sm {
+    display: none;
+  }
   nav {
     transform: translateX(calc(var(--width-navbar) * -1));
     transition: all ease 0.3s 0s;
@@ -1172,5 +1242,71 @@ footer .menu .item:nth-child(5) {
   }
   footer .menu .item {
     transform: translateY(0%);
+  }
+  .graph_container .graph {
+    padding: 10px;
+  }
+  .graph_container .graph .graph_head .graph_head_left {
+    gap: 10px;
+  }
+  .graph_container .graph .graph_head .graph_head_left .option {
+    font-size: 12px;
+  }
+  .graph_container .graph .graph_head .graph_head_right > input.toggle_input_menu:not(:checked) ~ .calendars_container {
+    border-color: rgba(0, 0, 0, 0);
+  }
+  .graph_container .graph .graph_head .graph_head_right .calendars_container {
+    max-width: 30px;
+    overflow: hidden;
+  }
+  .graph_container .graph .graph_head .graph_head_right .calendars_container .select,
+.graph_container .graph .graph_head .graph_head_right .calendars_container .icon_separator {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .graph_container .graph .graph_head .graph_head_right .calendars_container .select .toggle_menu {
+    width: 70px;
+  }
+  .graph_container .graph .graph_head .graph_head_right .calendars_container .calendar_icon {
+    pointer-events: all;
+    opacity: 1;
+    border-radius: 50%;
+  }
+  .graph_container .graph .graph_head .graph_head_right > input.toggle_input_menu:checked ~ .calendars_container {
+    max-width: 200px;
+    overflow: visible;
+  }
+  .graph_container .graph .graph_head .graph_head_right > input.toggle_input_menu:checked ~ .calendars_container .select,
+.graph_container .graph .graph_head .graph_head_right > input.toggle_input_menu:checked ~ .calendars_container .icon_separator {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .graph_container .graph .graph_head .graph_head_right > input.toggle_input_menu:checked ~ .calendars_container .calendar_icon {
+    pointer-events: none;
+    opacity: 0;
+  }
+  .info_container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-columns: 1fr;
+  }
+  .btn_containers {
+    justify-content: center;
+  }
+  .btn_containers.mobile-sm {
+    margin-bottom: 15px;
+    max-height: 35px;
+  }
+  .btn_containers.mobile-sm .btn_controls_container .btn_controls {
+    max-width: 100%;
+  }
+  .btn_containers.mobile-sm .btn_controls_container .btn_controls .button {
+    width: 170px;
+  }
+  .btn_containers.mobile-sm .btn_controls_container .btn_controls .button:first-child {
+    left: 0%;
+  }
+  .btn_containers.mobile-sm .btn_controls_container .btn_controls .button:last-child {
+    right: 0%;
   }
 }/*# sourceMappingURL=style.css.map */
