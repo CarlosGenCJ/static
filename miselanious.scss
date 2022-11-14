@@ -224,8 +224,9 @@ $label_color_secondary: #d9d9d9;
 
   .shane_effect:before {
     --size: 0;
+    pointer-events: none;
     content: '';
-    position: absolute;
+    position: absolute; 
     left: var(--x);
     top: var(--y);
     width: var(--size);

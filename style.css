@@ -88,6 +88,7 @@ body .shane_effect {
 }
 body .shane_effect:before {
   --size: 0;
+  pointer-events: none;
   content: "";
   position: absolute;
   left: var(--x);

@@ -359,7 +359,7 @@ class YearsList {
             let is_next = false;
 
             let move_years = (event_window) => {
-                
+
                 event_window.preventDefault();
                 const touches_window = event_window.touches[0];
                 const move_Y = touches_window.clientY;
@@ -380,7 +380,9 @@ class YearsList {
                 }
             }
 
-            document.addEventListener('touchmove', move_years, {passive: false});
+            document.addEventListener('touchmove', move_years, {
+                passive: false
+            });
 
             document.ontouchend = (event_touch_end) => {
                 this.not_scroll = false;
@@ -710,8 +712,11 @@ class Swipper {
 
     reCalcWhenResizeContainer() {
         this.limit = this.getLimit();
-        if (this.translate > this.limit) {
+        if (this.translate > this.limit && this.limit > 0) {
             this.translate = this.limit;
+            this.translateElement();
+        } else if (this.translate != 0 && this.limit < 0) {
+            this.translate = 0;
             this.translateElement();
         }
     }
@@ -735,6 +740,7 @@ class Swipper {
             this.swipperContent.style.transition = 'left ease ' + 0 + "s";
         }
         this.swipperContent.style.left = (this.translate * -1) + "px";
+        // throw new Error("prueba");
     }
 
     activableEvent() {
@@ -891,10 +897,8 @@ class Swipper {
         } else if (newData.index == 0) {
             this.children.unshift(newData.newObject);
         } else {
-            this.children.splice(newData.index - 1, newData.newObject);
+            this.children.splice(newData.index - 1, 0, newData.newObject);
         }
-
-        console.log("Aca llega", newData);
 
         newData.htmlElement.before(newData.newObject.element);
         this.addEventToChild(newData.newObject.element);
@@ -917,10 +921,9 @@ class Swipper {
 
         if (lengthChildren == 0) {
             this.children.push(newData.newObject);
-            // }else if(newData.index == 0){
             //     this.children.unshift(newData.newObject);
         } else {
-            this.children.splice(newData.index, newData.newObject);
+            this.children.splice(newData.index, 0, newData.newObject);
         }
 
         newData.htmlElement.after(newData.newObject.element);
@@ -954,7 +957,7 @@ class Swipper {
             if (clone.status == 0) {
                 throw new Error('El Swipper Cloner element no ha sido encontrado.');
             }
-            argumentToCallback = clone.child.element;
+            argumentToCallback = clone.child.element.cloneNode(true);
         }
 
         const typeCallback = this.getType(callback);
@@ -973,6 +976,9 @@ class Swipper {
             identifierNewElement = this.addIdentifier(newElement);
         }
 
+
+        this.addEventToChild(newElement);
+
         const newElementObject = {
             element: newElement,
             identifier: identifierNewElement
@@ -984,7 +990,7 @@ class Swipper {
             index: element.index
         };
 
-        element.child.element.before(newElement);
+        // element.child.element.before(newElement);
 
     }
 
@@ -1018,6 +1024,12 @@ class Swipper {
         element.swipperIdentifier = identifier;
 
         return identifier;
+    }
+
+    removeIdentifier(element){
+        if(this.isHTMLElement(element)){
+            element.removeAttribute(this.swipperIdentifier);
+        }
     }
 
     getChildByIdentifier(identificador, isCloner = false) {
@@ -1111,7 +1123,7 @@ class Swipper {
         return (typeof variable).toLowerCase();
     }
 
-    isMobile(){
+    isMobile() {
         if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
             return true;
         }
@@ -1897,10 +1909,10 @@ class Calendar extends YearsList {
         if (!this.placeholder || (typeof this.placeholder).toLowerCase() != 'string') {
 
             const dayAux = this.date_selected.dayMonth < 10 ? '0' + this.date_selected.dayMonth : this.date_selected.dayMonth;
-            if(this.isMobile()){
+            if (this.isMobile()) {
                 const monthAux = this.date_selected.month < 10 ? '0' + this.date_selected.month : this.date_selected.month;
                 this.toggle.innerHTML = dayAux + "/" + monthAux + "/" + this.date_selected.year;
-            }else{
+            } else {
                 this.toggle.innerHTML = this.months_short[this.date_selected.month - 1] + " " + dayAux + ", " + this.date_selected.year;
             }
         } else {
@@ -2375,7 +2387,7 @@ class Calendar extends YearsList {
         this.customInput.dispatchEvent(new Event('input'));
     }
 
-    isMobile(){
+    isMobile() {
         if (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
             return true;
         }

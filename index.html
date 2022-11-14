@@ -8,7 +8,9 @@
     <title>VoroFX</title>
     <link rel="stylesheet" href="schemal.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modal.css">
     <script src="script.js"></script>
+    <script src="modal.js"></script>
 </head>
 
 <body>
@@ -133,7 +135,7 @@
                 <div class="col-12 accounts_container">
                     <div class="container_aux" id="swipper">
                         <div class="accounts" swipper>
-                            <div class="account active" data-value="hola" swipper-child>
+                            <div class="account active" data-value="hola" swipper-child swipper-cloner="account">
                                 <!-- ? MENU DESPLEGABLE -- PUEDES COPIAR Y PEGAR, JULIO >:v -->
                                 <div class="menu_action_container toggle_container">
                                     <label for="sub_menu_1" class="menu_toggle click-touch">
@@ -142,10 +144,12 @@
                                     <input type="checkbox" id="sub_menu_1" class="toggle_input_menu">
                                     <div class="menu_action">
                                         <div class="options">
-                                            <div class="option ripple ripple-white click-touch">
+                                            <div class="option ripple ripple-white click-touch"
+                                                modal-opener="change-password">
                                                 Cambiar contraseña
                                             </div>
-                                            <div class="option ripple ripple-white click-touch">
+                                            <div class="option ripple ripple-white click-touch"
+                                                modal-opener="apalancamiento">
                                                 Cambiar apalancamiento
                                             </div>
                                         </div>
@@ -162,7 +166,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="account" swipper-child swipper-identifier="pruebainasxdxdxd"
+                            <!-- <div class="account" swipper-child swipper-identifier="pruebainasxdxdxd"
                                 swipper-cloner="account">
                                 <div class="account_name">
                                     Clásica - MT5 10829
@@ -183,7 +187,7 @@
                                         <div class="text">$11,262.46 USD</div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="account" swipper-child>
                                 <div class="account_name">
                                     Clásica - MT5 10829
@@ -227,7 +231,8 @@
                                 </div>
                             </div>
                             <div class="account add_account ripple ripple-white" swipper-child noclick
-                                swipper-cloner="btn_add" swipper-identifier="agregar" swipper-no-activable>
+                                swipper-cloner="btn_add" swipper-identifier="agregar" swipper-no-activable
+                                modal-opener="add_account">
                                 <div class="button_content">
                                     <div class="icon">
                                         <img src="./resouces/plus_icon.svg" class="img_ajust">
@@ -487,6 +492,249 @@
             </div>
         </div>
     </footer>
+
+    <div class="modal_voro close" modal-id="add_account" modal-no-click-outside>
+        <div class="modal_voro_background" modal-background>
+        </div>
+        <div class="modal_voro_main_content">
+            <div class="modal_voro_header">
+                <div class="modal_title">
+                    Agregar cuenta
+                </div>
+
+                <div class="btn_close_modal_voro shane_effect" modal-closer>
+                    <img src="./resouces/icon_close.svg">
+                </div>
+            </div>
+            <div class="modal_voro_body">
+                <form>
+                    <label class="modal_input_group shane_effect" for="type_account_select">
+                        <div class="label">
+                            *TIPO
+                        </div>
+                        <select id="type_account_select">
+                            <option value="Demo" selected>Demo</option>
+                            <option value="Real">Real</option>
+                        </select>
+                        <div class="icon_select">
+                            <img src="./resouces/arrow_menu_withe.svg">
+                        </div>
+                    </label>
+                    <label class="modal_input_group shane_effect" for="apalancamiento_new_account">
+                        <div class="label">
+                            *APALANCAMIENTO
+                        </div>
+                        <select id="apalancamiento_new_account">
+                            <option value="Demo" selected>1:3000</option>
+                            <option value="Real">3000:5000</option>
+                        </select>
+                        <div class="icon_select">
+                            <img src="./resouces/arrow_menu_withe.svg">
+                        </div>
+                    </label>
+                    <label class="modal_input_group shane_effect" for="init_balance">
+                        <div class="label">
+                            *BALANCE INICIAL
+                        </div>
+                        <input type="text" id="init_balance">
+                    </label>
+                    <div class="modal_anotations">
+                        <div class="anotation sugest">
+                            Debe ser un número positivo entero, sin espacios ni comas, menos de 200,000
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal_voro_footer">
+                <div class="controls">
+                    <button class="btn_save ripple shane_effect">
+                        Crear cuenta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal_voro close" modal-id="apalancamiento" modal-no-click-outside>
+        <div class="modal_voro_background" modal-background>
+        </div>
+        <div class="modal_voro_main_content">
+            <div class="modal_voro_header">
+                <div class="modal_title">
+                    Cambiar apalancamiento - Cuenta MT5 10830
+                </div>
+
+                <div class="btn_close_modal_voro shane_effect" modal-closer>
+                    <img src="./resouces/icon_close.svg">
+                </div>
+            </div>
+            <div class="modal_voro_body">
+                <form>
+                    <label class="modal_input_group shane_effect" for="apalancamiento">
+                        <div class="label">
+                            *APALANCAMIENTO
+                        </div>
+                        <select id="apalancamiento">
+                            <option value="Demo" selected>1:3000</option>
+                            <option value="Real">3000:5000</option>
+                        </select>
+                        <div class="icon_select">
+                            <img src="./resouces/arrow_menu_withe.svg">
+                        </div>
+                    </label>
+                    <div class="modal_anotations">
+                        <div class="anotation sugest">
+                            Advertencia: El apalancamiento permitido depende del saldo de su cuenta
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal_voro_footer">
+                <div class="controls">
+                    <button class="btn_save ripple shane_effect">
+                        Actualizar Apalancamiento
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal_voro close" modal-id="change-password" modal-no-click-outside>
+        <div class="modal_voro_background" modal-background>
+        </div>
+        <div class="modal_voro_main_content">
+            <div class="modal_voro_header">
+                <div class="modal_title">
+                    Cambiar Contraseña - Cuenta MT5 10830
+                </div>
+
+                <div class="btn_close_modal_voro shane_effect" modal-closer>
+                    <img src="./resouces/icon_close.svg">
+                </div>
+            </div>
+            <div class="modal_voro_body">
+                <form>
+
+                    <label class="modal_input_group shane_effect" for="new_password">
+                        <div class="label">
+                            *NUEVA CONTRASEÑA
+                        </div>
+                        <input type="password" id="new_password">
+                    </label>
+
+                    <div class="modal_anotations">
+                        <div class="anotation sugest">
+                            La contraseña debe tener al menos 5 símbolos y contener al menos dos de los tres tipos
+                            de caracteres siguientes: minúscula (a-z), mayúscula (A,Z), dígito (0-9).
+                        </div>
+                        <div class="anotation warning">
+                            Por favor, tenga en cuenta que las contraseñas Maestra e Investor deben ser diferentes.
+                        </div>
+                    </div>
+                    <label class="modal_input_group radios">
+                        <div class="label">
+                            *TIPO
+                        </div>
+                        <label for="master" class="radios ripple shane_effect">
+                            <input type="radio" id="master" name="type_account_password" name="type_account_name"
+                                checked>
+                            Master
+                        </label>
+                        <label for="investor" class="radios ripple shane_effect">
+                            <input type="radio" id="investor" name="type_account_password" name="type_account_name">
+                            Investor
+                        </label>
+                    </label>
+                </form>
+            </div>
+            <div class="modal_voro_footer">
+                <div class="controls">
+                    <button class="btn_save ripple shane_effect">
+                        Actualizar contraseña
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal_voro close" modal-id="reference" modal-no-click-outside>
+        <div class="modal_voro_background" modal-background>
+        </div>
+        <div class="modal_voro_main_content">
+            <div class="modal_voro_header">
+                <div class="modal_title">
+                    Agregar cuenta
+                </div>
+
+                <div class="btn_close_modal_voro shane_effect" modal-closer>
+                    <img src="./resouces/icon_close.svg">
+                </div>
+            </div>
+            <div class="modal_voro_body">
+                <form>
+                    <label class="modal_input_group shane_effect" for="reference_type_account_select">
+                        <div class="label">
+                            TIPO
+                        </div>
+                        <select id="reference_type_account_select">
+                            <option value="Demo" selected>Demo</option>
+                            <option value="Real">Real</option>
+                        </select>
+                        <div class="icon_select">
+                            <img src="./resouces/arrow_menu_withe.svg">
+                        </div>
+                    </label>
+                    <label class="modal_input_group shane_effect" for="reference_apalancamiento">
+                        <div class="label">
+                            APALANCAMIENTO
+                        </div>
+                        <select id="reference_apalancamiento">
+                            <option value="Demo" selected>1:3000</option>
+                            <option value="Real">3000:5000</option>
+                        </select>
+                        <div class="icon_select">
+                            <img src="./resouces/arrow_menu_withe.svg">
+                        </div>
+                    </label>
+                    <label class="modal_input_group shane_effect" for="reference_init_balance">
+                        <div class="label">
+                            *BALANCE INICIAL
+                        </div>
+                        <input type="text" id="reference_init_balance">
+                    </label>
+                    <div class="modal_anotations">
+                        <div class="anotation sugest">
+                            Debe ser un número positivo entero, sin espacios ni comas, menos de 200,000
+                        </div>
+                        <div class="anotation warning">
+                            Por favor, tenga en cuenta que las contraseñas Maestra e Investor deben ser diferentes.
+                        </div>
+                    </div>
+                    <label class="modal_input_group radios">
+                        <div class="label">
+                            *TIPO
+                        </div>
+                        <label for="reference_master" class="radios ripple shane_effect">
+                            <input type="radio" id="reference_master" name="type_account_password" name="type_account_name"
+                                checked>
+                            Master
+                        </label>
+                        <label for="reference_investor" class="radios ripple shane_effect">
+                            <input type="radio" id="reference_investor" name="type_account_password" name="type_account_name">
+                            Investor
+                        </label>
+                    </label>
+                </form>
+            </div>
+            <div class="modal_voro_footer">
+                <div class="controls">
+                    <button class="btn_save ripple shane_effect">
+                        Actualizar contraseña
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
