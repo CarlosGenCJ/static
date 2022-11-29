@@ -83,7 +83,24 @@
         });
     });
 
+    window.addEventListener('modalVoroCloser', (event) => {
+        let detail = event.detail;
+        if(detail && detail.modal && (typeof detail.modal) == 'string' ){
+            let modalIdentifier = detail.modal;
+            let modal = document.querySelector(`[modal-id="${modalIdentifier}"]`);
+            if(modal
+                && !modal.classList.contains('opening')
+                && !modal.classList.contains('closing')
+                && !modal.classList.contains('bounding')
+                && !modal.classList.contains('close')
+                ){
+                modal.classList.add('closing');
+            }
+        }
+    });
+
 
 
 
 })();
+// var modalCloser = new CustomEvent('modalVoroCloser', {detail:{modal: 'add_account'}});

@@ -470,7 +470,7 @@ class YearsList {
     }
 }
 
-class Swipper {
+class Swipper extends ScrollBehaviour {
     swipperContainer = null;
     swipperContent = null;
     children = [];
@@ -505,7 +505,12 @@ class Swipper {
     startX = -1;
     limitMovementToClick = 5;
 
+    isTouched = false;
+
+
     constructor(id, swipperContent) {
+
+        super();
 
         const isHTMLElement = this.isHTMLElement(id);
 
@@ -532,6 +537,7 @@ class Swipper {
         this.evaluateChildren();
 
         this.init();
+        
     }
 
     evaluateSwipperContent(swipperContent) {
@@ -616,65 +622,118 @@ class Swipper {
         this.swipperContent.style.position = "relative";
         this.swipperContent.style.overflow = "auto";
 
+        if('ontouchstart' in window || navigator.maxTouchPoints){
+            this.isTouched = true;
+          }
+
+        this.setDataToScrollBehaviourClass();
+
         this.events();
+
+        this.loop();
+    }
+
+    setDataToScrollBehaviourClass(){
+        this.container = this.swipperContent;
+        this.containerParent = this.swipperContainer;
+        this.isMouseDown = false;
     }
 
     events() {
         // ? Eventos del swipper
-        this.dragEvent();
-        this.touchEvents();
-        this.resizeEvent();
+        if(!this.isTouched){
+            this.dragEvent();
+        }else{
+            this.touchEvents();
+        }
+        // this.resizeEvent();
 
         this.activableEvent();
 
     }
 
     dragEvent() {
-        this.swipperContent.addEventListener('mousedown', (event) => {
 
-            this.limit = this.getLimit();
+        this.swipperContent.addEventListener('mousedown', (event)=>{
+            this.isMouseDown = true;
             this.clicks = 0;
-
-            const startX = event.clientX;
-
-            let last_movement = this.translate;
-
-            let movingEvent = (windowEvent) => {
-                this.movingEventControl(windowEvent, startX, last_movement);
-            }
-            document.addEventListener('mousemove', movingEvent);
-
-            document.onmouseup = () => {
-                document.removeEventListener('mousemove', movingEvent);
-                this.startX = -1;
-                document.onmouseup = null;
-            }
         });
+
+        document.addEventListener('mouseup', (event) => {
+            this.isMouseDown = false;
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            this.mouseX = event.pageX;
+            if (this.clicks < this.limitMovementToClick) {
+                this.clicks++;
+            }
+        }, false);
+
+        // this.swipperContent.addEventListener('mousedown', (event) => {
+
+        //     this.limit = this.getLimit();
+        //     this.clicks = 0;
+
+        //     const startX = event.clientX;
+
+        //     let last_movement = this.translate;
+
+        //     let movingEvent = (windowEvent) => {
+        //         this.movingEventControl(windowEvent, startX, last_movement);
+        //     }
+        //     document.addEventListener('mousemove', movingEvent);
+
+        //     document.onmouseup = () => {
+        //         document.removeEventListener('mousemove', movingEvent);
+        //         this.startX = -1;
+        //         document.onmouseup = null;
+        //     }
+        // });
     }
 
     touchEvents() {
-        this.swipperContainer.addEventListener('touchstart', (event) => {
-            this.limit = this.getLimit();
+
+        this.swipperContainer.addEventListener('touchstart', () => {
+            this.isMouseDown = true;
             this.clicks = 0;
-
-            const touches = event.touches;
-            const startX = touches[0].clientX;
-            let last_movement = this.translate;
-
-            let touchmove = (eventTouch) => {
-                this.movingEventControl(eventTouch, startX, last_movement);
-            }
-
-            document.addEventListener('touchmove', touchmove);
-
-            document.ontouchend = () => {
-                this.startX = -1;
-                this.clicks = 0;
-                document.removeEventListener('touchmove', touchmove);
-
-                document.ontouchend = null;
-            }
         });
+
+        document.addEventListener('touchend', () => {
+            this.isMouseDown = false;
+        });
+
+        document.addEventListener('touchmove', (event) => {
+            const touches = event.touches;
+            this.mouseX = touches[0].pageX;
+            console.log(event);
+            if (this.clicks < this.limitMovementToClick) {
+                this.clicks++;
+            }
+        }, false)
+
+        // this.swipperContainer.addEventListener('touchstart', (event) => {
+        //     this.limit = this.getLimit();
+        //     this.clicks = 0;
+
+        //     const touches = event.touches;
+        //     const startX = touches[0].clientX;
+        //     let last_movement = this.translate;
+
+        //     let touchmove = (eventTouch) => {
+        //         this.movingEventControl(eventTouch, startX, last_movement);
+        //     }
+
+        //     document.addEventListener('touchmove', touchmove);
+
+        //     document.ontouchend = () => {
+        //         this.startX = -1;
+        //         this.clicks = 0;
+        //         document.removeEventListener('touchmove', touchmove);
+
+        //         document.ontouchend = null;
+        //     }
+        // });
     }
 
     movingEventControl(event, startX, last_movement) {
@@ -714,11 +773,15 @@ class Swipper {
         this.limit = this.getLimit();
         if (this.translate > this.limit && this.limit > 0) {
             this.translate = this.limit;
-            this.translateElement();
+            // this.containerPosition = this.limit;
+            // this.translateElement();
         } else if (this.translate != 0 && this.limit < 0) {
             this.translate = 0;
-            this.translateElement();
+            // this.containerPosition = 0;
+            // this.translateElement();
         }
+        console.log("Cambiando")
+        this.container.style.transform = `translate(${this.containerPosition}px)`;
     }
 
     translateMovement(newMovement = 0, ease = false) {

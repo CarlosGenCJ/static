@@ -449,11 +449,11 @@ footer {
                     border: $main_border_inactive;
                     z-index: 2;
                     transition: all ease 0.0s var(--delay, 0.0s);
-
-                    .account_name,
-                    .text {
-                        user-select: all;
-                    }
+ 
+                    // .account_name,
+                    // .text {
+                    //     user-select: all;
+                    // }
                 }
 
                 &.desapearing {

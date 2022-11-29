@@ -527,12 +527,6 @@ footer .menu .item:nth-child(5) {
   z-index: 2;
   transition: all ease 0s var(--delay, 0s);
 }
-.accounts_container .container_aux .accounts .account.active .account_name,
-.accounts_container .container_aux .accounts .account.active .text {
-  -webkit-user-select: all;
-     -moz-user-select: all;
-          user-select: all;
-}
 .accounts_container .container_aux .accounts .account.desapearing {
   transition: all ease 0.6s 0s;
   opacity: 0;
