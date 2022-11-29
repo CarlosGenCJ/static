@@ -694,9 +694,12 @@ class Swipper extends ScrollBehaviour {
 
     touchEvents() {
 
-        this.swipperContainer.addEventListener('touchstart', () => {
+        this.swipperContainer.addEventListener('touchstart', (event) => {
             this.isMouseDown = true;
             this.clicks = 0;
+            const touches = event.touches;
+            this.mouseX = touches[0].pageX;
+            this.prevMouseX = this.mouseX;
         });
 
         document.addEventListener('touchend', () => {
@@ -706,7 +709,6 @@ class Swipper extends ScrollBehaviour {
         document.addEventListener('touchmove', (event) => {
             const touches = event.touches;
             this.mouseX = touches[0].pageX;
-            console.log(event);
             if (this.clicks < this.limitMovementToClick) {
                 this.clicks++;
             }

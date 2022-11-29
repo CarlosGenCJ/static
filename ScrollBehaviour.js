@@ -44,11 +44,8 @@ class ScrollBehaviour {
     }
 
     updateContainer() {
-        // const boundRight = -this.container.offsetWidth + this.containerParent.offsetWidth - 1;
         const boundRight = -this.container.offsetWidth + this.containerParent.offsetWidth - 1;
-        // const isOutBound = (this.containerPosition > 0) || (this.containerPosition < boundRight && boundRight < 0);
         const isOutBound = this.containerPosition > 0 || this.containerPosition < boundRight;
-        // console.log(this.containerPosition, boundRight);
         const isBiggerThanParent = (boundRight >= 0);
 
         if (!this.isMouseDown) {
@@ -102,3 +99,82 @@ class ScrollBehaviour {
         });
     }
 }
+
+// class Carrousel extends ScrollBehaviour{
+
+//     container_div = null;
+//     slider = null;
+
+//     velocidad = null;
+//     masa = null;
+//     momento = null;
+//     fuerza = null;
+//     distancia = null;
+//     time = null;
+    
+
+//     constructor(){
+//         super();
+//         this.container_div = document.getElementById('container');
+//         this.slider = document.getElementById('slider');
+        
+//         // this.velocidad = document.getElementById('velocidad');
+//         // this.masa = document.getElementById('masa');
+//         // this.momento = document.getElementById('momento');
+//         // this.fuerza = document.getElementById('momento');
+//         // this.distancia = document.getElementById('distancia');
+
+//         this.init();
+//     }
+
+//     init(){
+//         this.container = this.slider;
+//         this.containerParent = this.container_div;
+//         this.dragEvent();
+//         this.touchEvent();
+//     }
+
+//     dragEvent(){
+//         this.slider.addEventListener('mousedown', (event)=>{
+//             this.isMouseDown = true;
+//             // this.time = new Date().getTime();
+//         });
+//         document.addEventListener('mouseup', (event) => {
+//             this.isMouseDown = false;
+//         });
+//         document.addEventListener('mousemove', (event) => {
+//             this.mouseX = event.pageX;
+//             // this.calculate();
+//         }, false);
+//     }
+
+//     // calculate(){
+//     //     if(this.isMouseDown){
+//     //         let tiempo_actual = new Date().getTime();
+//     //         let distancia = this.mouseX - this.prevMouseX;
+//     //         let tiempo = tiempo_actual - this.time;
+//     //         let velocidad = distancia / tiempo;
+//     //         this.time = tiempo_actual;
+//     //         this.velocidad.innerHTML = velocidad;
+//     //     }
+//     // }
+
+//     touchEvent(){
+//         this.slider.addEventListener('touchstart', (event)=>{
+//             this.isMouseDown = true;
+//             this.mouseX = event.touches[0].pageX;
+//             this.prevMouseX = this.mouseX;
+//         });
+//         document.addEventListener('touchend', (event) => {
+//             this.isMouseDown = false;
+//         });
+//         document.addEventListener('touchmove', (event) => {
+//             this.mouseX = event.touches[0].pageX;
+//             // console.log(event);
+//         }, false);
+//     }
+// }
+// window.addEventListener('load', ()=>{
+//     var a  = new Carrousel();
+//     a.loop();
+// });
