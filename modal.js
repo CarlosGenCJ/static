@@ -50,6 +50,7 @@
     }
 
     window.addEventListener('click', (event) => {
+        console.log("Clicked");
 
         const openModal = (modalButton, modalIdentifierButton) => {
             const modal_identifier = modalButton.getAttribute('modal-opener');
